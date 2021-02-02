@@ -1,0 +1,9 @@
+npm init -y
+yarn add three
+tsc --init
+
+https://threejs.org/docs/#manual/en/introduction/Typescript-setup
+
+yarn add --dev typescript
+
+https://velog.io/@y1andyu/TypeScript-Express-node.js-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0

@@ -1,3 +1,7 @@
+참고 사이트.
+https://sbcode.net/threejs/
+
+npm install -g typescript
 npm init -y
 yarn add three
 tsc --init
@@ -7,3 +11,18 @@ https://threejs.org/docs/#manual/en/introduction/Typescript-setup
 yarn add --dev typescript
 
 https://velog.io/@y1andyu/TypeScript-Express-node.js-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0
+
+yarn add -D ts-node //ts파일 바로 실행. npx ts-node 파일경로.
+근데 바로 실행하면 실행 안됨..?
+
+//server 종속성.
+yarn add express
+yarn add @types/express
+yarn add -D nodemon //컴파일 된 출력에 변경 사항이 있을 때 다시 시작해줌.
+yarn add -D @types/node
+yarn add -D concurrently //컴파일과 nodemon 명령을 같이 실행해줌.
+ex) tsc -p ./src/server -w (소스 코드의 변경 사항이 자동을 다시 컴파일 하도록 감시)
+ nodemon ./dist/server/server.js (다시 실행)
+ 두 명령을 같이 실행한다. package.json의 dev 참조.
+
+https://sbcode.net/threejs/animation-loop/

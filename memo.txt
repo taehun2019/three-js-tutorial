@@ -33,3 +33,17 @@ yarn add -D webpack webpack-cli webpack-dev-server ts-loader
 
 
 https://sbcode.net/threejs/animation-loop/
+
+//구현 참고.
+https://threejsfundamentals.org/
+
+
+//UI 참고.
+https://www.evermade.fi/story/pure-three-js-hud/
+https://github.com/poki/three-ui
+
+
+//입력.
+http://learningthreejs.com/blog/2011/12/26/let-s-make-a-3d-game-virtual-joystick/
+//js파일을 ts로 바꾸기.
+https://ksrae.github.io/angular/import-js/

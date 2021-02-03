@@ -1,34 +1,52 @@
-// import * as THREE from "three";
-import * as THREE from '/build/three.module.js'
-import { OrbitControls } from '/jsm/controls/OrbitControls'
+import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import Stats from 'three/examples/jsm/libs/stats.module'
+import { GUI } from 'three/examples/jsm/libs/dat.gui.module'
+import MainScene from './main/MainScene';
 
 const scene: THREE.Scene = new THREE.Scene();
-const camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
+
 
 const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const controls = new OrbitControls(camera, renderer.domElement);
+const stats = Stats()
+document.body.appendChild(stats.dom)
 
-// const geometry: THREE.BoxGeometry = new THREE.BoxGeometry()
-const geometry: THREE.SphereGeometry = new THREE.SphereGeometry(5, 20, 20);
-const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true })
+let gameScene = new MainScene(scene);
+let camera = gameScene.getCamera();
 
-const cube: THREE.Mesh = new THREE.Mesh(geometry, material)
-scene.add(cube)
+window.addEventListener('resize', onWindowResize, false);
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight
+    camera.updateProjectionMatrix()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    render()
+}
 
-camera.position.z = 10
+// const controls = new OrbitControls(camera, renderer.domElement);
+//controls.addEventListener('change', render)
 
 var animate = function () {
     requestAnimationFrame(animate)
 
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
 
     // controls.update();
+    gameScene.update();
 
-    renderer.render(scene, camera)
+    // renderer.render(scene, camera);
+    render();
+
+    stats.update();
 };
-
 animate();
+
+function render() {
+    // stats.begin()
+    renderer.render(scene, camera)
+    // stats.end()
+}
+// render()

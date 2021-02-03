@@ -25,4 +25,11 @@ ex) tsc -p ./src/server -w (소스 코드의 변경 사항이 자동을 다시 �
  nodemon ./dist/server/server.js (다시 실행)
  두 명령을 같이 실행한다. package.json의 dev 참조.
 
+yarn add @types/dat.gui
+
+//https://sbcode.net/threejs/module-specifiers/
+yarn add -D webpack webpack-cli webpack-dev-server ts-loader
+
+
+
 https://sbcode.net/threejs/animation-loop/

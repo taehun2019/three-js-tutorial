@@ -12,6 +12,8 @@ export default class MainScene extends GameScene {
     ground: THREE.Mesh;
     
 
+    enemyPlayers: Player[];
+
 
     // private static instance: MainScene;
     // static getInstance() { 
@@ -28,6 +30,11 @@ export default class MainScene extends GameScene {
 
         this.mainCamera.setLength(50);
         this.mainCamera.setRotationX(5.2);
+
+        const geome: THREE.SphereGeometry = new THREE.SphereGeometry(50, 20, 20);
+        const mat: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+        const box = new THREE.Mesh(geome, mat);
+        scene.add(box);
     
         const groundGeometry: THREE.CylinderGeometry = new THREE.CylinderGeometry(50, 50, 5, 20);
         // const groundMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true })
@@ -36,7 +43,7 @@ export default class MainScene extends GameScene {
         scene.add(this.ground)
         this.ground.position.y = -2;
 
-        this.light = new THREE.DirectionalLight('0xffffff', 1.3, );
+        this.light = new THREE.DirectionalLight(0xffffff, 1.3);
         this.light.position.set(0, 100, 0);
         scene.add(this.light);
 
@@ -57,11 +64,23 @@ export default class MainScene extends GameScene {
         scene.add(this.localPlayer);
 
 
+        this.enemyPlayers = [];
+        for (let index = 0; index < 5; index++) {
+            this.enemyPlayers[index] = new Player(scene);
+        }
+
         this.init();
     }
 
     init() {
-        this.localPlayer.init();
+        this.localPlayer.init(0, 0);
+        
+        for (let index = 0; index < this.enemyPlayers.length; index++) {
+            const posX = THREE.MathUtils.randInt(-30, 30);
+            const posY = THREE.MathUtils.randInt(-30, 30);
+            console.log(`posX:${posX}/posY:${posY}`);
+            this.enemyPlayers[index].init(posX, posY);
+        }
     }
 
     update(deltaTime: number) {
@@ -69,5 +88,8 @@ export default class MainScene extends GameScene {
         this.mainCamera.update();
         // this.cube.rotation.x += 0.01;
         // this.cube.rotation.y += 0.01;
+        for (let index = 0; index < this.enemyPlayers.length; index++) {
+            this.enemyPlayers[index].update(deltaTime);
+        }
     }
 }

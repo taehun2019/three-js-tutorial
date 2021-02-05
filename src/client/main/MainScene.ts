@@ -3,11 +3,12 @@ import * as THREE from 'three'
 import { GUI } from 'three/examples/jsm/libs/dat.gui.module'
 import GUIManager from '../common/GUIManager';
 import Player from './World/Player';
+import LocalPlayer from './World/LocalPlayer';
 // import { GUI } from 'dat.gui';
 
 export default class MainScene extends GameScene {
     // cube: THREE.Mesh;
-    localPlayer: Player;
+    localPlayer: LocalPlayer;
     light: THREE.DirectionalLight;
     ground: THREE.Mesh;
     
@@ -23,18 +24,16 @@ export default class MainScene extends GameScene {
     //     return MainScene.instance; 
     // }
 
-    
-
     constructor(scene: THREE.Scene) {
         super(scene);
 
         this.mainCamera.setLength(50);
         this.mainCamera.setRotationX(5.2);
 
-        const geome: THREE.SphereGeometry = new THREE.SphereGeometry(50, 20, 20);
-        const mat: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-        const box = new THREE.Mesh(geome, mat);
-        scene.add(box);
+        // const geome: THREE.SphereGeometry = new THREE.SphereGeometry(50, 20, 20);
+        // const mat: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+        // const box = new THREE.Mesh(geome, mat);
+        // scene.add(box);
     
         const groundGeometry: THREE.CylinderGeometry = new THREE.CylinderGeometry(50, 50, 5, 20);
         // const groundMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true })
@@ -60,13 +59,14 @@ export default class MainScene extends GameScene {
         subFolder.add(this.light.rotation, "z", -5, 5, 0.1)
         folder.open();
 
-        this.localPlayer = new Player(scene);
+        this.localPlayer = new LocalPlayer(scene);
         scene.add(this.localPlayer);
 
 
         this.enemyPlayers = [];
         for (let index = 0; index < 5; index++) {
             this.enemyPlayers[index] = new Player(scene);
+            scene.add(this.enemyPlayers[index]);
         }
 
         this.init();
@@ -78,9 +78,10 @@ export default class MainScene extends GameScene {
         for (let index = 0; index < this.enemyPlayers.length; index++) {
             const posX = THREE.MathUtils.randInt(-30, 30);
             const posY = THREE.MathUtils.randInt(-30, 30);
-            console.log(`posX:${posX}/posY:${posY}`);
             this.enemyPlayers[index].init(posX, posY);
         }
+
+        this.mainCamera.init(this.localPlayer);
     }
 
     update(deltaTime: number) {

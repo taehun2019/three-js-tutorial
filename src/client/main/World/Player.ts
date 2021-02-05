@@ -38,10 +38,12 @@ export default class Player extends THREE.Object3D {
         const raycaster = new THREE.Raycaster(this.position, new Vector3(0, -1, 0), 0, 1);
         // raycaster.intersectObject()
         this.position.set(posX, 0, posZ);
+        // console.log(`input : posX:${posX}/posY:${posZ}`);
+        // console.log(`this.positin : posX:${this.position.x}/posY:${this.position.z}`);
     }
 
     update(deltaTime: number) {
-        this.snow.rotation.x += 90 * THREE.MathUtils.DEG2RAD * deltaTime;
+        // this.snow.rotation.x += 90 * THREE.MathUtils.DEG2RAD * deltaTime;
 
         this.position.x += +this.moveDirection.x * 10 * deltaTime;
         this.position.z += -this.moveDirection.y * 10 * deltaTime;

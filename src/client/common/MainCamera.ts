@@ -4,6 +4,7 @@ import GUIManager from './GUIManager';
 export default class MainCamera extends THREE.Object3D {
     private pivot: THREE.Object3D;
     private camera: THREE.PerspectiveCamera;
+    target: THREE.Object3D;
 
     constructor(scene: THREE.Scene) {
         super();
@@ -26,6 +27,12 @@ export default class MainCamera extends THREE.Object3D {
         cameraRotationFolder.add(this.pivot.rotation, "y", 0, Math.PI * 2, 0.01);
         cameraRotationFolder.add(this.pivot.rotation, "z", 0, Math.PI * 2, 0.01);
         cameraFolder.open();
+
+        this.target = new THREE.Object3D();
+    }
+
+    init(target: THREE.Object3D) {
+        this.target = target;
     }
 
     setLength(length: number) {
@@ -42,5 +49,11 @@ export default class MainCamera extends THREE.Object3D {
     update() {
         // this.camera.position.z += 100;
         // console.log("cameraZ:"+this.camera.position.z);
+        if (this.target != null) {
+            this.followTarget(this.target.position);
+        }
+    }
+    followTarget(targetPos: THREE.Vector3) {
+        this.position.copy(targetPos);
     }
 }

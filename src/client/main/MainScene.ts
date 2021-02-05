@@ -4,7 +4,10 @@ import { GUI } from 'three/examples/jsm/libs/dat.gui.module'
 import GUIManager from '../common/GUIManager';
 import Player from './World/Player';
 import LocalPlayer from './World/LocalPlayer';
+import { Vector3 } from 'three';
 // import { GUI } from 'dat.gui';
+
+const enemyNum = 1;
 
 export default class MainScene extends GameScene {
     // cube: THREE.Mesh;
@@ -12,9 +15,10 @@ export default class MainScene extends GameScene {
     light: THREE.DirectionalLight;
     ground: THREE.Mesh;
     
-
     enemyPlayers: Player[];
+    totalPlayers: Player[];
 
+    
 
     // private static instance: MainScene;
     // static getInstance() { 
@@ -27,7 +31,7 @@ export default class MainScene extends GameScene {
     constructor(scene: THREE.Scene) {
         super(scene);
 
-        this.mainCamera.setLength(50);
+        this.mainCamera.setLength(40);
         this.mainCamera.setRotationX(5.2);
 
         // const geome: THREE.SphereGeometry = new THREE.SphereGeometry(50, 20, 20);
@@ -35,7 +39,7 @@ export default class MainScene extends GameScene {
         // const box = new THREE.Mesh(geome, mat);
         // scene.add(box);
     
-        const groundGeometry: THREE.CylinderGeometry = new THREE.CylinderGeometry(50, 50, 5, 20);
+        const groundGeometry: THREE.CylinderGeometry = new THREE.CylinderGeometry(40, 40, 5, 20);
         // const groundMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true })
         const groundMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xddddff,})
         this.ground = new THREE.Mesh(groundGeometry, groundMaterial)
@@ -64,9 +68,15 @@ export default class MainScene extends GameScene {
 
 
         this.enemyPlayers = [];
-        for (let index = 0; index < 5; index++) {
+        for (let index = 0; index < enemyNum; index++) {
             this.enemyPlayers[index] = new Player(scene);
             scene.add(this.enemyPlayers[index]);
+        }
+
+        this.totalPlayers = [];
+        this.totalPlayers[0] = this.localPlayer;
+        for (let index = 0; index < enemyNum; index++) {
+            this.totalPlayers[index + 1] = this.enemyPlayers[index];
         }
 
         this.init();
@@ -91,6 +101,26 @@ export default class MainScene extends GameScene {
         // this.cube.rotation.y += 0.01;
         for (let index = 0; index < this.enemyPlayers.length; index++) {
             this.enemyPlayers[index].update(deltaTime);
+        }
+
+        this.checkCollision();
+    }
+
+    checkCollision() {
+        for (let aIndex = 0; aIndex < this.totalPlayers.length; aIndex++) {
+            const playerA = this.totalPlayers[aIndex];
+            const playerAPos = new Vector3();
+            playerAPos.copy(playerA.position);
+
+            for (let bIndex = 0; bIndex < this.totalPlayers.length; bIndex++) {
+                const playerB = this.totalPlayers[bIndex];
+                const playerBPos = new Vector3();
+                playerBPos.copy(playerB.position);
+                
+                // playerB.position.add(playerA.position);
+                // const distance = playerBPos.addScaledVector(playerAPos, -1).length();
+                // console.log("distance:"+distance);
+            }
         }
     }
 }

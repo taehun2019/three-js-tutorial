@@ -25,6 +25,7 @@ export default class VirtualJoystickManager {
         VirtualJoystickManager.clicked = false;
         VirtualJoystickManager.offset = new Vector2(0, 0);
         
+        //https://techhtml.github.io/pointerevents/#the-pointerleave-event
         window.addEventListener('pointerdown', VirtualJoystickManager.onPointerDown);
         window.addEventListener('pointermove', VirtualJoystickManager.onPointerMove);
         window.addEventListener('pointerup', VirtualJoystickManager.onPointerUp);

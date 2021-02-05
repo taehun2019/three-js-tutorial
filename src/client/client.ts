@@ -5,17 +5,17 @@ import { GUI } from 'three/examples/jsm/libs/dat.gui.module'
 import MainScene from './main/MainScene';
 import VirtualJoystickManager from './common/VirtualJoystickManager';
 
-//https://threejsfundamentals.org/threejs/lessons/threejs-fundamentals.html
-const canvas = document.querySelector('#c') as HTMLCanvasElement;
-canvas.getBoundingClientRect();
+// //https://threejsfundamentals.org/threejs/lessons/threejs-fundamentals.html
+// const canvas = document.querySelector('#c') as HTMLCanvasElement;
+// canvas.getBoundingClientRect();
 
-// const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
-// renderer.setSize(window.innerWidth, window.innerHeight);
-// document.body.appendChild(renderer.domElement);
-const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({canvas});
+const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+// const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({canvas});
+// renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x459ce5);
-// document.body.appendChild(renderer.domElement);
+const canvas = document.body.lastChild as HTMLCanvasElement;
 
 const stats = Stats()
 document.body.appendChild(stats.dom)

@@ -7,7 +7,7 @@ export default class Snow extends THREE.Object3D {
     constructor(scene: THREE.Scene) {
         super();
 
-        const geometry: THREE.SphereGeometry = new THREE.SphereGeometry(5, 20, 20);
+        const geometry: THREE.SphereGeometry = new THREE.SphereGeometry(1, 20, 20);
         // const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true })
         // const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, })
         const material: THREE.MeshToonMaterial = new THREE.MeshToonMaterial({ color: 0x00ff00, })

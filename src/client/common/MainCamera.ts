@@ -6,6 +6,9 @@ export default class MainCamera extends THREE.Object3D {
     private camera: THREE.PerspectiveCamera;
     target: THREE.Object3D;
 
+    // _length:number;
+    // set length(value: number) { this._length = value } 
+
     constructor(scene: THREE.Scene) {
         super();
         this.pivot = new THREE.Object3D();
@@ -29,6 +32,8 @@ export default class MainCamera extends THREE.Object3D {
         cameraFolder.open();
 
         this.target = new THREE.Object3D();
+
+        // this._length = 0;
     }
 
     init(target: THREE.Object3D) {

@@ -1,5 +1,6 @@
 import GUIManager from '../../common/GUIManager';
-import * as THREE from 'three'
+import * as THREE from 'three';
+// import { THREE } from 'enable3d';
 
 export default class Snow extends THREE.Object3D {
     sphere: THREE.Mesh;
@@ -15,7 +16,7 @@ export default class Snow extends THREE.Object3D {
         this.sphere = new THREE.Mesh(geometry, material)
         this.add(this.sphere);
 
-        this.position.y = 4;
+        this.position.y = 1;
 
         // const gui = GUIManager.getInstance().gui;
         
@@ -27,12 +28,12 @@ export default class Snow extends THREE.Object3D {
         // cubeFolder.add(this.sphere, "visible", true)
         // cubeFolder.open()
 
-        const eyeGeometry: THREE.BoxGeometry = new THREE.BoxGeometry(8, 4);
+        const eyeGeometry: THREE.BoxGeometry = new THREE.BoxGeometry(2, 1, 0.5);
         const eyeMaterial: THREE.MeshToonMaterial = new THREE.MeshToonMaterial({ color: 0x0000ff, });
         this.eye = new THREE.Mesh(eyeGeometry, eyeMaterial);
         this.sphere.add(this.eye);
 
-        this.eye.position.set(0, 2, 4.5);
+        this.eye.position.set(0, 0.2, 0.8);
     }
 
     init() {

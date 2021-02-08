@@ -1,4 +1,7 @@
 import * as THREE from 'three'
+// import { PhysicsLoader } from '@enable3d/ammo-physics'
+// import { THREE } from 'enable3d';
+import AmmoModule from "ammojs-typed";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Stats from 'three/examples/jsm/libs/stats.module'
 import { GUI } from 'three/examples/jsm/libs/dat.gui.module'
@@ -24,62 +27,116 @@ const scene: THREE.Scene = new THREE.Scene();
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
-let gameScene = new MainScene(scene);
-let camera = gameScene.getCamera();
-
-window.addEventListener('resize', onWindowResize, false);
-function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    render()
-}
+// let gameScene: MainScene; // = new MainScene(scene);
+// let camera: THREE.PerspectiveCamera; // = gameScene.getCamera();
 
 const virtualJoystickManager = new VirtualJoystickManager(canvas);
 
-function onKeyDown(event: KeyboardEvent) {
-    if (event.key == "ArrowDown")
-    {
+const LoadGame = () => {
+    console.log("physics loaded");
 
+    let gameScene = new MainScene(scene);
+    let camera = gameScene.getCamera();
+
+    window.addEventListener('resize', onWindowResize, false);
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight
+        camera.updateProjectionMatrix()
+        renderer.setSize(window.innerWidth, window.innerHeight)
+        render()
     }
+
+
+    let preElapsedTime: number = 0;
+    let curElapsedTime: number = 0;
+    let deltaTime: number = 0;
+    var animate = function (time: number) {
+        
+        preElapsedTime = curElapsedTime;
+        curElapsedTime = time;
+        deltaTime = curElapsedTime - preElapsedTime;
+        deltaTime *= 0.001;
+
+
+        gameScene.update(deltaTime);
+
+        render();
+
+        stats.update();
+
+        requestAnimationFrame(animate)
+    };
+
+    function render() {
+        renderer.render(scene, camera)
+    }
+
+    animate(0);
 }
-function onKeyUp(event: KeyboardEvent) {
-    console.log("hoho!");
-}
-document.addEventListener("keydown", onKeyDown, false);
-document.addEventListener("keyup", onKeyUp, false);
+
+// PhysicsLoader('/ammo', () => LoadGame());
+
+
+// function loadGame() {
+//     console.log("physics loaded");
+
+//     let gameScene = new MainScene(scene);
+//     let camera = gameScene.getCamera();
+
+//     animate(0);
+// }
+
+
+// function onKeyDown(event: KeyboardEvent) {
+//     if (event.key == "ArrowDown")
+//     {
+
+//     }
+// }
+// function onKeyUp(event: KeyboardEvent) {
+//     console.log("hoho!");
+// }
+// document.addEventListener("keydown", onKeyDown, false);
+// document.addEventListener("keyup", onKeyUp, false);
+
 
 // const controls = new OrbitControls(camera, renderer.domElement);
 //controls.addEventListener('change', render)
 
-let preElapsedTime: number = 0;
-let curElapsedTime: number = 0;
-let deltaTime: number = 0;
-var animate = function (time: number) {
-    
-    preElapsedTime = curElapsedTime;
-    curElapsedTime = time;
-    deltaTime = curElapsedTime - preElapsedTime;
-    deltaTime *= 0.001;
-
-    // console.log(deltaTime);
-    requestAnimationFrame(animate)
 
 
-    // controls.update();
-    gameScene.update(deltaTime);
 
-    // renderer.render(scene, camera);
-    render();
 
-    stats.update();
 
-};
-animate(0);
+// ammo사용.
+// const PhysicsLoader = (path:string, callback:Function) => {
+//     if (typeof window !== 'undefined')
+//         window.__loadPhysics = true;
+//     loadAmmoModule(path, () => {
+//         Ammo().then(() => {
+//             callback();
+//         });
+//     });
+// };
+// const loadAmmoModule = (path:string, doneCallback:Function) => {
+//     // console.log(wasmSupported ? 'WebAssembly is supported' : 'WebAssembly is not supported')
+//     // if (wasmSupported)
+//         loadScriptAsync(`${path}/ammo.wasm.js`, () => doneCallback());
+//     // else
+//         // loadScriptAsync(`${path}/ammo.js`, () => doneCallback());
+// };
+// const loadScriptAsync = (url:string, doneCallback:Function) => {
+//     var tag = document.createElement('script');
+//     tag.onload = () => {
+//         doneCallback();
+//     };
+//     tag.onerror = () => {
+//         throw new Error('failed to load ' + url);
+//     };
+//     tag.async = true;
+//     tag.src = url;
+//     document.head.appendChild(tag);
+// };
 
-function render() {
-    // stats.begin()
-    renderer.render(scene, camera)
-    // stats.end()
-}
-// render()
+// PhysicsLoader('.', () => LoadGame());
+LoadGame();

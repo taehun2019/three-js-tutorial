@@ -1,9 +1,10 @@
 import * as THREE from 'three';
+// import { THREE } from 'enable3d';
 import GUIManager from './GUIManager';
 
 export default class MainCamera extends THREE.Object3D {
-    private pivot: THREE.Object3D;
-    private camera: THREE.PerspectiveCamera;
+    pivot: THREE.Object3D;
+    camera: THREE.PerspectiveCamera;
     target: THREE.Object3D;
 
     // _length:number;
@@ -47,9 +48,9 @@ export default class MainCamera extends THREE.Object3D {
         this.pivot.rotation.x = x;
     }
 
-    getCamera(): THREE.PerspectiveCamera {
-        return this.camera;
-    }
+    // getCamera(): THREE.PerspectiveCamera {
+    //     return this.camera;
+    // }
 
     update() {
         // this.camera.position.z += 100;

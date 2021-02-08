@@ -1,5 +1,7 @@
 import * as THREE from "three";
-import { Vector2 } from "three";
+// import { Vector2 } from "three";
+// import { THREE } from 'enable3d';
+const Vector2 = THREE.Vector2;
 
 export default class VirtualJoystickManager {
     private static instance: VirtualJoystickManager;
@@ -12,10 +14,10 @@ export default class VirtualJoystickManager {
     }
 
     static canvas: HTMLCanvasElement;
-    static centerPosition: Vector2; // = {x: 0, y: 0};
-    static pointerPosition: Vector2; // = {x: 0, y: 0};
+    static centerPosition: THREE.Vector2; // = {x: 0, y: 0};
+    static pointerPosition: THREE.Vector2; // = {x: 0, y: 0};
     static clicked: boolean;
-    static offset: Vector2;
+    static offset: THREE.Vector2;
     constructor(canvas: HTMLCanvasElement) {
         VirtualJoystickManager.instance = this;
 
@@ -29,7 +31,7 @@ export default class VirtualJoystickManager {
         window.addEventListener('pointerdown', VirtualJoystickManager.onPointerDown);
         window.addEventListener('pointermove', VirtualJoystickManager.onPointerMove);
         window.addEventListener('pointerup', VirtualJoystickManager.onPointerUp);
-        window.addEventListener('pointerleave', VirtualJoystickManager.onPointerLeave);
+        // window.addEventListener('pointerleave', VirtualJoystickManager.onPointerLeave);
     }
 
     static onPointerDown(event: PointerEvent) {
@@ -54,10 +56,10 @@ export default class VirtualJoystickManager {
         VirtualJoystickManager.offset.set(0, 0);
         console.log("pointer up");
     }
-    static onPointerLeave() {
-        VirtualJoystickManager.pointerPosition.x = -100000;
-        VirtualJoystickManager.pointerPosition.y = -100000;
-    }
+    // static onPointerLeave() {
+    //     VirtualJoystickManager.pointerPosition.x = -100000;
+    //     VirtualJoystickManager.pointerPosition.y = -100000;
+    // }
 
     static pointerEventToViewport(event: PointerEvent) {
         const pos = this.getCanvasRelativePosition(event);

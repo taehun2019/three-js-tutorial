@@ -52,3 +52,8 @@ https://ksrae.github.io/angular/import-js/
 enable3d - 유력.
 ammo
 physijs
+
+yarn add @enable3d/ammo-physics
+ammo webassembly 폴더 추가.
+yarn add wasm-loader ??
+물리 추가 시 용량 많이 늘어남, 한 파일에 javascript 또는 wasm을 묶어야되는데 안됨.

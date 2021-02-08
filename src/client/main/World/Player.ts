@@ -8,11 +8,15 @@ const Vector2 = THREE.Vector2;
 const Vector3 = THREE.Vector3;
 
 export default class Player extends THREE.Object3D {
-    static moveSpeed: number = 10;
+    static initMoveSpeed: number = 4; //10;
+    static initRotateSpeed: number = 200;
 
     snow: Snow;
     keyboard: any;
     moveDirection: THREE.Vector2;
+
+    curMoveSpeed: number;
+    curRotateSpeed: number;
 
     constructor(scene: THREE.Scene) {
         super();
@@ -36,6 +40,9 @@ export default class Player extends THREE.Object3D {
         // subFolder = folder.addFolder("MoveDirection");
         // subFolder.add(this.moveDirection, "x", -5, 5, 0.1);
         // subFolder.add(this.moveDirection, "y", -5, 5, 0.1);
+
+        this.curMoveSpeed = Player.initMoveSpeed;
+        this.curRotateSpeed = Player.initRotateSpeed;
     }
 
     init(posX: number, posZ: number) {
@@ -53,14 +60,17 @@ export default class Player extends THREE.Object3D {
         this.moveDirection.y = THREE.MathUtils.randInt(-1, 1);
         this.moveDirection = this.moveDirection.normalize();
         // console.log("init");
+
+        this.curMoveSpeed = Player.initMoveSpeed;
+        this.curRotateSpeed = Player.initRotateSpeed;
     }
 
     update(deltaTime: number) {
         // this.snow.rotation.x += 90 * THREE.MathUtils.DEG2RAD * deltaTime;
-        this.snow.rotation.x += (Player.moveSpeed * 20) * THREE.MathUtils.DEG2RAD * deltaTime;
+        this.snow.rotation.x += this.curRotateSpeed * THREE.MathUtils.DEG2RAD * deltaTime;
 
-        this.position.x += +this.moveDirection.x * Player.moveSpeed * deltaTime;
-        this.position.z += -this.moveDirection.y * Player.moveSpeed * deltaTime;
+        this.position.x += +this.moveDirection.x * this.curMoveSpeed * deltaTime;
+        this.position.z += -this.moveDirection.y * this.curMoveSpeed * deltaTime;
 
         if (this.moveDirection.x == 0 && this.moveDirection.y == 0)
         {
@@ -124,5 +134,11 @@ export default class Player extends THREE.Object3D {
 
         //0~90 90~180 180~270 -90~0 0~90
         //0~90 90~180 180~270 270~360 0~90
+    }
+
+    changeSize(deltaSize: number) {
+        let newSize = this.scale.x + deltaSize;
+        this.scale.set(newSize, newSize, newSize);
+        this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.5, newSize / 10);
     }
 }

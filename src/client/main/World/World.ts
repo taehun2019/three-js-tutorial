@@ -12,7 +12,7 @@ import LocalPlayer from './../World/LocalPlayer';
 // import World from './../World/World';
 import MainCamera from '../../common/MainCamera';
 
-const enemyNum = 1;
+const enemyNum = 7;
 
 export default class World extends THREE.Scene {
     
@@ -196,7 +196,7 @@ export default class World extends THREE.Scene {
             const playerAPos = new Vector3();
             playerAPos.copy(playerA.position);
 
-            for (let bIndex = 0; bIndex < this.totalPlayers.length; bIndex++) {
+            for (let bIndex = aIndex + 1; bIndex < this.totalPlayers.length; bIndex++) {
                 const playerB = this.totalPlayers[bIndex];
                 const playerBPos = new Vector3();
                 playerBPos.copy(playerB.position);
@@ -209,7 +209,7 @@ export default class World extends THREE.Scene {
                     (playerBPos.x - playerAPos.x) * (playerBPos.x - playerAPos.x) + 
                     (playerBPos.z - playerAPos.z) * (playerBPos.z - playerAPos.z)
                 );
-                if (length < 0.2)
+                if (length < 10)
                 {
                     console.log(`length:${length}`);
                     // console.log("near");

@@ -13,7 +13,13 @@ export default class LocalPlayer extends Player {
         super(scene);
         this.arrow = new Arrow(scene);
         this.add(this.arrow);
-        this.arrow.scale.set(0.3, 0.3, 0.3);
+        this.arrow.scale.set(0.2, 0.2, 0.2);
+    }
+
+    init(posX: number, posZ: number) {
+        super.init(posX, posZ);
+
+        // this.curMoveSpeed = 10;
     }
 
     update(deltaTime: number) {
@@ -21,10 +27,15 @@ export default class LocalPlayer extends Player {
         // if (VirtualJoystickManager.offset.x != 0 || VirtualJoystickManager.offset.y != 0)
         this.processInput();
         super.update(deltaTime);
+
     }
 
     // processInput(deltaTime: number) {
     processInput() {
+        if (VirtualJoystickManager.offset.length() == 0)
+            return;
+        this.moveDirection = VirtualJoystickManager.offset.normalize();
+
         // const newDirection = VirtualJoystickManager.offset.normalize();
         // if (newDirection.length() > 0.1)
         // {
@@ -42,24 +53,24 @@ export default class LocalPlayer extends Player {
 
 
 
-        if (VirtualJoystickManager.clicked == false)
-            return;
-        // console.log(`VirtualJoystickManager.clicked:${VirtualJoystickManager.clicked}`);
-        // const joystickOffset = VirtualJoystickManager.offset.normalize();
-        let joystickOffset = VirtualJoystickManager.offset;
-        if (joystickOffset.x == 0 && joystickOffset.y == 0)
-            return;
-        joystickOffset = joystickOffset.normalize();
-        // console.log(`length:${joystickOffset.length()}`)
-        if (joystickOffset.length() < 0.5)
-            return;
+        // if (VirtualJoystickManager.clicked == false)
+        //     return;
+        // // console.log(`VirtualJoystickManager.clicked:${VirtualJoystickManager.clicked}`);
+        // // const joystickOffset = VirtualJoystickManager.offset.normalize();
+        // let joystickOffset = VirtualJoystickManager.offset;
+        // if (joystickOffset.x == 0 && joystickOffset.y == 0)
+        //     return;
+        // joystickOffset = joystickOffset.normalize();
+        // // console.log(`length:${joystickOffset.length()}`)
+        // if (joystickOffset.length() < 0.5)
+        //     return;
 
-        // this.moveDirection.x = joystickOffset.x;
-        // this.moveDirection.y = joystickOffset.y;
-        // this.moveDirection = joystickOffset.normalize();
+        // // this.moveDirection.x = joystickOffset.x;
+        // // this.moveDirection.y = joystickOffset.y;
+        // // this.moveDirection = joystickOffset.normalize();
 
-        this.moveDirection = joystickOffset;
-        console.log(`x:${this.moveDirection.x}/y:${this.moveDirection.y}`);
+        // this.moveDirection = joystickOffset;
+        // console.log(`x:${this.moveDirection.x}/y:${this.moveDirection.y}`);
     }
 
 }

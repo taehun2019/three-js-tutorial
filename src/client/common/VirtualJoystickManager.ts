@@ -53,7 +53,7 @@ export default class VirtualJoystickManager {
     }
     static onPointerUp(event: PointerEvent) {
         VirtualJoystickManager.clicked = false;
-        VirtualJoystickManager.offset.set(0, 0);
+        // VirtualJoystickManager.offset.set(0, 0);
         console.log("pointer up");
     }
     // static onPointerLeave() {

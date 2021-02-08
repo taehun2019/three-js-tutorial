@@ -23,6 +23,13 @@ module.exports = {
         filename: 'bundle.js',
         path: path.resolve(__dirname, '../../dist/client')
     },
+    plugins: [
+        new HtmlWebpackPlugin({
+            title: 'haha',
+            template: 'template.html',
+            filename: 'index.html'
+        })
+    ],
     performance: {
         hints: false
     },

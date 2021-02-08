@@ -38,13 +38,27 @@ const LoadGame = () => {
     let gameScene = new MainScene(scene);
     let camera = gameScene.getCamera();
 
-    window.addEventListener('resize', onWindowResize, false);
     function onWindowResize() {
         camera.aspect = window.innerWidth / window.innerHeight
         camera.updateProjectionMatrix()
         renderer.setSize(window.innerWidth, window.innerHeight)
         render()
     }
+    window.addEventListener('resize', onWindowResize, false);
+
+    function onKeyDown(event: KeyboardEvent) {
+        if (event.key == "q") {
+            gameScene.world.localPlayer.changeSize(+0.1);
+        }
+        if (event.key == 'w') {
+            gameScene.world.localPlayer.changeSize(-0.1);
+        }
+    }
+    function onKeyUp(event: KeyboardEvent) {
+        console.log("hoho!");
+    }
+    document.addEventListener("keydown", onKeyDown, false);
+    document.addEventListener("keyup", onKeyUp, false);
 
 
     let preElapsedTime: number = 0;
@@ -87,17 +101,6 @@ const LoadGame = () => {
 // }
 
 
-// function onKeyDown(event: KeyboardEvent) {
-//     if (event.key == "ArrowDown")
-//     {
-
-//     }
-// }
-// function onKeyUp(event: KeyboardEvent) {
-//     console.log("hoho!");
-// }
-// document.addEventListener("keydown", onKeyDown, false);
-// document.addEventListener("keyup", onKeyUp, false);
 
 
 // const controls = new OrbitControls(camera, renderer.domElement);

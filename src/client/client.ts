@@ -33,7 +33,7 @@ scene.add(axesHelper);
 const virtualJoystickManager = new VirtualJoystickManager(canvas);
 
 const LoadGame = () => {
-    console.log("physics loaded");
+    // console.log("physics loaded");
 
     let gameScene = new MainScene(scene);
     let camera = gameScene.getCamera();
@@ -55,11 +55,13 @@ const LoadGame = () => {
         }
     }
     function onKeyUp(event: KeyboardEvent) {
-        console.log("hoho!");
+        // console.log("hoho!");
     }
     document.addEventListener("keydown", onKeyDown, false);
     document.addEventListener("keyup", onKeyUp, false);
 
+    // const controls = new OrbitControls(camera, renderer.domElement);
+    //controls.addEventListener('change', render)
 
     let preElapsedTime: number = 0;
     let curElapsedTime: number = 0;
@@ -103,8 +105,6 @@ const LoadGame = () => {
 
 
 
-// const controls = new OrbitControls(camera, renderer.domElement);
-//controls.addEventListener('change', render)
 
 
 

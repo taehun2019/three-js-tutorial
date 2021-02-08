@@ -18,6 +18,10 @@ export default class Player extends THREE.Object3D {
     curMoveSpeed: number;
     curRotateSpeed: number;
 
+    velocityY: number;
+
+    onGround: boolean;
+
     constructor(scene: THREE.Scene) {
         super();
         this.snow = new Snow(scene);
@@ -43,6 +47,9 @@ export default class Player extends THREE.Object3D {
 
         this.curMoveSpeed = Player.initMoveSpeed;
         this.curRotateSpeed = Player.initRotateSpeed;
+
+        this.velocityY = 0;
+        this.onGround = true;
     }
 
     init(posX: number, posZ: number) {
@@ -63,6 +70,9 @@ export default class Player extends THREE.Object3D {
 
         this.curMoveSpeed = Player.initMoveSpeed;
         this.curRotateSpeed = Player.initRotateSpeed;
+
+        this.velocityY = 0;
+        this.onGround = true;
     }
 
     update(deltaTime: number) {
@@ -72,10 +82,17 @@ export default class Player extends THREE.Object3D {
         this.position.x += +this.moveDirection.x * this.curMoveSpeed * deltaTime;
         this.position.z += -this.moveDirection.y * this.curMoveSpeed * deltaTime;
 
-        if (this.moveDirection.x == 0 && this.moveDirection.y == 0)
+        if (this.onGround == false)
         {
-            // console.log('!!!!!');/
+            this.velocityY -= 10 * deltaTime;
+            // console.log(`velocityY:${this.velocityY}`);
+            this.position.y += this.velocityY * deltaTime;
         }
+
+        // if (this.moveDirection.x == 0 && this.moveDirection.y == 0)
+        // {
+        //     // console.log('!!!!!');/
+        // }
 
         this.rotate(deltaTime);
     }
@@ -139,6 +156,8 @@ export default class Player extends THREE.Object3D {
     changeSize(deltaSize: number) {
         let newSize = this.scale.x + deltaSize;
         this.scale.set(newSize, newSize, newSize);
-        this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.5, newSize / 10);
+        this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.2, newSize / 10);
     }
+
+
 }

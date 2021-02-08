@@ -12,7 +12,7 @@ import LocalPlayer from './../World/LocalPlayer';
 // import World from './../World/World';
 import MainCamera from '../../common/MainCamera';
 
-const enemyNum = 7;
+const enemyNum = 0; //7;
 
 export default class World extends THREE.Scene {
     
@@ -211,10 +211,24 @@ export default class World extends THREE.Scene {
                 );
                 if (length < 10)
                 {
-                    console.log(`length:${length}`);
+                    // console.log(`length:${length}`);
                     // console.log("near");
                 }
             }
+
+            let center = new Vector3;
+            playerA.snow.getWorldPosition(center);
+            const raycast = new THREE.Raycaster(center, new Vector3(0, -1, 0), 0, 5);
+            let onGround = false;
+            // raycast.set(playerAPos, new Vector3(0, -1, 0));
+            const intersect = raycast.intersectObject(this.ground, true);
+            for (let index = 0; index < intersect.length; index++) {
+                playerA.position.y = intersect[index].point.y - (playerA.scale.x * 0.2);
+                playerA.velocityY = 0;
+                // console.log("on ground");
+                onGround = true;
+            }
+            playerA.onGround = onGround;
         }
     }
 

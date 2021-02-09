@@ -59,6 +59,8 @@ export default class Player extends THREE.Object3D {
     }
 
     init(posX: number, posZ: number) {
+        this.visible = true;
+
         this.snow.init();
         const raycaster = new THREE.Raycaster(this.position, new Vector3(0, -1, 0), 0, 1);
         // raycaster.intersectObject()
@@ -162,10 +164,14 @@ export default class Player extends THREE.Object3D {
         // }
         // this.rotation.y = newAngleY;
         // this.rotation.y = desireAngleY;
-        const newLook= new THREE.Vector3(this.position.x, this.position.y, this.position.z);
+        const newLook = new Vector3().copy(this.position); //this.position.x, this.position.y, this.position.z);
         newLook.x += moveDirection.x;
         newLook.z -= moveDirection.y;
+        // let curLook = new Vector3().copy(this.position).add(this.getWorldDirection(new Vector3()));
+        // curLook.lerp(newLook, deltaTime * 4);
+        
         this.lookAt(newLook);
+        // this.lookAt(curLook);
 
         //0~90 90~180 180~270 -90~0 0~90
         //0~90 90~180 180~270 270~360 0~90

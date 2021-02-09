@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import VirtualJoystickManager from "../../common/VirtualJoystickManager";
 import Player from "./Player";
 import Arrow from "./Arrow";
+import { Vector3 } from 'three';
 
 export default class LocalPlayer extends Player {
     elapsedTime: number = 0;
@@ -25,7 +26,7 @@ export default class LocalPlayer extends Player {
     update(deltaTime: number) {
         // console.log(`x:${this.moveDirection.x}/y:${this.moveDirection.y}`);
         // if (VirtualJoystickManager.offset.x != 0 || VirtualJoystickManager.offset.y != 0)
-        this.processInput();
+        this.processInput(deltaTime);
         super.update(deltaTime);
 
         // this.changeSize(+0.05);
@@ -35,11 +36,12 @@ export default class LocalPlayer extends Player {
         this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.2, this.scale.x / 10);
     }
 
-    // processInput(deltaTime: number) {
-    processInput() {
+    processInput(deltaTime: number) {
+    // processInput() {
         if (VirtualJoystickManager.offset.length() == 0)
             return;
-        this.moveDirection = VirtualJoystickManager.offset.normalize();
+        const inputDirection = VirtualJoystickManager.offset.normalize();
+        this.moveDirection.lerp(inputDirection, deltaTime * 4);
 
         // const newDirection = VirtualJoystickManager.offset.normalize();
         // if (newDirection.length() > 0.1)

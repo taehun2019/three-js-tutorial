@@ -251,6 +251,15 @@ export default class World extends THREE.Scene {
 
             biggerPlayer.changeSizeByCollision(+0.005);
             smallerPlayer.changeSizeByCollision(-0.01);
+
+            // const smallerPosition = smallerPlayer.position;
+            // let pushVector = smallerPosition.sub(biggerPlayer.position).setLength(minDistance - curDistance);
+            let pushVector = new Vector3();
+            pushVector.copy(smallerPlayer.position).sub(biggerPlayer.position);
+            pushVector.setLength((minDistance - curDistance) * 0.8);
+
+            smallerPlayer.position.add(pushVector);
+            // smallerPlayer.position.add(new Vector3(0.1,0.1,0.1));
         }
     }
 

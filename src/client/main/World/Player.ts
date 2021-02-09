@@ -8,8 +8,10 @@ const Vector2 = THREE.Vector2;
 const Vector3 = THREE.Vector3;
 
 export default class Player extends THREE.Object3D {
-    static initMoveSpeed: number = 4; //10;
+    static initMoveSpeed: number = 1; //4; //10;
     static initRotateSpeed: number = 200;
+
+    dieAction: Function = () => { };
 
     snow: Snow;
     keyboard: any;
@@ -21,6 +23,8 @@ export default class Player extends THREE.Object3D {
     velocityY: number;
 
     onGround: boolean;
+    scaling: boolean;
+    colliding: boolean;
 
     constructor(scene: THREE.Scene) {
         super();
@@ -50,6 +54,8 @@ export default class Player extends THREE.Object3D {
 
         this.velocityY = 0;
         this.onGround = true;
+        this.scaling = false;
+        this.colliding = false;
     }
 
     init(posX: number, posZ: number) {
@@ -66,6 +72,7 @@ export default class Player extends THREE.Object3D {
         this.moveDirection.x = THREE.MathUtils.randInt(-1, 1);
         this.moveDirection.y = THREE.MathUtils.randInt(-1, 1);
         this.moveDirection = this.moveDirection.normalize();
+        this.rotate(0);
         // console.log("init");
 
         this.curMoveSpeed = Player.initMoveSpeed;
@@ -73,9 +80,14 @@ export default class Player extends THREE.Object3D {
 
         this.velocityY = 0;
         this.onGround = true;
+        this.scaling = false;
+        this.colliding = false;
     }
 
     update(deltaTime: number) {
+        if (this.visible == false)
+            return;
+            
         // this.snow.rotation.x += 90 * THREE.MathUtils.DEG2RAD * deltaTime;
         this.snow.rotation.x += this.curRotateSpeed * THREE.MathUtils.DEG2RAD * deltaTime;
 
@@ -85,14 +97,20 @@ export default class Player extends THREE.Object3D {
         if (this.onGround == false)
         {
             this.velocityY -= 10 * deltaTime;
+            // this.velocityY -= 0 * deltaTime;
             // console.log(`velocityY:${this.velocityY}`);
             this.position.y += this.velocityY * deltaTime;
+            if (this.position.y < -10)
+            {
+                this.die();
+            }
         }
 
         // if (this.moveDirection.x == 0 && this.moveDirection.y == 0)
         // {
         //     // console.log('!!!!!');/
         // }
+        this.changeSizeByElapsingTime();
 
         this.rotate(deltaTime);
     }
@@ -153,11 +171,47 @@ export default class Player extends THREE.Object3D {
         //0~90 90~180 180~270 270~360 0~90
     }
 
-    changeSize(deltaSize: number) {
+    changeSizeImmediately(deltaSize: number) {
         let newSize = this.scale.x + deltaSize;
         this.scale.set(newSize, newSize, newSize);
-        this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.2, newSize / 10);
+        this.updateSpeed();
+
+        if (newSize < 1)
+        {
+            this.die();
+        }
+    }
+    die() {
+        this.visible = false;
+        this.dieAction();
+    }
+    updateSpeed() {
+        this.curMoveSpeed = THREE.MathUtils.lerp(Player.initMoveSpeed, Player.initMoveSpeed * 2, this.scale.x / 10);
+        this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.2, this.scale.x / 10);
     }
 
+    changeSizeByElapsingTime() {
+        if (this.scaling == true)
+            return;
+        if (this.colliding == true)
+            return;
 
+        this.scaling = true;
+        setTimeout(()=>{
+            this.changeSizeImmediately(+0.01);
+            // console.log('haha');
+            this.scaling = false;
+        }, 100);
+    }
+    changeSizeByCollision(deltaSize: number) {
+        if (this.colliding == true)
+            return;
+        
+        // console.log('intersection!');
+        this.colliding = true;
+        setTimeout(() => {
+            this.changeSizeImmediately(deltaSize);
+            this.colliding = false;
+        }, 10);
+    }
 }

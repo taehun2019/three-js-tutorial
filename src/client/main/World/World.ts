@@ -15,10 +15,9 @@ import MainCamera from '../../common/MainCamera';
 // v = require('./../../common/ParticleSystem');
 import ParticleSystem from './../../common/ParticleSystem'
 
-const enemyNum = 0; //7;
+const enemyNum = 7;
 
 export default class World extends THREE.Scene {
-    
     // cube: THREE.Mesh;
     mainCamera: MainCamera;
     localPlayer: LocalPlayer;
@@ -91,7 +90,7 @@ export default class World extends THREE.Scene {
             this.totalPlayers[index + 1] = this.enemyPlayers[index];
         }
 
-        this.init();
+        // this.init();
 
 
         // this.physics.add.box({ x: 0.05, y: 10 }, { lambert: { color: 0x2194ce } })
@@ -202,32 +201,29 @@ export default class World extends THREE.Scene {
     checkCollision() {
         for (let aIndex = 0; aIndex < this.totalPlayers.length; aIndex++) {
             const playerA = this.totalPlayers[aIndex];
-            const playerAPos = new Vector3();
-            playerAPos.copy(playerA.position);
+            if (playerA.visible == false)
+                continue;
+            // const playerAPos = new Vector3();
+            // playerAPos.copy(playerA.position);
 
+            //충돌 체크.
             for (let bIndex = aIndex + 1; bIndex < this.totalPlayers.length; bIndex++) {
                 const playerB = this.totalPlayers[bIndex];
-                const playerBPos = new Vector3();
-                playerBPos.copy(playerB.position);
+                if (playerB.visible == false)
+                    continue;
+                // const playerBPos = new Vector3();
+                // playerBPos.copy(playerB.position);
                 
                 // playerB.position.add(playerA.position);
                 // const distance = playerBPos.addScaledVector(playerAPos, -1).length();
                 // console.log("distance:"+distance);
-
-                const length = Math.sqrt(
-                    (playerBPos.x - playerAPos.x) * (playerBPos.x - playerAPos.x) + 
-                    (playerBPos.z - playerAPos.z) * (playerBPos.z - playerAPos.z)
-                );
-                if (length < 10)
-                {
-                    // console.log(`length:${length}`);
-                    // console.log("near");
-                }
+                this.checkIntersection(playerA, playerB);
             }
 
+            //땅 체크.
             let center = new Vector3;
             playerA.snow.getWorldPosition(center);
-            const raycast = new THREE.Raycaster(center, new Vector3(0, -1, 0), 0, 5);
+            const raycast = new THREE.Raycaster(center, new Vector3(0, -1, 0), 0, 20);
             let onGround = false;
             // raycast.set(playerAPos, new Vector3(0, -1, 0));
             const intersect = raycast.intersectObject(this.ground, true);
@@ -238,6 +234,23 @@ export default class World extends THREE.Scene {
                 onGround = true;
             }
             playerA.onGround = onGround;
+        }
+    }
+
+    checkIntersection(playerA: Player, playerB: Player) {
+        const minDistance = playerA.scale.x + playerB.scale.x;
+        const curDistance = Math.sqrt(
+            (playerB.position.x - playerA.position.x) * (playerB.position.x - playerA.position.x) + 
+            (playerB.position.z - playerA.position.z) * (playerB.position.z - playerA.position.z)
+        );
+        if (curDistance < minDistance)
+        {
+            // console.log('intersection!');
+            const biggerPlayer = (playerA.scale.x > playerB.scale.x) ? playerA : playerB;
+            const smallerPlayer = (playerA.scale.x > playerB.scale.x) ? playerB : playerA;
+
+            biggerPlayer.changeSizeByCollision(+0.005);
+            smallerPlayer.changeSizeByCollision(-0.01);
         }
     }
 

@@ -39,7 +39,7 @@ export default class VirtualJoystickManager {
 
         const pos = VirtualJoystickManager.pointerEventToViewport(event);
         VirtualJoystickManager.centerPosition.set(pos.x, pos.y);
-        console.log(`pointer down pos : ${pos.x}/${pos.y}`);
+        // console.log(`pointer down pos : ${pos.x}/${pos.y}`);
     }
     static onPointerMove(event: PointerEvent) {
         if (VirtualJoystickManager.clicked == false)
@@ -54,7 +54,7 @@ export default class VirtualJoystickManager {
     static onPointerUp(event: PointerEvent) {
         VirtualJoystickManager.clicked = false;
         // VirtualJoystickManager.offset.set(0, 0);
-        console.log("pointer up");
+        // console.log("pointer up");
     }
     // static onPointerLeave() {
     //     VirtualJoystickManager.pointerPosition.x = -100000;

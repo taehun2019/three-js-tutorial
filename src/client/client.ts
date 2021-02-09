@@ -12,10 +12,14 @@ import VirtualJoystickManager from './common/VirtualJoystickManager';
 // const canvas = document.querySelector('#c') as HTMLCanvasElement;
 // canvas.getBoundingClientRect();
 
+// appendChild에서 null일 때 : https://stackoverflow.com/questions/9916747/why-is-document-body-null-in-my-javascript
 window.onload = () => {
     const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+    // document.body.appendChild(renderer.domElement);
+    document.body.append(renderer.domElement);
+    // document.body.prepend(renderer.domElement);
+
     // const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({canvas});
     // renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x459ce5);
@@ -24,14 +28,19 @@ window.onload = () => {
     const stats = Stats()
     document.body.appendChild(stats.dom)
     
+    //@ts-ignore
+    document.getElementById("bottomBtn").addEventListener("click", function() {
+        console.log("HOHO");
+    }, false);
+    
     const scene: THREE.Scene = new THREE.Scene();
     const axesHelper = new THREE.AxesHelper(5);
     scene.add(axesHelper);
     
-    const virtualJoystickManager = new VirtualJoystickManager(canvas);
     
     const LoadGame = () => {
         // console.log("physics loaded");
+        const virtualJoystickManager = new VirtualJoystickManager(canvas);
     
         let gameScene = new MainScene(scene);
         let camera = gameScene.getCamera();
@@ -46,10 +55,16 @@ window.onload = () => {
     
         function onKeyDown(event: KeyboardEvent) {
             if (event.key == "q") {
-                gameScene.world.localPlayer.changeSize(+0.1);
+                gameScene.world.localPlayer.changeSizeImmediately(+0.1);
             }
             if (event.key == 'w') {
-                gameScene.world.localPlayer.changeSize(-0.1);
+                gameScene.world.localPlayer.changeSizeImmediately(-0.1);
+            }
+            if (event.key == 'o') {
+                gameScene.isPlaying = !gameScene.isPlaying;
+            }
+            if (event.key == 'i') {
+                gameScene.init();
             }
         }
         function onKeyUp(event: KeyboardEvent) {

@@ -19,7 +19,7 @@ export default class LocalPlayer extends Player {
     init(posX: number, posZ: number) {
         super.init(posX, posZ);
 
-        // this.curMoveSpeed = 10;
+        this.curMoveSpeed = 4;
     }
 
     update(deltaTime: number) {
@@ -28,6 +28,11 @@ export default class LocalPlayer extends Player {
         this.processInput();
         super.update(deltaTime);
 
+        // this.changeSize(+0.05);
+    }
+    updateSpeed() {
+        this.curMoveSpeed = THREE.MathUtils.lerp(4, 4 * 2, this.scale.x / 10);
+        this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.2, this.scale.x / 10);
     }
 
     // processInput(deltaTime: number) {
@@ -73,4 +78,17 @@ export default class LocalPlayer extends Player {
         // console.log(`x:${this.moveDirection.x}/y:${this.moveDirection.y}`);
     }
 
+    changeSizeByElapsingTime() {
+        if (this.scaling == true)
+            return;
+        if (this.colliding == true)
+            return;
+
+        this.scaling = true;
+        setTimeout(()=>{
+            this.changeSizeImmediately(+0.012);
+            // console.log('haha');
+            this.scaling = false;
+        }, 100);
+    }
 }

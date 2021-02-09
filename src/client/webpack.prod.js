@@ -1,5 +1,6 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const InlineChunkHtmlPlugin = require('inline-chunk-html-plugin');
 
 module.exports = {
     mode: 'production',
@@ -28,8 +29,9 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'haha',
             template: 'template.html',
-            filename: 'index.html'
-        })
+            filename: 'output.html'
+        }),
+        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/bundle/]), //[/runtime/]),
     ],
     performance: {
         hints: false

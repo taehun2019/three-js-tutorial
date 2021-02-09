@@ -12,83 +12,85 @@ import VirtualJoystickManager from './common/VirtualJoystickManager';
 // const canvas = document.querySelector('#c') as HTMLCanvasElement;
 // canvas.getBoundingClientRect();
 
-const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-// const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({canvas});
-// renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0x459ce5);
-const canvas = document.body.lastChild as HTMLCanvasElement;
-
-const stats = Stats()
-document.body.appendChild(stats.dom)
-
-const scene: THREE.Scene = new THREE.Scene();
-const axesHelper = new THREE.AxesHelper(5);
-scene.add(axesHelper);
-
-// let gameScene: MainScene; // = new MainScene(scene);
-// let camera: THREE.PerspectiveCamera; // = gameScene.getCamera();
-
-const virtualJoystickManager = new VirtualJoystickManager(canvas);
-
-const LoadGame = () => {
-    // console.log("physics loaded");
-
-    let gameScene = new MainScene(scene);
-    let camera = gameScene.getCamera();
-
-    function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight
-        camera.updateProjectionMatrix()
-        renderer.setSize(window.innerWidth, window.innerHeight)
-        render()
-    }
-    window.addEventListener('resize', onWindowResize, false);
-
-    function onKeyDown(event: KeyboardEvent) {
-        if (event.key == "q") {
-            gameScene.world.localPlayer.changeSize(+0.1);
+window.onload = () => {
+    const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+    // const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({canvas});
+    // renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x459ce5);
+    const canvas = document.body.lastChild as HTMLCanvasElement;
+    
+    const stats = Stats()
+    document.body.appendChild(stats.dom)
+    
+    const scene: THREE.Scene = new THREE.Scene();
+    const axesHelper = new THREE.AxesHelper(5);
+    scene.add(axesHelper);
+    
+    const virtualJoystickManager = new VirtualJoystickManager(canvas);
+    
+    const LoadGame = () => {
+        // console.log("physics loaded");
+    
+        let gameScene = new MainScene(scene);
+        let camera = gameScene.getCamera();
+    
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight
+            camera.updateProjectionMatrix()
+            renderer.setSize(window.innerWidth, window.innerHeight)
+            render()
         }
-        if (event.key == 'w') {
-            gameScene.world.localPlayer.changeSize(-0.1);
+        window.addEventListener('resize', onWindowResize, false);
+    
+        function onKeyDown(event: KeyboardEvent) {
+            if (event.key == "q") {
+                gameScene.world.localPlayer.changeSize(+0.1);
+            }
+            if (event.key == 'w') {
+                gameScene.world.localPlayer.changeSize(-0.1);
+            }
         }
+        function onKeyUp(event: KeyboardEvent) {
+            // console.log("hoho!");
+        }
+        document.addEventListener("keydown", onKeyDown, false);
+        document.addEventListener("keyup", onKeyUp, false);
+    
+        // const controls = new OrbitControls(camera, renderer.domElement);
+        //controls.addEventListener('change', render)
+    
+        let preElapsedTime: number = 0;
+        let curElapsedTime: number = 0;
+        let deltaTime: number = 0;
+        var animate = function (time: number) {
+            
+            preElapsedTime = curElapsedTime;
+            curElapsedTime = time;
+            deltaTime = curElapsedTime - preElapsedTime;
+            deltaTime *= 0.001;
+    
+    
+            gameScene.update(deltaTime);
+    
+            render();
+    
+            stats.update();
+    
+            requestAnimationFrame(animate)
+        };
+    
+        function render() {
+            renderer.render(scene, camera)
+        }
+    
+        animate(0);
     }
-    function onKeyUp(event: KeyboardEvent) {
-        // console.log("hoho!");
-    }
-    document.addEventListener("keydown", onKeyDown, false);
-    document.addEventListener("keyup", onKeyUp, false);
-
-    // const controls = new OrbitControls(camera, renderer.domElement);
-    //controls.addEventListener('change', render)
-
-    let preElapsedTime: number = 0;
-    let curElapsedTime: number = 0;
-    let deltaTime: number = 0;
-    var animate = function (time: number) {
-        
-        preElapsedTime = curElapsedTime;
-        curElapsedTime = time;
-        deltaTime = curElapsedTime - preElapsedTime;
-        deltaTime *= 0.001;
-
-
-        gameScene.update(deltaTime);
-
-        render();
-
-        stats.update();
-
-        requestAnimationFrame(animate)
-    };
-
-    function render() {
-        renderer.render(scene, camera)
-    }
-
-    animate(0);
+    LoadGame();
 }
+
+
 
 // PhysicsLoader('/ammo', () => LoadGame());
 
@@ -142,4 +144,3 @@ const LoadGame = () => {
 // };
 
 // PhysicsLoader('.', () => LoadGame());
-LoadGame();

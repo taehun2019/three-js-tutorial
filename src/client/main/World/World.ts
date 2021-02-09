@@ -12,6 +12,9 @@ import LocalPlayer from './../World/LocalPlayer';
 // import World from './../World/World';
 import MainCamera from '../../common/MainCamera';
 
+// v = require('./../../common/ParticleSystem');
+import ParticleSystem from './../../common/ParticleSystem'
+
 const enemyNum = 0; //7;
 
 export default class World extends THREE.Scene {
@@ -160,6 +163,12 @@ export default class World extends THREE.Scene {
         //     scene.add(curveObject);
         // }
         // }
+
+        // let asdf = new ParticleSystem();
+        let asdf = new ParticleSystem({
+            parent: scene,
+            camera: this.mainCamera.camera,
+        });
     }
 
     init() {

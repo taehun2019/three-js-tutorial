@@ -5,10 +5,10 @@ const Vector2 = THREE.Vector2;
 
 export default class VirtualJoystickManager {
     private static instance: VirtualJoystickManager;
-    static getInstance() { 
+    static getInstance(canvas?: HTMLCanvasElement) { 
         if (!VirtualJoystickManager.instance) { 
-            // VirtualJoystickManager.instance = new VirtualJoystickManager(); 
-            return null;
+            VirtualJoystickManager.instance = new VirtualJoystickManager(canvas as HTMLCanvasElement); 
+            return this.instance;
         } 
         return VirtualJoystickManager.instance; 
     }

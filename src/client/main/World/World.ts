@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 // import * as AmmoPhysics from '../../../packages/enable3d/enable3d.ammoPhysics.0.21.0.min.js;
 // import { THREE } from '@enable3d/three-graphics'
-import { AmmoPhysics } from '@enable3d/ammo-physics'
+// import { AmmoPhysics } from '@enable3d/ammo-physics'
 // import asd from 'enabl3d'
 // import { THREE, Scene3D, PhysicsLoader, Project } from 'enable3d'
 const Vector3 = THREE.Vector3;
@@ -9,13 +9,23 @@ const Vector3 = THREE.Vector3;
 import GUIManager from './../../common/GUIManager';
 import Player from './../World/Player';
 import LocalPlayer from './../World/LocalPlayer';
-// import World from './../World/World';
 import MainCamera from '../../common/MainCamera';
 
 // v = require('./../../common/ParticleSystem');
 import ParticleSystem from './../../common/ParticleSystem'
 
 const enemyNum = 7;
+
+const colors = [
+    new THREE.Color(0xdfeeff),
+    new THREE.Color(0xff665d),
+    new THREE.Color(0x00d629),
+    new THREE.Color(0xd4d600),
+    new THREE.Color(0x767676),
+    new THREE.Color(0xb700db),
+    new THREE.Color(0xee9500),
+    new THREE.Color(0x00e5e7),
+]
 
 export default class World extends THREE.Scene {
     // cube: THREE.Mesh;
@@ -45,10 +55,21 @@ export default class World extends THREE.Scene {
     
         const groundGeometry: THREE.CylinderGeometry = new THREE.CylinderGeometry(40, 40, 5, 20);
         // const groundMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true })
-        const groundMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xddddff,})
+        // const groundMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xddddff,})
+        // const groundMaterial = new THREE.MeshToonMaterial({ color: 0xcee4ff,})
+        const groundMaterial = new THREE.MeshToonMaterial({ color: 0xaabbff,})
         this.ground = new THREE.Mesh(groundGeometry, groundMaterial)
         scene.add(this.ground)
         this.ground.position.y = -2;
+
+
+        const waterGeometry: THREE.PlaneGeometry = new THREE.PlaneGeometry(1000, 1000);
+        const waterMaterial = new THREE.MeshToonMaterial({ color: 0x6783ee, opacity: 0.8, transparent: true})
+        const water = new THREE.Mesh(waterGeometry, waterMaterial)
+        water.rotation.x = -90 * THREE.MathUtils.DEG2RAD;
+        water.position.y = -5;
+        scene.add(water)
+        // water.position.y = -2;
 
         // this.physics.add.existing(this.ground);
         // PhysicsLoader('/lib', () => { });
@@ -171,12 +192,12 @@ export default class World extends THREE.Scene {
     }
 
     init() {
-        this.localPlayer.init(0, 0);
+        this.localPlayer.init(colors[0], 0, 0);
         
         for (let index = 0; index < this.enemyPlayers.length; index++) {
             const posX = THREE.MathUtils.randInt(-30, 30);
             const posY = THREE.MathUtils.randInt(-30, 30);
-            this.enemyPlayers[index].init(posX, posY);
+            this.enemyPlayers[index].init(colors[index + 1],posX, posY);
         }
 
         this.mainCamera.init(this.localPlayer);
@@ -188,7 +209,8 @@ export default class World extends THREE.Scene {
         // this.physics.updateDebugger();
 
         this.localPlayer.update(deltaTime);
-        this.mainCamera.update();
+        if (this.localPlayer.onGround == true)
+            this.mainCamera.update();
         // this.cube.rotation.x += 0.01;
         // this.cube.rotation.y += 0.01;
         for (let index = 0; index < this.enemyPlayers.length; index++) {
@@ -254,13 +276,21 @@ export default class World extends THREE.Scene {
 
             // const smallerPosition = smallerPlayer.position;
             // let pushVector = smallerPosition.sub(biggerPlayer.position).setLength(minDistance - curDistance);
-            let pushVector = new Vector3();
-            pushVector.copy(smallerPlayer.position).sub(biggerPlayer.position);
-            pushVector.setLength((minDistance - curDistance) * 0.8);
+            let fromBiggerToSmaller = new Vector3().copy(smallerPlayer.position).sub(biggerPlayer.position);
+            let pushSmallerVector = new Vector3().copy(fromBiggerToSmaller).setLength((minDistance - curDistance) * 0.8);
+            let pushBiggerVector = new Vector3().copy(fromBiggerToSmaller).setLength((minDistance - curDistance) * -0.2);
 
-            smallerPlayer.position.add(pushVector);
+            smallerPlayer.position.add(pushSmallerVector);
             // smallerPlayer.position.add(new Vector3(0.1,0.1,0.1));
+            biggerPlayer.position.add(pushBiggerVector);
         }
     }
-
+    getAliveEnemyNum() {
+        let aliveNum = 0;
+        this.enemyPlayers.forEach(enemyPlayer => {
+            if (enemyPlayer.visible == true)
+                aliveNum++;
+        });
+        return aliveNum;
+    }
 }

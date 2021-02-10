@@ -1,20 +1,26 @@
 import GUIManager from '../../common/GUIManager';
 import * as THREE from 'three';
+import SnowFace from './SnowFace';
 // import { THREE } from 'enable3d';
 
 export default class Snow extends THREE.Object3D {
-    sphere: THREE.Mesh;
-    eye: THREE.Mesh;
+    body: THREE.Mesh;
+    bodyMaterial: THREE.MeshToonMaterial;
+    eyes: SnowFace;
     constructor(scene: THREE.Scene) {
         super();
 
         const geometry: THREE.SphereGeometry = new THREE.SphereGeometry(1, 20, 20);
         // const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true })
         // const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, })
-        const material: THREE.MeshToonMaterial = new THREE.MeshToonMaterial({ color: 0x00ff00, })
+        this.bodyMaterial = new THREE.MeshToonMaterial({ color: 0x00ff00, })
         
-        this.sphere = new THREE.Mesh(geometry, material)
-        this.add(this.sphere);
+        this.body = new THREE.Mesh(geometry, this.bodyMaterial)
+        this.add(this.body);
+
+        this.eyes = new SnowFace();
+        this.body.add(this.eyes);
+        this.eyes.position.set(0, 0.0, 1.0);
 
         this.position.y = 1;
 
@@ -27,16 +33,11 @@ export default class Snow extends THREE.Object3D {
         // cubePositionFolder.add(this.sphere.position, "z", -10, 10)
         // cubeFolder.add(this.sphere, "visible", true)
         // cubeFolder.open()
-
-        const eyeGeometry: THREE.BoxGeometry = new THREE.BoxGeometry(2, 1, 0.5);
-        const eyeMaterial: THREE.MeshToonMaterial = new THREE.MeshToonMaterial({ color: 0x0000ff, });
-        this.eye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-        this.sphere.add(this.eye);
-
-        this.eye.position.set(0, 0.2, 0.8);
     }
 
-    init() {
-
+    init(color: THREE.Color) {
+        this.bodyMaterial.color = color;
+        // console.log(color);
+        this.body.material = this.bodyMaterial;
     }
 }

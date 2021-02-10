@@ -15,8 +15,14 @@ export default class MainScene extends THREE.Scene {
 
         this.init();
         this.world.localPlayer.dieAction = () => {
-            console.log('GameOver');
+            this.lose();
         };
+        this.world.enemyPlayers.forEach(enemyPlayer => {
+            enemyPlayer.dieAction = () => {
+                if (this.world.getAliveEnemyNum() <= 0)
+                    this.win();
+            };
+        });
     }
 
     init() {
@@ -35,5 +41,19 @@ export default class MainScene extends THREE.Scene {
             return;
         }
         this.world.update(deltaTime);
+    }
+
+    win() {
+        // if (this.isPlaying == false)
+        //     return;
+        // this.isPlaying = false;
+        console.log('win');
+    }
+
+    lose() {
+        // if (this.isPlaying == false)
+        //     return;
+        // this.isPlaying = false;
+        console.log('lose');
     }
 }

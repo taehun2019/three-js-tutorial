@@ -7,6 +7,7 @@ import Stats from 'three/examples/jsm/libs/stats.module'
 import { GUI } from 'three/examples/jsm/libs/dat.gui.module'
 import MainScene from './main/MainScene';
 import VirtualJoystickManager from './common/VirtualJoystickManager';
+import AssetManager from './common/AssetManager';
 
 // //https://threejsfundamentals.org/threejs/lessons/threejs-fundamentals.html
 // const canvas = document.querySelector('#c') as HTMLCanvasElement;
@@ -22,7 +23,8 @@ window.onload = () => {
 
     // const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({canvas});
     // renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0x459ce5);
+    // renderer.setClearColor(0x459ce5);
+    renderer.setClearColor(0x6783ee);
     const canvas = document.body.lastChild as HTMLCanvasElement;
     
     const stats = Stats()
@@ -40,7 +42,9 @@ window.onload = () => {
     
     const LoadGame = () => {
         // console.log("physics loaded");
-        const virtualJoystickManager = new VirtualJoystickManager(canvas);
+        // const virtualJoystickManager = new VirtualJoystickManager(canvas);
+        const virtualJoystickManager = VirtualJoystickManager.getInstance(canvas);
+        const assetManager = AssetManager.getInstance();
     
         let gameScene = new MainScene(scene);
         let camera = gameScene.getCamera();
@@ -56,6 +60,7 @@ window.onload = () => {
         function onKeyDown(event: KeyboardEvent) {
             if (event.key == "q") {
                 gameScene.world.localPlayer.changeSizeImmediately(+0.1);
+                // console.log(gameScene.world.localPlayer.curRotateSpeed);
             }
             if (event.key == 'w') {
                 gameScene.world.localPlayer.changeSizeImmediately(-0.1);

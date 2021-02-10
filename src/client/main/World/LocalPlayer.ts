@@ -17,10 +17,10 @@ export default class LocalPlayer extends Player {
         this.arrow.scale.set(0.2, 0.2, 0.2);
     }
 
-    init(posX: number, posZ: number) {
-        super.init(posX, posZ);
+    init(color: THREE.Color, posX: number, posZ: number) {
+        super.init(color, posX, posZ);
 
-        this.curMoveSpeed = 4;
+        // this.curMoveSpeed = 10; //4;
     }
 
     update(deltaTime: number) {
@@ -29,55 +29,20 @@ export default class LocalPlayer extends Player {
         this.processInput(deltaTime);
         super.update(deltaTime);
 
-        // this.changeSize(+0.05);
+        this.changeSizeImmediately(+0.1 * deltaTime);
     }
-    updateSpeed() {
-        this.curMoveSpeed = THREE.MathUtils.lerp(4, 4 * 2, this.scale.x / 10);
-        this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.2, this.scale.x / 10);
-    }
+    // updateSpeed() {
+    //     this.curMoveSpeed = THREE.MathUtils.lerp(4, 4 * 2, this.scale.x / 10);
+    //     this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.2, this.scale.x / 10);
+    // }
 
     processInput(deltaTime: number) {
     // processInput() {
         if (VirtualJoystickManager.offset.length() == 0)
             return;
         const inputDirection = VirtualJoystickManager.offset.normalize();
-        this.moveDirection.lerp(inputDirection, deltaTime * 4);
-
-        // const newDirection = VirtualJoystickManager.offset.normalize();
-        // if (newDirection.length() > 0.1)
-        // {
-        //     console.log(`length:${newDirection.length()}`);
-        //     console.log(`x:${newDirection.x}/y:${newDirection.y}`);
-        //     this.moveDirection = newDirection;
-        // }
-        // // console.log(`x:${this.moveDirection.x}/y:${this.moveDirection.y}`);
-        // // if (VirtualJoystickManager.offset.x != 0 && VirtualJoystickManager.offset.y != 0)
-        // //     this.moveDirection = VirtualJoystickManager.offset.normalize();
-        // // // else
-        // //     // console.log("no input");
-        // return;
-
-
-
-
-        // if (VirtualJoystickManager.clicked == false)
-        //     return;
-        // // console.log(`VirtualJoystickManager.clicked:${VirtualJoystickManager.clicked}`);
-        // // const joystickOffset = VirtualJoystickManager.offset.normalize();
-        // let joystickOffset = VirtualJoystickManager.offset;
-        // if (joystickOffset.x == 0 && joystickOffset.y == 0)
-        //     return;
-        // joystickOffset = joystickOffset.normalize();
-        // // console.log(`length:${joystickOffset.length()}`)
-        // if (joystickOffset.length() < 0.5)
-        //     return;
-
-        // // this.moveDirection.x = joystickOffset.x;
-        // // this.moveDirection.y = joystickOffset.y;
-        // // this.moveDirection = joystickOffset.normalize();
-
-        // this.moveDirection = joystickOffset;
-        // console.log(`x:${this.moveDirection.x}/y:${this.moveDirection.y}`);
+        // this.moveDirection.lerp(inputDirection, deltaTime * 4);
+        this.moveDirection.lerp(inputDirection, deltaTime * 10).normalize();
     }
 
     changeSizeByElapsingTime() {

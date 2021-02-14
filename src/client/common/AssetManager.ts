@@ -35,7 +35,7 @@ export default class AssetManager {
         // console.log(event.type);
     }
     onFulfilled(value: THREE.Texture, name: string, finishAction: Function) {
-        console.log('onFulfilled');
+        // console.log('onFulfilled');
         this.textures.set(name, value);
 
         // this.finishLoadAction();

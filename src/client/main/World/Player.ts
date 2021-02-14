@@ -88,7 +88,7 @@ export default class Player extends THREE.Object3D {
         this.moveDirection.x = THREE.MathUtils.randFloat(-1, 1);
         this.moveDirection.y = THREE.MathUtils.randFloat(-1, 1);
         this.moveDirection = this.moveDirection.normalize();
-        console.log(this.moveDirection);
+        // console.log(this.moveDirection);
         this.rotate(0);
 
         this.curMoveSpeed = Player.initMoveSpeed;

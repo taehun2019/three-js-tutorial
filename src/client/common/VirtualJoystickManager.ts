@@ -28,22 +28,30 @@ export default class VirtualJoystickManager {
         VirtualJoystickManager.offset = new Vector2(0, 0);
         
         //https://techhtml.github.io/pointerevents/#the-pointerleave-event
+        //https://stackoverflow.com/questions/48124372/pointermove-event-not-working-with-touch-why-not
+        //body에 touch-action none 추가.
         window.addEventListener('pointerdown', VirtualJoystickManager.onPointerDown);
         window.addEventListener('pointermove', VirtualJoystickManager.onPointerMove);
         window.addEventListener('pointerup', VirtualJoystickManager.onPointerUp);
+        // window.addEventListener('mousedown', VirtualJoystickManager.onPointerDown);
+        // window.addEventListener('mousemove', VirtualJoystickManager.onPointerMove);
+        // window.addEventListener('mouseup', VirtualJoystickManager.onPointerUp);
         // window.addEventListener('pointerleave', VirtualJoystickManager.onPointerLeave);
     }
 
-    static onPointerDown(event: PointerEvent) {
+    // static onPointerDown(event: PointerEvent) {
+    static onPointerDown(event: any) { //MouseEvent) {
+        console.log("onPointerDown");
         VirtualJoystickManager.clicked = true;
 
         const pos = VirtualJoystickManager.pointerEventToViewport(event);
         VirtualJoystickManager.centerPosition.set(pos.x, pos.y);
         // console.log(`pointer down pos : ${pos.x}/${pos.y}`);
     }
-    static onPointerMove(event: PointerEvent) {
+    static onPointerMove(event: any) { //PointerEvent) {
         if (VirtualJoystickManager.clicked == false)
             return;
+        console.log("onPointerMove");
         const pos = VirtualJoystickManager.pointerEventToViewport(event);
         VirtualJoystickManager.pointerPosition.set(pos.x, pos.y);
 
@@ -51,7 +59,8 @@ export default class VirtualJoystickManager {
         offset.x = VirtualJoystickManager.pointerPosition.x - VirtualJoystickManager.centerPosition.x;
         offset.y = VirtualJoystickManager.pointerPosition.y - VirtualJoystickManager.centerPosition.y;
     }
-    static onPointerUp(event: PointerEvent) {
+    static onPointerUp(event: any) { //PointerEvent) {
+        console.log("onPointerUp");
         VirtualJoystickManager.clicked = false;
         // VirtualJoystickManager.offset.set(0, 0);
         // console.log("pointer up");
@@ -61,14 +70,14 @@ export default class VirtualJoystickManager {
     //     VirtualJoystickManager.pointerPosition.y = -100000;
     // }
 
-    static pointerEventToViewport(event: PointerEvent) {
+    static pointerEventToViewport(event: any) { // PointerEvent) {
         const pos = this.getCanvasRelativePosition(event);
         return {
             x: (pos.x / this.canvas.width) * 2 - 1,
             y: (pos.y / this.canvas.height) * -2 + 1, // Y를 뒤집습니다.
         }
     }
-    static getCanvasRelativePosition(event: PointerEvent) {
+    static getCanvasRelativePosition(event: any) { //PointerEvent) {
         const rect = this.canvas.getBoundingClientRect();
         return {
             x: (event.clientX - rect.left) * this.canvas.width / rect.width,

@@ -16,6 +16,10 @@ module.exports = {
             //     test: /\.wasm$/,
             //     use: 'wasm-loader'
             // },
+            {
+                test: /\.png/,
+                type: 'asset/inline'
+            },
         ],
     },
     resolve: {

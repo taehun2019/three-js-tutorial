@@ -10,11 +10,17 @@ module.exports = {
         hot: true,
     },
     module: {
-        rules: [{
-            test: /\.tsx?$/,
-            use: 'ts-loader',
-            exclude: /node_modules/,
-        }, ],
+        rules: [
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            }, 
+            {
+                test: /\.png/,
+                type: 'asset/inline'
+            },
+        ],
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],

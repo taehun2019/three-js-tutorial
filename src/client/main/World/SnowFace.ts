@@ -1,5 +1,6 @@
 import AssetManager from '../../common/AssetManager';
 import * as THREE from 'three'
+import face from './../../assets/images/face.png'
 
 export default class SnowFace extends THREE.Object3D {
     face: THREE.Mesh;
@@ -11,9 +12,8 @@ export default class SnowFace extends THREE.Object3D {
         // loader.load()
         this.face = new THREE.Mesh();
 
-        // AssetManager.getInstance().finishLoadAction = () => this.loadTexture();
-        // AssetManager.getInstance().finishLoadAction.addListener('finish', () => this.loadTexture());
-        AssetManager.getInstance().load('resources/face.png', this.loadTexture.bind(this));
+        // AssetManager.getInstance().load('resources/face.png', this.loadTexture.bind(this));
+        AssetManager.getInstance().load(face, this.loadTexture.bind(this));
         
     }
 

@@ -5,6 +5,9 @@ import Snow from './Snow';
 import SnowTrail from './SnowTrail';
 // import { Vector2, Vector3 } from 'three';
 
+import AssetManager from './../../common/AssetManager'
+import shadow from './../../assets/images/circle.png'
+
 const Vector2 = THREE.Vector2;
 const Vector3 = THREE.Vector3;
 
@@ -35,19 +38,23 @@ export default class Player extends THREE.Object3D {
         this.snow = new Snow(scene);
         this.add(this.snow);
 
-        // const plane = new THREE.Mesh(
-        //     new THREE.PlaneBufferGeometry(10, 10),
-        //     new THREE.ShadowMaterial({
-        //         color: 0x92A2B5, transparent: true, opacity: 0.5
-        //     })
-        // );
-        // plane.rotation.x = -Math.PI / 2;
-        // plane.receiveShadow = true;
-        // // plane.position.y = -1;
-        // this.add(plane);
+
+        AssetManager.getInstance().load(shadow, (texture: THREE.Texture) => {
+            const plane = new THREE.Mesh(
+                new THREE.PlaneGeometry(2.3, 2.3),
+                new THREE.MeshBasicMaterial({
+                    //https://discourse.threejs.org/t/threejs-and-the-transparent-problem/11553/4
+                    map: texture, color: 0x92a2b5, transparent: true, opacity: 0.5, depthWrite: false, depthTest: true //side: THREE.FrontSide
+                })
+            );
+            plane.rotation.x = -Math.PI / 2;
+            plane.position.y = 0.3;
+            // plane.receiveShadow = true;
+            // plane.position.y = -1;
+            this.add(plane);
+        });
 
 
-        
         // const gui = GUIManager.getInstance().gui;
         // const folder = gui.addFolder("Player");
         // let subFolder;

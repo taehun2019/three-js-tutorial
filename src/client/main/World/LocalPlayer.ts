@@ -13,6 +13,7 @@ export default class LocalPlayer extends Player {
     constructor(scene: THREE.Scene) {
         super(scene);
         this.arrow = new Arrow(scene);
+        this.arrow.position.y = 0.2;
         this.add(this.arrow);
         this.arrow.scale.set(0.2, 0.2, 0.2);
     }

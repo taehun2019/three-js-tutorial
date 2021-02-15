@@ -98,7 +98,7 @@ export default class World extends THREE.Scene {
         // // this.light.shadow.camera.zoom = 10;
         // this.light.shadow.mapSize.set(1024, 1024); //= new THREE.Vector2()
 
-        
+
         // const gui = GUIManager.getInstance().gui;
         // const folder = gui.addFolder("Light");
         // let subFolder;
@@ -221,6 +221,8 @@ export default class World extends THREE.Scene {
 
         this.mainCamera.init(this.localPlayer);
         this.vibrateCooldown = false;
+
+        // this.checkCollision();
     }
 
     update(deltaTime: number) {

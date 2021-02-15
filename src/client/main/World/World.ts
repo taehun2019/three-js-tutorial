@@ -83,18 +83,18 @@ export default class World extends THREE.Scene {
         this.light.position.set(0, 100, 0);
         scene.add(this.light);
 
-        const gui = GUIManager.getInstance().gui;
-        const folder = gui.addFolder("Light");
-        let subFolder;
-        subFolder = folder.addFolder("Position")
-        subFolder.add(this.light.position, "x", -100, 100, 0.1)
-        subFolder.add(this.light.position, "y", -100, 100, 0.1)
-        subFolder.add(this.light.position, "z", -100, 100, 0.1)
-        subFolder = folder.addFolder("Rotation")
-        subFolder.add(this.light.rotation, "x", -5, 5, 0.1)
-        subFolder.add(this.light.rotation, "y", -5, 5, 0.1)
-        subFolder.add(this.light.rotation, "z", -5, 5, 0.1)
-        folder.open();
+        // const gui = GUIManager.getInstance().gui;
+        // const folder = gui.addFolder("Light");
+        // let subFolder;
+        // subFolder = folder.addFolder("Position")
+        // subFolder.add(this.light.position, "x", -100, 100, 0.1)
+        // subFolder.add(this.light.position, "y", -100, 100, 0.1)
+        // subFolder.add(this.light.position, "z", -100, 100, 0.1)
+        // subFolder = folder.addFolder("Rotation")
+        // subFolder.add(this.light.rotation, "x", -5, 5, 0.1)
+        // subFolder.add(this.light.rotation, "y", -5, 5, 0.1)
+        // subFolder.add(this.light.rotation, "z", -5, 5, 0.1)
+        // folder.open();
 
         this.localPlayer = new LocalPlayer(scene);
         scene.add(this.localPlayer);
@@ -184,11 +184,12 @@ export default class World extends THREE.Scene {
         // }
         // }
 
+        
         // let asdf = new ParticleSystem();
-        let asdf = new ParticleSystem({
-            parent: scene,
-            camera: this.mainCamera.camera,
-        });
+        // let asdf = new ParticleSystem({
+        //     parent: scene,
+        //     camera: this.mainCamera.camera,
+        // });
     }
 
     init() {

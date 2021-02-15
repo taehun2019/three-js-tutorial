@@ -41,7 +41,7 @@ export default class VirtualJoystickManager {
 
     // static onPointerDown(event: PointerEvent) {
     static onPointerDown(event: any) { //MouseEvent) {
-        console.log("onPointerDown");
+        // console.log("onPointerDown");
         VirtualJoystickManager.clicked = true;
 
         const pos = VirtualJoystickManager.pointerEventToViewport(event);
@@ -51,7 +51,7 @@ export default class VirtualJoystickManager {
     static onPointerMove(event: any) { //PointerEvent) {
         if (VirtualJoystickManager.clicked == false)
             return;
-        console.log("onPointerMove");
+        // console.log("onPointerMove");
         const pos = VirtualJoystickManager.pointerEventToViewport(event);
         VirtualJoystickManager.pointerPosition.set(pos.x, pos.y);
 
@@ -60,7 +60,7 @@ export default class VirtualJoystickManager {
         offset.y = VirtualJoystickManager.pointerPosition.y - VirtualJoystickManager.centerPosition.y;
     }
     static onPointerUp(event: any) { //PointerEvent) {
-        console.log("onPointerUp");
+        // console.log("onPointerUp");
         VirtualJoystickManager.clicked = false;
         // VirtualJoystickManager.offset.set(0, 0);
         // console.log("pointer up");

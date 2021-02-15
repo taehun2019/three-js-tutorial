@@ -23,14 +23,14 @@ export default class MainCamera extends THREE.Object3D {
         this.pivot.parent = this;
         this.camera.parent = this.pivot;
 
-        const gui = GUIManager.getInstance().gui;
-        const cameraFolder = gui.addFolder("Camera");
-        cameraFolder.add(this.camera.position, "z", 0, 100, 0.01);
-        const cameraRotationFolder = cameraFolder.addFolder("Rotation");
-        cameraRotationFolder.add(this.pivot.rotation, "x", 0, Math.PI * 2, 0.01);
-        cameraRotationFolder.add(this.pivot.rotation, "y", 0, Math.PI * 2, 0.01);
-        cameraRotationFolder.add(this.pivot.rotation, "z", 0, Math.PI * 2, 0.01);
-        cameraFolder.open();
+        // const gui = GUIManager.getInstance().gui;
+        // const cameraFolder = gui.addFolder("Camera");
+        // cameraFolder.add(this.camera.position, "z", 0, 100, 0.01);
+        // const cameraRotationFolder = cameraFolder.addFolder("Rotation");
+        // cameraRotationFolder.add(this.pivot.rotation, "x", 0, Math.PI * 2, 0.01);
+        // cameraRotationFolder.add(this.pivot.rotation, "y", 0, Math.PI * 2, 0.01);
+        // cameraRotationFolder.add(this.pivot.rotation, "z", 0, Math.PI * 2, 0.01);
+        // cameraFolder.open();
 
         this.target = new THREE.Object3D();
 

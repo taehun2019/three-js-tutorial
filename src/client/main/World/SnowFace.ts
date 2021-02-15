@@ -1,5 +1,8 @@
 import AssetManager from '../../common/AssetManager';
 import * as THREE from 'three'
+//https://webpack.js.org/guides/asset-modules/
+//https://stackoverflow.com/questions/52286068/webpack-cannot-find-image-when-imported-module-not-found
+//https://github.com/microsoft/TypeScript-React-Starter/issues/12
 import face from './../../assets/images/face.png'
 
 export default class SnowFace extends THREE.Object3D {
@@ -7,14 +10,10 @@ export default class SnowFace extends THREE.Object3D {
     constructor() {
         super();
 
-
-        // const loader = new THREE.TextureLoader();
-        // loader.load()
         this.face = new THREE.Mesh();
 
         // AssetManager.getInstance().load('resources/face.png', this.loadTexture.bind(this));
         AssetManager.getInstance().load(face, this.loadTexture.bind(this));
-        
     }
 
     loadTexture(texture: THREE.Texture) {

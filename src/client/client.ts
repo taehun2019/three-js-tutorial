@@ -13,8 +13,48 @@ import AssetManager from './common/AssetManager';
 // const canvas = document.querySelector('#c') as HTMLCanvasElement;
 // canvas.getBoundingClientRect();
 
-// appendChild에서 null일 때 : https://stackoverflow.com/questions/9916747/why-is-document-body-null-in-my-javascript
-window.onload = () => {
+let mraidLoaded = false;
+let windowLoaded = false;
+
+let mraidService: any;
+// console.log('A');
+try {
+    //@ts-ignore
+    mraidService = mraid;
+    if (mraidService.getState() === 'loading')
+        mraidService.addEventListener('ready', () => {
+            mraidLoaded = true;
+            LoadThree();
+        });
+    else {
+        mraidLoaded = true;
+        LoadThree();
+    }
+}
+catch(error) {
+    console.log(error);
+    console.log("mraid is not exist")
+}
+// console.log('B');
+
+// // appendChild에서 null일 때 : https://stackoverflow.com/questions/9916747/why-is-document-body-null-in-my-javascript
+// window.onload = () => {
+//     windowLoaded = true;
+//     LoadThree();
+// }
+
+if (mraidService === undefined) {
+    LoadThree();
+    // setTimeout(()=>LoadThree(), 1000);
+}
+
+function LoadThree() {
+    // if (windowLoaded === false)
+    //     return;
+    if (mraidService !== undefined && mraidLoaded === false)
+        return;
+    // console.log('C');
+
     const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     // document.body.appendChild(renderer.domElement);
@@ -26,13 +66,19 @@ window.onload = () => {
     // renderer.setClearColor(0x459ce5);
     renderer.setClearColor(0x6783ee);
     const canvas = document.body.lastChild as HTMLCanvasElement;
+
+    // console.log('D');
     
     const stats = Stats()
     document.body.appendChild(stats.dom)
+
+    // console.log('E');
     
     //@ts-ignore
     document.getElementById("bottomBtn").addEventListener("click", function() {
-        console.log("HOHO");
+        // console.log("HOHO");
+        if (mraidService !== undefined)
+            mraidService.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
     }, false);
     
     const scene: THREE.Scene = new THREE.Scene();
@@ -49,10 +95,14 @@ window.onload = () => {
         let gameScene = new MainScene(scene);
         let camera = gameScene.getCamera();
     
+        function updateAspect() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        updateAspect();
         function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight
-            camera.updateProjectionMatrix()
-            renderer.setSize(window.innerWidth, window.innerHeight)
+            updateAspect();
             render()
         }
         window.addEventListener('resize', onWindowResize, false);
@@ -109,7 +159,6 @@ window.onload = () => {
     }
     LoadGame();
 }
-
 
 
 // PhysicsLoader('/ammo', () => LoadGame());

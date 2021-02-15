@@ -33,7 +33,8 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'haha',
             template: 'template.html',
-            filename: 'output.html'
+            filename: 'output.html',
+            inject: 'body',
         }),
         new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/bundle/]), //[/runtime/]),
     ],

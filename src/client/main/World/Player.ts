@@ -35,6 +35,19 @@ export default class Player extends THREE.Object3D {
         this.snow = new Snow(scene);
         this.add(this.snow);
 
+        // const plane = new THREE.Mesh(
+        //     new THREE.PlaneBufferGeometry(10, 10),
+        //     new THREE.ShadowMaterial({
+        //         color: 0x92A2B5, transparent: true, opacity: 0.5
+        //     })
+        // );
+        // plane.rotation.x = -Math.PI / 2;
+        // plane.receiveShadow = true;
+        // // plane.position.y = -1;
+        // this.add(plane);
+
+
+        
         // const gui = GUIManager.getInstance().gui;
         // const folder = gui.addFolder("Player");
         // let subFolder;
@@ -173,8 +186,8 @@ export default class Player extends THREE.Object3D {
             return;
 
         this.scaling = true;
+        this.changeSizeImmediately(+0.01);
         setTimeout(()=>{
-            this.changeSizeImmediately(+0.01);
             // console.log('haha');
             this.scaling = false;
         }, 100);
@@ -185,8 +198,8 @@ export default class Player extends THREE.Object3D {
         
         // console.log('intersection!');
         this.colliding = true;
+        this.changeSizeImmediately(deltaSize);
         setTimeout(() => {
-            this.changeSizeImmediately(deltaSize);
             this.colliding = false;
         }, 10);
     }

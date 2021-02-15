@@ -38,6 +38,8 @@ export default class World extends THREE.Scene {
     enemyPlayers: Player[];
     totalPlayers: Player[];
 
+    vibrateCooldown: boolean;
+
     constructor(scene: THREE.Scene) {
         super();
 
@@ -58,9 +60,10 @@ export default class World extends THREE.Scene {
         // const groundMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xddddff,})
         // const groundMaterial = new THREE.MeshToonMaterial({ color: 0xcee4ff,})
         const groundMaterial = new THREE.MeshToonMaterial({ color: 0xaabbff,})
-        this.ground = new THREE.Mesh(groundGeometry, groundMaterial)
+        this.ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        // this.ground.receiveShadow = true;
         scene.add(this.ground)
-        this.ground.position.y = -2;
+        this.ground.position.y = -2.52;
 
 
         const waterGeometry: THREE.PlaneGeometry = new THREE.PlaneGeometry(1000, 1000);
@@ -81,8 +84,21 @@ export default class World extends THREE.Scene {
 
         this.light = new THREE.DirectionalLight(0xffffff, 1.3);
         this.light.position.set(0, 100, 0);
+        // this.light.castShadow = true;
         scene.add(this.light);
 
+        // const cameraHelper = new THREE.CameraHelper(this.light.shadow.camera);
+        // scene.add(cameraHelper);
+        // this.light.shadow.camera.left   = -40;
+        // this.light.shadow.camera.right  = +40;
+        // this.light.shadow.camera.top    = -40;
+        // this.light.shadow.camera.bottom = +40;
+        // // this.light.shadow.camera.near   = 0.5;
+        // // this.light.shadow.camera.far    = 20;
+        // // this.light.shadow.camera.zoom = 10;
+        // this.light.shadow.mapSize.set(1024, 1024); //= new THREE.Vector2()
+
+        
         // const gui = GUIManager.getInstance().gui;
         // const folder = gui.addFolder("Light");
         // let subFolder;
@@ -184,12 +200,14 @@ export default class World extends THREE.Scene {
         // }
         // }
 
-        
+
         // let asdf = new ParticleSystem();
         // let asdf = new ParticleSystem({
         //     parent: scene,
         //     camera: this.mainCamera.camera,
         // });
+
+        this.vibrateCooldown = false;
     }
 
     init() {
@@ -197,11 +215,12 @@ export default class World extends THREE.Scene {
         
         for (let index = 0; index < this.enemyPlayers.length; index++) {
             const posX = THREE.MathUtils.randInt(-30, 30);
-            const posY = THREE.MathUtils.randInt(-30, 30);
-            this.enemyPlayers[index].init(colors[index + 1],posX, posY);
+            const posZ = THREE.MathUtils.randInt(-30, 30);
+            this.enemyPlayers[index].init(colors[index + 1],posX, posZ);
         }
 
         this.mainCamera.init(this.localPlayer);
+        this.vibrateCooldown = false;
     }
 
     update(deltaTime: number) {
@@ -284,6 +303,14 @@ export default class World extends THREE.Scene {
             smallerPlayer.position.add(pushSmallerVector);
             // smallerPlayer.position.add(new Vector3(0.1,0.1,0.1));
             biggerPlayer.position.add(pushBiggerVector);
+
+            if (biggerPlayer === this.localPlayer)
+            {
+                if (smallerPlayer.visible === false)
+                    this.vibrate(50, true);
+                else
+                    this.vibrate(10);
+            }
         }
     }
     getAliveEnemyNum() {
@@ -293,5 +320,21 @@ export default class World extends THREE.Scene {
                 aliveNum++;
         });
         return aliveNum;
+    }
+
+    vibrate(millisecond: number, immediately: boolean = false) {
+        if (immediately === false && this.vibrateCooldown === true)
+            return;
+
+        if (immediately === true)
+            window.navigator.vibrate(0);
+
+        window.navigator.vibrate(millisecond);
+        console.log(`vibrate ${millisecond}`);
+
+        this.vibrateCooldown = true;
+        setTimeout(() => {
+            this.vibrateCooldown = false;
+        }, millisecond);
     }
 }

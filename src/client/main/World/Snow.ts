@@ -15,14 +15,15 @@ export default class Snow extends THREE.Object3D {
         // const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, })
         this.bodyMaterial = new THREE.MeshToonMaterial({ color: 0x00ff00, })
         
-        this.body = new THREE.Mesh(geometry, this.bodyMaterial)
+        this.body = new THREE.Mesh(geometry, this.bodyMaterial);
+        // this.body.castShadow = true;
         this.add(this.body);
 
         this.eyes = new SnowFace();
         this.body.add(this.eyes);
         this.eyes.position.set(0, 0.0, 1.0);
 
-        this.position.y = 1;
+        this.position.y = 0.8; //1;
 
         // const gui = GUIManager.getInstance().gui;
         

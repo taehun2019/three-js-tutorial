@@ -332,7 +332,7 @@ export default class World extends THREE.Scene {
             window.navigator.vibrate(0);
 
         window.navigator.vibrate(millisecond);
-        console.log(`vibrate ${millisecond}`);
+        // console.log(`vibrate ${millisecond}`);
 
         this.vibrateCooldown = true;
         setTimeout(() => {

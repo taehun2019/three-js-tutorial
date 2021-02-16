@@ -8,6 +8,8 @@ import { GUI } from 'three/examples/jsm/libs/dat.gui.module'
 import MainScene from './main/MainScene';
 import VirtualJoystickManager from './common/VirtualJoystickManager';
 import AssetManager from './common/AssetManager';
+import title from './assets/images/snow_roll_title.png'
+// import titleFont from './assets/fonts/FredokaOne-Regular.ttf'
 
 // //https://threejsfundamentals.org/threejs/lessons/threejs-fundamentals.html
 // const canvas = document.querySelector('#c') as HTMLCanvasElement;
@@ -48,6 +50,14 @@ if (mraidService === undefined) {
     // setTimeout(()=>LoadThree(), 1000);
 }
 
+function printGraph(obj: THREE.Object3D) {
+    // console.group(obj.name + ' <%o> ', obj);
+    const groupName = obj.constructor.name + ((obj.name === '') ? '' : ` (${obj.name})`);
+    console.groupCollapsed(groupName);
+    obj.children.forEach(printGraph);
+    console.groupEnd();
+};
+
 function LoadThree() {
     // if (windowLoaded === false)
     //     return;
@@ -68,6 +78,15 @@ function LoadThree() {
     renderer.setClearColor(0x6783ee);
     const canvas = document.body.lastChild as HTMLCanvasElement;
 
+    const titleImage = document.getElementById("title") as HTMLImageElement;
+    titleImage.src = title;
+    // titleImage.onclick = () => {
+    //     console.log('hahaha');
+    // }
+
+    // const titleText = document.getElementById("title")?.style;
+    // titleText?.fontFamily = titleFont;
+
     // console.log('D');
     
     const stats = Stats()
@@ -75,16 +94,17 @@ function LoadThree() {
 
     // console.log('E');
     
-    //@ts-ignore
-    document.getElementById("bottomBtn").addEventListener("click", function() {
-        // console.log("HOHO");
-        if (mraidService !== undefined)
-            mraidService.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
-    }, false);
+    // //@ts-ignore
+    // document.getElementById("bottomBtn").addEventListener("click", function() {
+    //     // console.log("HOHO");
+    //     if (mraidService !== undefined)
+    //         mraidService.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
+    // }, false);
     
-    const scene: THREE.Scene = new THREE.Scene();
+    // const rootScene: THREE.Scene = new THREE.Scene();
+    const gameScene = new MainScene();
     const axesHelper = new THREE.AxesHelper(5);
-    scene.add(axesHelper);
+    gameScene.add(axesHelper);
     
     
     const LoadGame = () => {
@@ -93,8 +113,18 @@ function LoadThree() {
         const virtualJoystickManager = VirtualJoystickManager.getInstance(canvas);
         const assetManager = AssetManager.getInstance();
     
-        let gameScene = new MainScene(scene);
+        // let gameScene = new MainScene(rootScene);
+        // rootScene.add(gameScene);
         let camera = gameScene.getCamera();
+        // console.log(gameScene);
+        printGraph(gameScene);
+
+        gameScene.callbacks.addListener('init', () => {
+            titleImage.style.visibility = 'visible';
+        });
+        gameScene.callbacks.addListener('start', () => {
+            titleImage.style.visibility = 'hidden';
+        })
     
         function updateAspect() {
             camera.aspect = window.innerWidth / window.innerHeight;
@@ -117,10 +147,13 @@ function LoadThree() {
                 gameScene.world.localPlayer.changeSizeImmediately(-0.1);
             }
             if (event.key == 'o') {
-                gameScene.isPlaying = !gameScene.isPlaying;
+                gameScene.pause = !gameScene.pause;
             }
             if (event.key == 'i') {
                 gameScene.init();
+            }
+            if (event.key == 'e') {
+                gameScene.world.mainCamera.confettiEffect.play();
             }
         }
         function onKeyUp(event: KeyboardEvent) {
@@ -153,14 +186,13 @@ function LoadThree() {
         };
     
         function render() {
-            renderer.render(scene, camera)
+            renderer.render(gameScene, camera)
         }
     
         animate(0);
     }
     LoadGame();
 }
-
 
 // PhysicsLoader('/ammo', () => LoadGame());
 

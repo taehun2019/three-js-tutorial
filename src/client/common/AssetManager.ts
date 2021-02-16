@@ -1,5 +1,5 @@
-import * as EventEmitter from 'events';
 import * as THREE from 'three';
+import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 export default class AssetManager {
     private static instance: AssetManager;
@@ -11,21 +11,26 @@ export default class AssetManager {
     }
 
     textures: Map<string, THREE.Texture>;
+    gltfs: Map<string, GLTF>;
     //https://basarat.gitbook.io/typescript/main-1/typed-event
     // finishLoadAction: EventEmitter;
 
     textureLoader: THREE.TextureLoader;
+    gltfLoader: GLTFLoader;
 
     constructor() {
         this.textures = new Map<string, THREE.Texture>();
+        this.gltfs = new Map<string, GLTF>();
         // this.finishLoadAction = ()=>{};
         // this.finishLoadAction = new EventEmitter();
 
         this.textureLoader = new THREE.TextureLoader();
+        this.gltfLoader = new GLTFLoader();
+
     }
 
-    load(url: string, finishAction: Function) {
-        if (this.textures.has(url) == true)
+    loadTexture(url: string, finishAction: Function) {
+        if (this.textures.has(url) === true)
             finishAction(this.textures.get(url));
         else
             this.textureLoader.loadAsync(url, this.onProgress).then((value) => this.onFulfilled(value, url, finishAction), this.onRejected);
@@ -44,5 +49,16 @@ export default class AssetManager {
     }
     onRejected(reason: any) {
         console.log(reason.toString());
+    }
+
+    // gltf.scene으로 사용.
+    loadGltf(url: string, finishAction: Function) {
+        if (this.gltfs.has(url) === true)
+            finishAction(this.gltfs.get(url));
+        else
+            this.gltfLoader.loadAsync(url, this.onProgress).then((value) => {
+                this.gltfs.set(url, value);
+                finishAction(value);
+            });
     }
 }

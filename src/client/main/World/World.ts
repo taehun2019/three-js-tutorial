@@ -13,6 +13,7 @@ import MainCamera from '../../common/MainCamera';
 
 // v = require('./../../common/ParticleSystem');
 import ParticleSystem from './../../common/ParticleSystem'
+import Crown from './Crown';
 
 const enemyNum = 7;
 
@@ -38,6 +39,8 @@ export default class World extends THREE.Scene {
     enemyPlayers: Player[];
     totalPlayers: Player[];
 
+    crown: Crown;
+
     vibrateCooldown: boolean;
 
     constructor(scene: THREE.Scene) {
@@ -46,23 +49,17 @@ export default class World extends THREE.Scene {
         // this.physics = new AmmoPhysics(scene as any);
         // this.physics.debug?.enable();
 
-        this.mainCamera = new MainCamera(scene);
-        this.mainCamera.setLength(40);
-        this.mainCamera.setRotationX(5.2);
+        this.mainCamera = new MainCamera();
+        // this.mainCamera.setRotationX(5.2);
+        this.mainCamera.setRotationX((300 / 180) * Math.PI);
+        this.add(this.mainCamera);
 
-        // const geome: THREE.SphereGeometry = new THREE.SphereGeometry(50, 20, 20);
-        // const mat: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-        // const box = new THREE.Mesh(geome, mat);
-        // scene.add(box);
-    
         const groundGeometry: THREE.CylinderGeometry = new THREE.CylinderGeometry(40, 40, 5, 20);
-        // const groundMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true })
-        // const groundMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xddddff,})
-        // const groundMaterial = new THREE.MeshToonMaterial({ color: 0xcee4ff,})
         const groundMaterial = new THREE.MeshToonMaterial({ color: 0xaabbff,})
         this.ground = new THREE.Mesh(groundGeometry, groundMaterial);
         // this.ground.receiveShadow = true;
-        scene.add(this.ground)
+        this.ground.name = 'Ground'
+        this.add(this.ground)
         this.ground.position.y = -2.52;
 
 
@@ -71,8 +68,8 @@ export default class World extends THREE.Scene {
         const water = new THREE.Mesh(waterGeometry, waterMaterial)
         water.rotation.x = -90 * THREE.MathUtils.DEG2RAD;
         water.position.y = -5;
-        scene.add(water)
-        // water.position.y = -2;
+        water.name = 'Water'
+        this.add(water)
 
         // this.physics.add.existing(this.ground);
         // PhysicsLoader('/lib', () => { });
@@ -85,7 +82,7 @@ export default class World extends THREE.Scene {
         this.light = new THREE.DirectionalLight(0xffffff, 1.3);
         this.light.position.set(0, 100, 0);
         // this.light.castShadow = true;
-        scene.add(this.light);
+        this.add(this.light);
 
         // const cameraHelper = new THREE.CameraHelper(this.light.shadow.camera);
         // scene.add(cameraHelper);
@@ -113,12 +110,12 @@ export default class World extends THREE.Scene {
         // folder.open();
 
         this.localPlayer = new LocalPlayer(scene);
-        scene.add(this.localPlayer);
+        this.add(this.localPlayer);
 
         this.enemyPlayers = [];
         for (let index = 0; index < enemyNum; index++) {
             this.enemyPlayers[index] = new Player(scene);
-            scene.add(this.enemyPlayers[index]);
+            this.add(this.enemyPlayers[index]);
         }
 
         this.totalPlayers = [];
@@ -126,9 +123,6 @@ export default class World extends THREE.Scene {
         for (let index = 0; index < enemyNum; index++) {
             this.totalPlayers[index + 1] = this.enemyPlayers[index];
         }
-
-        // this.init();
-
 
         // this.physics.add.box({ x: 0.05, y: 10 }, { lambert: { color: 0x2194ce } })
 
@@ -208,6 +202,9 @@ export default class World extends THREE.Scene {
         // });
 
         this.vibrateCooldown = false;
+
+        this.crown = new Crown();
+        this.add(this.crown);
     }
 
     init() {
@@ -222,7 +219,12 @@ export default class World extends THREE.Scene {
         this.mainCamera.init(this.localPlayer);
         this.vibrateCooldown = false;
 
+        this.crown.visible = false;
         // this.checkCollision();
+    }
+
+    start() {
+        this.mainCamera.start();
     }
 
     update(deltaTime: number) {
@@ -232,12 +234,15 @@ export default class World extends THREE.Scene {
 
         this.localPlayer.update(deltaTime);
         if (this.localPlayer.onGround == true)
-            this.mainCamera.update();
+            this.mainCamera.update(deltaTime);
         // this.cube.rotation.x += 0.01;
         // this.cube.rotation.y += 0.01;
         for (let index = 0; index < this.enemyPlayers.length; index++) {
             this.enemyPlayers[index].update(deltaTime);
         }
+
+        if (this.crown.visible == true)
+            this.crown.update(deltaTime);
 
         this.checkCollision();
     }
@@ -245,7 +250,7 @@ export default class World extends THREE.Scene {
     checkCollision() {
         for (let aIndex = 0; aIndex < this.totalPlayers.length; aIndex++) {
             const playerA = this.totalPlayers[aIndex];
-            if (playerA.visible == false)
+            if (playerA.isAlive == false)
                 continue;
             // const playerAPos = new Vector3();
             // playerAPos.copy(playerA.position);
@@ -253,7 +258,7 @@ export default class World extends THREE.Scene {
             //충돌 체크.
             for (let bIndex = aIndex + 1; bIndex < this.totalPlayers.length; bIndex++) {
                 const playerB = this.totalPlayers[bIndex];
-                if (playerB.visible == false)
+                if (playerB.isAlive == false)
                     continue;
                 // const playerBPos = new Vector3();
                 // playerBPos.copy(playerB.position);
@@ -306,9 +311,12 @@ export default class World extends THREE.Scene {
             // smallerPlayer.position.add(new Vector3(0.1,0.1,0.1));
             biggerPlayer.position.add(pushBiggerVector);
 
+            if (smallerPlayer.isAlive === false)
+                biggerPlayer.kill(smallerPlayer);
+
             if (biggerPlayer === this.localPlayer)
             {
-                if (smallerPlayer.visible === false)
+                if (smallerPlayer.isAlive === false)
                     this.vibrate(50, true);
                 else
                     this.vibrate(10);
@@ -318,7 +326,7 @@ export default class World extends THREE.Scene {
     getAliveEnemyNum() {
         let aliveNum = 0;
         this.enemyPlayers.forEach(enemyPlayer => {
-            if (enemyPlayer.visible == true)
+            if (enemyPlayer.isAlive == true)
                 aliveNum++;
         });
         return aliveNum;
@@ -338,5 +346,15 @@ export default class World extends THREE.Scene {
         setTimeout(() => {
             this.vibrateCooldown = false;
         }, millisecond);
+    }
+
+    processLocalPlayerWin() {
+        this.localPlayer.stopGrowing = true;
+        this.localPlayer.curMoveSpeed = 0;
+        this.localPlayer.curRotateSpeed = 0;
+
+        this.crown.show(this.localPlayer);
+
+        this.mainCamera.confettiEffect.play();
     }
 }

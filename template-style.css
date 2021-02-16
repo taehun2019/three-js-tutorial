@@ -1,0 +1,27 @@
+@font-face {
+    font-family: FredokaOne;
+    src: url('./src/client/assets/fonts/FredokaOne-Regular.ttf');
+}
+#title {
+    position: absolute;
+    width:100%;
+    height:10%;
+}
+#titleTextAlign {
+    position: absolute;
+    text-align: center;
+    width:100%;
+    height:100%;
+}
+#titleText {
+    font            : bold 60px FredokaOne, Century Gothic, Arial;
+    -webkit-text-stroke: 2px white;
+    background: linear-gradient(to bottom, #eaf100, #00f8ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+#titleTextShadow {
+    font            : bold 60px FredokaOne, Century Gothic, Arial;
+    text-shadow:
+    0px 5px 0 #000;
+}

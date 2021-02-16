@@ -16,12 +16,23 @@ export default class LocalPlayer extends Player {
         this.arrow.position.y = 0.2;
         this.add(this.arrow);
         this.arrow.scale.set(0.2, 0.2, 0.2);
+
+        this.timeGrowSize = 0.012;
     }
 
     init(color: THREE.Color, posX: number, posZ: number) {
         super.init(color, posX, posZ);
 
         // this.curMoveSpeed = 10; //4;
+        this.arrow.visible = true;
+    }
+    kill(player: Player) {
+        super.kill(player);
+        // console.log('show kill effect');
+    }
+    die(showEffect: boolean = false) {
+        super.die(showEffect);
+        this.arrow.visible = false;
     }
 
     update(deltaTime: number) {
@@ -30,7 +41,7 @@ export default class LocalPlayer extends Player {
         this.processInput(deltaTime);
         super.update(deltaTime);
 
-        this.changeSizeImmediately(+0.1 * deltaTime);
+        // this.changeSizeImmediately(+0.1 * deltaTime);
     }
     // updateSpeed() {
     //     this.curMoveSpeed = THREE.MathUtils.lerp(4, 4 * 2, this.scale.x / 10);
@@ -46,17 +57,18 @@ export default class LocalPlayer extends Player {
         this.moveDirection.lerp(inputDirection, deltaTime * 10).normalize();
     }
 
-    changeSizeByElapsingTime() {
-        if (this.scaling == true)
-            return;
-        if (this.colliding == true)
-            return;
+    // changeSizeByElapsingTime() {
+    //     if (this.scaling == true)
+    //         return;
+    //     if (this.colliding == true)
+    //         return;
+    //     if (this.stopGrowing === true)
+    //         return;
 
-        this.scaling = true;
-        setTimeout(()=>{
-            this.changeSizeImmediately(+0.012);
-            // console.log('haha');
-            this.scaling = false;
-        }, 100);
-    }
+    //     this.scaling = true;
+    //     setTimeout(()=>{
+    //         this.changeSizeImmediately(+0.012);
+    //         this.scaling = false;
+    //     }, 100);
+    // }
 }

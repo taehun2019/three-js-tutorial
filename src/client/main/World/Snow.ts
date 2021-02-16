@@ -7,7 +7,7 @@ export default class Snow extends THREE.Object3D {
     body: THREE.Mesh;
     bodyMaterial: THREE.MeshToonMaterial;
     eyes: SnowFace;
-    constructor(scene: THREE.Scene) {
+    constructor() {
         super();
 
         const geometry: THREE.SphereGeometry = new THREE.SphereGeometry(1, 20, 20);
@@ -37,6 +37,7 @@ export default class Snow extends THREE.Object3D {
     }
 
     init(color: THREE.Color) {
+        this.visible = true;
         this.bodyMaterial.color = color;
         // console.log(color);
         this.body.material = this.bodyMaterial;

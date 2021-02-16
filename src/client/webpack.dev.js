@@ -15,9 +15,9 @@ module.exports = {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
                 exclude: /node_modules/,
-            }, 
+            },
             {
-                test: /\.png/,
+                test: /\.(png|glb)/,
                 type: 'asset/inline'
             },
         ],
@@ -33,7 +33,8 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'haha',
             template: 'template.html',
-            filename: 'index.html'
+            filename: 'index.html',
+            inject: 'body',
         })
     ],
     performance: {

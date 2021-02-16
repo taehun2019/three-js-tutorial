@@ -3,17 +3,22 @@ import VirtualJoystickManager from './../common/VirtualJoystickManager';
 import * as THREE from 'three'
 // import { Scene3D, THREE } from 'enable3d';
 import World from './World/World';
+import * as EventEmitter from 'events';
 
 export default class MainScene extends THREE.Scene {
     world: World;
     isPlaying: boolean;
-    constructor(scene: THREE.Scene) {
+    pause: boolean;
+    callbacks: EventEmitter;
+    // constructor(scene: THREE.Scene) {
+    constructor() {
         super();
         
-        this.world = new World(scene);
+        this.world = new World(this);
+        this.add(this.world);
         this.isPlaying = false;
+        this.pause = false;
 
-        this.init();
         this.world.localPlayer.dieAction = () => {
             this.lose();
         };
@@ -23,21 +28,37 @@ export default class MainScene extends THREE.Scene {
                     this.win();
             };
         });
+        this.callbacks = new EventEmitter();
+        
+        this.init();
+
+        console.log(this);
     }
 
     init() {
+        this.isPlaying = false;
+
         this.world.init();
+        this.callbacks.emit('init');
     }
 
     getCamera() {
         return this.world.mainCamera.camera;
     }
 
+    start() {
+        this.isPlaying = true;
+        this.world.start();
+        this.callbacks.emit('start');
+    }
+
     update(deltaTime: number) {
+        if (this.pause == true)
+            return;
         if (this.isPlaying == false)
         {
             if (VirtualJoystickManager.clicked == true)
-                this.isPlaying = true;
+                this.start();
             return;
         }
         this.world.update(deltaTime);
@@ -48,6 +69,9 @@ export default class MainScene extends THREE.Scene {
         //     return;
         // this.isPlaying = false;
         console.log('win');
+        // this.world.localPlayer.isAlive = false;
+
+        this.world.processLocalPlayerWin();
     }
 
     lose() {

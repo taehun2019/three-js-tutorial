@@ -7,6 +7,7 @@ import SnowTrail from './SnowTrail';
 
 import AssetManager from './../../common/AssetManager'
 import shadow from './../../assets/images/circle.png'
+import DieEffect from './DieEffect';
 
 const Vector2 = THREE.Vector2;
 const Vector3 = THREE.Vector3;
@@ -18,40 +19,49 @@ export default class Player extends THREE.Object3D {
     dieAction: Function = () => { };
 
     snow: Snow;
-    keyboard: any;
+    shadow: THREE.Mesh;
+    color: THREE.Color;
+    dieEffect: DieEffect;
+    // keyboard: any;
+
     moveDirection: THREE.Vector2;
+    timeGrowSize: number;
 
     curMoveSpeed: number;
     curRotateSpeed: number;
 
     velocityY: number;
 
+    isAlive: boolean;
     onGround: boolean;
     scaling: boolean;
     colliding: boolean;
+    stopGrowing: boolean;
 
     snowTrailLeft: SnowTrail;
     snowTrailRight: SnowTrail;
 
     constructor(scene: THREE.Scene) {
         super();
-        this.snow = new Snow(scene);
+        this.snow = new Snow();
+        this.color = new THREE.Color('white');
         this.add(this.snow);
 
+        this.shadow = new THREE.Mesh();
 
-        AssetManager.getInstance().load(shadow, (texture: THREE.Texture) => {
-            const plane = new THREE.Mesh(
+        AssetManager.getInstance().loadTexture(shadow, (texture: THREE.Texture) => {
+            this.shadow = new THREE.Mesh(
                 new THREE.PlaneGeometry(2.3, 2.3),
                 new THREE.MeshBasicMaterial({
                     //https://discourse.threejs.org/t/threejs-and-the-transparent-problem/11553/4
                     map: texture, color: 0x92a2b5, transparent: true, opacity: 0.5, depthWrite: false, depthTest: true //side: THREE.FrontSide
                 })
             );
-            plane.rotation.x = -Math.PI / 2;
-            plane.position.y = 0.3;
+            this.shadow.rotation.x = -Math.PI / 2;
+            this.shadow.position.y = 0.3;
             // plane.receiveShadow = true;
             // plane.position.y = -1;
-            this.add(plane);
+            this.add(this.shadow);
         });
 
 
@@ -80,6 +90,8 @@ export default class Player extends THREE.Object3D {
         this.onGround = true;
         this.scaling = false;
         this.colliding = false;
+        this.isAlive = true;
+        this.stopGrowing = false;
 
         this.snowTrailLeft = new SnowTrail(scene);
         this.snowTrailLeft.position.set(0.7, 0.5, -0.7); // = -1;
@@ -89,12 +101,21 @@ export default class Player extends THREE.Object3D {
         this.snowTrailRight.position.set(-0.7, 0.5, -0.7); // = -1;
         this.add(this.snowTrailRight);
 
+        this.dieEffect = new DieEffect();
+        this.dieEffect.position.y = 3;
+        this.add(this.dieEffect);
+
+        this.timeGrowSize = 0.01;
     }
 
     init(color: THREE.Color, posX: number, posZ: number) {
         this.visible = true;
 
+        this.color = color;
         this.snow.init(color);
+
+        this.shadow.visible = true;
+
         const raycaster = new THREE.Raycaster(this.position, new Vector3(0, -1, 0), 0, 1);
         // raycaster.intersectObject()
         this.position.set(posX, 0, posZ);
@@ -115,19 +136,25 @@ export default class Player extends THREE.Object3D {
         this.curRotateSpeed = Player.initRotateSpeed;
 
         this.velocityY = 0;
+        this.isAlive = true;
         this.onGround = true;
         this.scaling = false;
         this.colliding = false;
+        this.stopGrowing = false;
 
         this.snowTrailLeft.init();
         this.snowTrailRight.init();
+
+        this.dieEffect.init(color);
+        this.dieEffect.visible = false;
     }
 
     update(deltaTime: number) {
-        this.snowTrailLeft.update(deltaTime, this.onGround);
-        this.snowTrailRight.update(deltaTime, this.onGround);
+        this.snowTrailLeft.update(deltaTime,  (this.onGround && this.isAlive));
+        this.snowTrailRight.update(deltaTime, (this.onGround && this.isAlive));
+        this.dieEffect.update(deltaTime);
 
-        if (this.visible == false)
+        if (this.isAlive == false)
             return;
             
         // this.snow.rotation.x += 90 * THREE.MathUtils.DEG2RAD * deltaTime;
@@ -174,12 +201,26 @@ export default class Player extends THREE.Object3D {
 
         if (newSize < 1)
         {
-            this.die();
+            this.die(true);
         }
     }
-    die() {
-        this.visible = false;
+    kill(player: Player) {
+        this.changeSizeImmediately(+0.5);
+    }
+    die(showEffect: boolean = false) {
+        this.isAlive = false;
+        // this.visible = false;
+        this.snow.visible = false;
+        this.shadow.visible = false;
         this.dieAction();
+
+        if (showEffect === true) {
+            this.dieEffect.visible = true;
+            this.dieEffect.play();
+            setTimeout(() => {
+                this.dieEffect.visible = false;
+            }, 3000);
+        }
     }
     updateSpeed() {
         this.curMoveSpeed = THREE.MathUtils.lerp(Player.initMoveSpeed, Player.initMoveSpeed * 2.5, THREE.MathUtils.clamp((this.scale.x - 1) / (5 - 1), 0, 1));
@@ -187,15 +228,16 @@ export default class Player extends THREE.Object3D {
     }
 
     changeSizeByElapsingTime() {
-        if (this.scaling == true)
+        if (this.scaling === true)
             return;
-        if (this.colliding == true)
+        if (this.colliding === true)
+            return;
+        if (this.stopGrowing === true)
             return;
 
         this.scaling = true;
-        this.changeSizeImmediately(+0.01);
+        this.changeSizeImmediately(this.timeGrowSize);
         setTimeout(()=>{
-            // console.log('haha');
             this.scaling = false;
         }, 100);
     }

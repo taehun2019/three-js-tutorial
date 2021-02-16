@@ -12,12 +12,8 @@ module.exports = {
                 use: 'ts-loader',
                 exclude: /node_modules/,
             },
-            // {
-            //     test: /\.wasm$/,
-            //     use: 'wasm-loader'
-            // },
             {
-                test: /\.png/,
+                test: /\.(png|glb)/,
                 type: 'asset/inline'
             },
         ],

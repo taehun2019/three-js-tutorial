@@ -13,7 +13,7 @@ export default class SnowFace extends THREE.Object3D {
         this.face = new THREE.Mesh();
 
         // AssetManager.getInstance().load('resources/face.png', this.loadTexture.bind(this));
-        AssetManager.getInstance().load(face, this.loadTexture.bind(this));
+        AssetManager.getInstance().loadTexture(face, this.loadTexture.bind(this));
     }
 
     loadTexture(texture: THREE.Texture) {

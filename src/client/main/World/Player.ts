@@ -17,6 +17,7 @@ export default class Player extends THREE.Object3D {
     static initRotateSpeed: number = 800; //200;
 
     dieAction: Function = () => { };
+    killCountAction: Function = () => { };
 
     snow: Snow;
     shadow: THREE.Mesh;
@@ -40,6 +41,8 @@ export default class Player extends THREE.Object3D {
 
     snowTrailLeft: SnowTrail;
     snowTrailRight: SnowTrail;
+
+    killCount = 0;
 
     constructor(scene: THREE.Scene) {
         super();
@@ -116,21 +119,13 @@ export default class Player extends THREE.Object3D {
 
         this.shadow.visible = true;
 
-        const raycaster = new THREE.Raycaster(this.position, new Vector3(0, -1, 0), 0, 1);
-        // raycaster.intersectObject()
         this.position.set(posX, 0, posZ);
-        // console.log(`input : posX:${posX}/posY:${posZ}`);
-        // console.log(`this.positin : posX:${this.position.x}/posY:${this.position.z}`);
-
-        // this.scale.set(0.5, 0.5, 0.5);
         this.scale.set(1,1,1);
-        // this.scale.setLength(1);
 
         this.moveDirection.x = THREE.MathUtils.randFloat(-1, 1);
         this.moveDirection.y = THREE.MathUtils.randFloat(-1, 1);
         this.moveDirection = this.moveDirection.normalize();
-        // console.log(this.moveDirection);
-        this.rotate(0);
+        this.rotate();
 
         this.curMoveSpeed = Player.initMoveSpeed;
         this.curRotateSpeed = Player.initRotateSpeed;
@@ -147,9 +142,13 @@ export default class Player extends THREE.Object3D {
 
         this.dieEffect.init(color);
         this.dieEffect.visible = false;
+
+        this.killCount = 0;
     }
 
     update(deltaTime: number) {
+        this.processInput(deltaTime);
+
         this.snowTrailLeft.update(deltaTime,  (this.onGround && this.isAlive));
         this.snowTrailRight.update(deltaTime, (this.onGround && this.isAlive));
         this.dieEffect.update(deltaTime);
@@ -178,10 +177,13 @@ export default class Player extends THREE.Object3D {
 
         this.changeSizeByElapsingTime(deltaTime);
 
-        this.rotate(deltaTime);
+        this.rotate();
+    }
+    processInput(deltaTime: number) {
+        
     }
 
-    rotate(deltaTime: number) {
+    rotate() {
         const moveDirection = this.moveDirection;
 
         const newLook = new Vector3().copy(this.position);
@@ -196,7 +198,8 @@ export default class Player extends THREE.Object3D {
 
     changeSizeImmediately(deltaSize: number) {
         let newSize = this.scale.x + deltaSize;
-        this.scale.set(newSize, newSize, newSize);
+        // this.scale.set(newSize, newSize, newSize);
+        this.scale.setScalar(newSize);
         this.updateSpeed();
 
         if (newSize < 1)
@@ -208,6 +211,9 @@ export default class Player extends THREE.Object3D {
         if (this.stopGrowing === true)
             return;
         this.changeSizeImmediately(+0.5);
+
+        this.killCount++;
+        this.killCountAction?.(this.killCount);
     }
     die(showEffect: boolean = false) {
         this.isAlive = false;
@@ -225,33 +231,20 @@ export default class Player extends THREE.Object3D {
         }
     }
     updateSpeed() {
-        this.curMoveSpeed = THREE.MathUtils.lerp(Player.initMoveSpeed, Player.initMoveSpeed * 2.5, THREE.MathUtils.clamp((this.scale.x - 1) / (5 - 1), 0, 1));
-        this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.2, THREE.MathUtils.clamp((this.scale.x - 1) / (5 - 1), 0, 1));
+        this.curMoveSpeed = THREE.MathUtils.lerp(Player.initMoveSpeed, Player.initMoveSpeed * 3.0, THREE.MathUtils.clamp((this.scale.x - 1) / (5 - 1), 0, 1));
+        this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.1, THREE.MathUtils.clamp((this.scale.x - 1) / (4 - 1), 0, 1));
     }
 
     changeSizeByElapsingTime(deltaTime: number) {
-        // if (this.scaling === true)
-        //     return;
         if (this.colliding === true)
             return;
         if (this.stopGrowing === true)
             return;
 
-        // this.scaling = true;
         this.changeSizeImmediately(this.timeGrowSize * deltaTime);
-        // setTimeout(()=>{
-        //     this.scaling = false;
-        // }, 100);
     }
     changeSizeByCollision(deltaSize: number) {
-        // if (this.colliding == true)
-        //     return;
-        
-        // console.log('intersection!');
         this.colliding = true;
         this.changeSizeImmediately(deltaSize);
-        // setTimeout(() => {
-        //     this.colliding = false;
-        // }, 10);
     }
 }

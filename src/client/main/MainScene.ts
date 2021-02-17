@@ -4,9 +4,11 @@ import * as THREE from 'three'
 // import { Scene3D, THREE } from 'enable3d';
 import World from './World/World';
 import * as EventEmitter from 'events';
+import MainUI from './MainUI';
 
 export default class MainScene extends THREE.Scene {
     world: World;
+    ui: MainUI;
     isPlaying: boolean;
     pause: boolean;
     callbacks: EventEmitter;
@@ -14,11 +16,15 @@ export default class MainScene extends THREE.Scene {
     constructor() {
         super();
         
+        this.ui = new MainUI();
         this.world = new World(this);
         this.add(this.world);
         this.isPlaying = false;
         this.pause = false;
 
+        this.world.localPlayer.killCountAction = (count: number) => {
+            this.ui.setKillCount(count);
+        }
         this.world.localPlayer.dieAction = () => {
             this.lose();
         };
@@ -33,12 +39,14 @@ export default class MainScene extends THREE.Scene {
         this.init();
 
         console.log(this);
+
     }
 
     init() {
         this.isPlaying = false;
 
         this.world.init();
+        this.ui.init();
         this.callbacks.emit('init');
     }
 
@@ -48,7 +56,9 @@ export default class MainScene extends THREE.Scene {
 
     start() {
         this.isPlaying = true;
+        
         this.world.start();
+        this.ui.start();
         this.callbacks.emit('start');
     }
 

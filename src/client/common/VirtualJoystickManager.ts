@@ -57,7 +57,7 @@ export default class VirtualJoystickManager {
 
     private onControlStart(event: any) { //MouseEvent) {
         event.preventDefault(); 
-        console.log("onControlStart");
+        // console.log("onControlStart");
         this.clicked = true;
 
         const pos = this.pointerEventToViewport(event);
@@ -80,7 +80,7 @@ export default class VirtualJoystickManager {
     }
     private onControlEnd(event: any) { //PointerEvent) {
         event.preventDefault(); 
-        console.log("onControlEnd");
+        // console.log("onControlEnd");
         this.clicked = false;
         // VirtualJoystickManager.offset.set(0, 0);
         // console.log("pointer up");
@@ -95,7 +95,7 @@ export default class VirtualJoystickManager {
         }
     }
     private getCanvasRelativePosition(event: any) { //PointerEvent) {
-        console.log(`x:${event.clientX}/y:${event.clientY}`)
+        // console.log(`x:${event.clientX}/y:${event.clientY}`)
         const rect = this.canvas.getBoundingClientRect();
         return {
             x: (event.clientX - rect.left) * this.canvas.width / rect.width,
@@ -104,7 +104,7 @@ export default class VirtualJoystickManager {
     }
     private getCanvasRelativePositionByTouch(event: TouchEvent) {
         const touch = event.touches[0];
-        console.log(`x:${touch.clientX}/y:${touch.clientY}`);
+        // console.log(`x:${touch.clientX}/y:${touch.clientY}`);
         const rect = this.canvas.getBoundingClientRect();
         return {
             x: (touch.clientX - rect.left) * this.canvas.width / rect.width,

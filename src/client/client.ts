@@ -8,8 +8,6 @@ import { GUI } from 'three/examples/jsm/libs/dat.gui.module'
 import MainScene from './main/MainScene';
 import VirtualJoystickManager from './common/VirtualJoystickManager';
 import AssetManager from './common/AssetManager';
-import title from './assets/images/snow_roll_title.png'
-// import titleFont from './assets/fonts/FredokaOne-Regular.ttf'
 
 
 let mraidLoaded = false;
@@ -81,21 +79,13 @@ function LoadThree() {
     renderer.setClearColor(0x6783ee);
     // const canvas = document.body.lastChild as HTMLCanvasElement;
 
-    const titleImage = document.getElementById("title") as HTMLImageElement;
-    titleImage.src = title;
     // titleImage.onclick = () => {
     //     console.log('hahaha');
     // }
 
-    // const titleText = document.getElementById("title")?.style;
-    // titleText?.fontFamily = titleFont;
-
-    // console.log('D');
-    
-    const stats = Stats()
-    document.body.appendChild(stats.dom)
-
-    // console.log('E');
+    // 프레임 수 보기.
+    // const stats = Stats()
+    // document.body.appendChild(stats.dom)
     
     // //@ts-ignore
     // document.getElementById("bottomBtn").addEventListener("click", function() {
@@ -104,10 +94,9 @@ function LoadThree() {
     //         mraidService.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
     // }, false);
     
-    // const rootScene: THREE.Scene = new THREE.Scene();
     const gameScene = new MainScene();
-    const axesHelper = new THREE.AxesHelper(5);
-    gameScene.add(axesHelper);
+    // const axesHelper = new THREE.AxesHelper(5);
+    // gameScene.add(axesHelper);
     
     
     const LoadGame = () => {
@@ -122,12 +111,6 @@ function LoadThree() {
         // console.log(gameScene);
         // printGraph(gameScene);
 
-        gameScene.callbacks.addListener('init', () => {
-            titleImage.style.visibility = 'visible';
-        });
-        gameScene.callbacks.addListener('start', () => {
-            titleImage.style.visibility = 'hidden';
-        })
     
         function updateAspect() {
             camera.aspect = window.innerWidth / window.innerHeight;
@@ -157,7 +140,8 @@ function LoadThree() {
                 gameScene.init();
             }
             if (event.key == 'e') {
-                gameScene.world.mainCamera.confettiEffect.play();
+                // gameScene.world.mainCamera.confettiEffect.play();
+                gameScene.world.localPlayer.killEffect.play();
             }
         }
         function onKeyUp(event: KeyboardEvent) {
@@ -185,7 +169,7 @@ function LoadThree() {
     
             render();
     
-            stats.update();
+            // stats.update();
     
             requestAnimationFrame(animate)
         };

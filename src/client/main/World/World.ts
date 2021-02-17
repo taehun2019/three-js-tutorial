@@ -29,7 +29,7 @@ const colors = [
     new THREE.Color(0x00e5e7),
 ]
 
-export default class World extends THREE.Scene {
+export default class World extends THREE.Object3D {
     // cube: THREE.Mesh;
     mainCamera: MainCamera;
     localPlayer: LocalPlayer;
@@ -82,8 +82,11 @@ export default class World extends THREE.Scene {
 
         this.light = new THREE.DirectionalLight(0xffffff, 1.3);
         this.light.position.set(0, 100, 0);
-        // this.light.castShadow = true;
+        this.light.rotation.x = (30 / 180) * Math.PI;
+        this.light.castShadow = true;
+        this.light.target.position.set(0,0,-40);
         this.add(this.light);
+        this.add(this.light.target);
 
         // const cameraHelper = new THREE.CameraHelper(this.light.shadow.camera);
         // scene.add(cameraHelper);
@@ -100,10 +103,10 @@ export default class World extends THREE.Scene {
         // const gui = GUIManager.getInstance().gui;
         // const folder = gui.addFolder("Light");
         // let subFolder;
-        // subFolder = folder.addFolder("Position")
-        // subFolder.add(this.light.position, "x", -100, 100, 0.1)
-        // subFolder.add(this.light.position, "y", -100, 100, 0.1)
-        // subFolder.add(this.light.position, "z", -100, 100, 0.1)
+        // // subFolder = folder.addFolder("Position")
+        // // subFolder.add(this.light.position, "x", -100, 100, 0.1)
+        // // subFolder.add(this.light.position, "y", -100, 100, 0.1)
+        // // subFolder.add(this.light.position, "z", -100, 100, 0.1)
         // subFolder = folder.addFolder("Rotation")
         // subFolder.add(this.light.rotation, "x", -5, 5, 0.1)
         // subFolder.add(this.light.rotation, "y", -5, 5, 0.1)

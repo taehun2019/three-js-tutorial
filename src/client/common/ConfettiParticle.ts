@@ -2,6 +2,7 @@ import * as THREE from 'three'
 
 export default class ConfettiParticle extends THREE.Object3D {
     static terminalFallVelocity = -2;
+    static fallResistance = 5;
 
     moveVelocity: THREE.Vector3;
     rotateVelocity: THREE.Vector3;
@@ -36,7 +37,7 @@ export default class ConfettiParticle extends THREE.Object3D {
         this.mesh.rotation.x += this.rotateVelocity.x * deltaTime;
         
         let newVelocityY = this.moveVelocity.y;
-        newVelocityY -= 5 * deltaTime;
+        newVelocityY -= (10 - ConfettiParticle.fallResistance) * deltaTime;
         if (newVelocityY < ConfettiParticle.terminalFallVelocity)
             newVelocityY = ConfettiParticle.terminalFallVelocity;
 

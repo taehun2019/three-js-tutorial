@@ -17,7 +17,7 @@ export default class LocalPlayer extends Player {
         this.add(this.arrow);
         this.arrow.scale.set(0.2, 0.2, 0.2);
 
-        this.timeGrowSize = 0.012;
+        this.timeGrowSize = 0.24; //0.012;
     }
 
     init(color: THREE.Color, posX: number, posZ: number) {
@@ -50,9 +50,10 @@ export default class LocalPlayer extends Player {
 
     processInput(deltaTime: number) {
     // processInput() {
-        if (VirtualJoystickManager.offset.length() == 0)
+        const joystickOffset = VirtualJoystickManager.getInstance().offset;
+        if (joystickOffset.length() == 0)
             return;
-        const inputDirection = VirtualJoystickManager.offset.normalize();
+        const inputDirection = joystickOffset.normalize();
         // this.moveDirection.lerp(inputDirection, deltaTime * 4);
         this.moveDirection.lerp(inputDirection, deltaTime * 10).normalize();
     }

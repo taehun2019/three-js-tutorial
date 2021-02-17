@@ -105,7 +105,7 @@ export default class Player extends THREE.Object3D {
         this.dieEffect.position.y = 3;
         this.add(this.dieEffect);
 
-        this.timeGrowSize = 0.01;
+        this.timeGrowSize = 0.2; //0.01;
     }
 
     init(color: THREE.Color, posX: number, posZ: number) {
@@ -176,7 +176,7 @@ export default class Player extends THREE.Object3D {
             }
         }
 
-        this.changeSizeByElapsingTime();
+        this.changeSizeByElapsingTime(deltaTime);
 
         this.rotate(deltaTime);
     }
@@ -205,6 +205,8 @@ export default class Player extends THREE.Object3D {
         }
     }
     kill(player: Player) {
+        if (this.stopGrowing === true)
+            return;
         this.changeSizeImmediately(+0.5);
     }
     die(showEffect: boolean = false) {
@@ -227,29 +229,29 @@ export default class Player extends THREE.Object3D {
         this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.2, THREE.MathUtils.clamp((this.scale.x - 1) / (5 - 1), 0, 1));
     }
 
-    changeSizeByElapsingTime() {
-        if (this.scaling === true)
-            return;
+    changeSizeByElapsingTime(deltaTime: number) {
+        // if (this.scaling === true)
+        //     return;
         if (this.colliding === true)
             return;
         if (this.stopGrowing === true)
             return;
 
-        this.scaling = true;
-        this.changeSizeImmediately(this.timeGrowSize);
-        setTimeout(()=>{
-            this.scaling = false;
-        }, 100);
+        // this.scaling = true;
+        this.changeSizeImmediately(this.timeGrowSize * deltaTime);
+        // setTimeout(()=>{
+        //     this.scaling = false;
+        // }, 100);
     }
     changeSizeByCollision(deltaSize: number) {
-        if (this.colliding == true)
-            return;
+        // if (this.colliding == true)
+        //     return;
         
         // console.log('intersection!');
         this.colliding = true;
         this.changeSizeImmediately(deltaSize);
-        setTimeout(() => {
-            this.colliding = false;
-        }, 10);
+        // setTimeout(() => {
+        //     this.colliding = false;
+        // }, 10);
     }
 }

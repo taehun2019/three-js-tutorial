@@ -57,7 +57,7 @@ export default class MainScene extends THREE.Scene {
             return;
         if (this.isPlaying == false)
         {
-            if (VirtualJoystickManager.clicked == true)
+            if (VirtualJoystickManager.getInstance().clicked == true)
                 this.start();
             return;
         }

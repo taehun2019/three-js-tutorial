@@ -11,9 +11,6 @@ import AssetManager from './common/AssetManager';
 import title from './assets/images/snow_roll_title.png'
 // import titleFont from './assets/fonts/FredokaOne-Regular.ttf'
 
-// //https://threejsfundamentals.org/threejs/lessons/threejs-fundamentals.html
-// const canvas = document.querySelector('#c') as HTMLCanvasElement;
-// canvas.getBoundingClientRect();
 
 let mraidLoaded = false;
 let windowLoaded = false;
@@ -58,6 +55,7 @@ function printGraph(obj: THREE.Object3D) {
     console.groupEnd();
 };
 
+
 function LoadThree() {
     // if (windowLoaded === false)
     //     return;
@@ -65,18 +63,23 @@ function LoadThree() {
         return;
     // console.log('C');
 
-    const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    // renderer.shadowMap.enabled = true;
-    // document.body.appendChild(renderer.domElement);
-    document.body.append(renderer.domElement);
-    // document.body.prepend(renderer.domElement);
+    //https://threejsfundamentals.org/threejs/lessons/threejs-fundamentals.html
+    const canvas = document.querySelector('#c') as HTMLCanvasElement;
+    canvas.getBoundingClientRect();
 
-    // const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({canvas});
+    // const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
     // renderer.setSize(window.innerWidth, window.innerHeight);
+    // // renderer.shadowMap.enabled = true;
+    // document.body.append(renderer.domElement);
+
+    const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({canvas});
+    // renderer.setSize(window.innerWidth, window.innerHeight);
+    //참고: https://threejsfundamentals.org/threejs/lessons/threejs-responsive.html
+    renderer.setSize(window.innerWidth * 2, window.innerHeight * 2, false);
+    // renderer.setRenderTarget(null, undefined, 0);
     // renderer.setClearColor(0x459ce5);
     renderer.setClearColor(0x6783ee);
-    const canvas = document.body.lastChild as HTMLCanvasElement;
+    // const canvas = document.body.lastChild as HTMLCanvasElement;
 
     const titleImage = document.getElementById("title") as HTMLImageElement;
     titleImage.src = title;
@@ -117,7 +120,7 @@ function LoadThree() {
         // rootScene.add(gameScene);
         let camera = gameScene.getCamera();
         // console.log(gameScene);
-        printGraph(gameScene);
+        // printGraph(gameScene);
 
         gameScene.callbacks.addListener('init', () => {
             titleImage.style.visibility = 'visible';
@@ -129,7 +132,8 @@ function LoadThree() {
         function updateAspect() {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            // renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(window.innerWidth * 2, window.innerHeight * 2, false);
         }
         updateAspect();
         function onWindowResize() {
@@ -174,6 +178,7 @@ function LoadThree() {
             curElapsedTime = time;
             deltaTime = curElapsedTime - preElapsedTime;
             deltaTime *= 0.001;
+            // console.log(deltaTime);
     
     
             gameScene.update(deltaTime);

@@ -14,6 +14,7 @@ import MainCamera from '../../common/MainCamera';
 // v = require('./../../common/ParticleSystem');
 import ParticleSystem from './../../common/ParticleSystem'
 import Crown from './Crown';
+import DeviceManager from './../../common/DeviceManager';
 
 const enemyNum = 7;
 
@@ -244,10 +245,10 @@ export default class World extends THREE.Scene {
         if (this.crown.visible == true)
             this.crown.update(deltaTime);
 
-        this.checkCollision();
+        this.checkCollision(deltaTime);
     }
 
-    checkCollision() {
+    checkCollision(deltaTime: number) {
         for (let aIndex = 0; aIndex < this.totalPlayers.length; aIndex++) {
             const playerA = this.totalPlayers[aIndex];
             if (playerA.isAlive == false)
@@ -266,7 +267,7 @@ export default class World extends THREE.Scene {
                 // playerB.position.add(playerA.position);
                 // const distance = playerBPos.addScaledVector(playerAPos, -1).length();
                 // console.log("distance:"+distance);
-                this.checkIntersection(playerA, playerB);
+                this.checkIntersection(playerA, playerB, deltaTime);
             }
 
             //땅 체크.
@@ -286,7 +287,7 @@ export default class World extends THREE.Scene {
         }
     }
 
-    checkIntersection(playerA: Player, playerB: Player) {
+    checkIntersection(playerA: Player, playerB: Player, deltaTime: number) {
         const minDistance = playerA.scale.x + playerB.scale.x;
         const curDistance = Math.sqrt(
             (playerB.position.x - playerA.position.x) * (playerB.position.x - playerA.position.x) + 
@@ -298,13 +299,15 @@ export default class World extends THREE.Scene {
             const biggerPlayer = (playerA.scale.x > playerB.scale.x) ? playerA : playerB;
             const smallerPlayer = (playerA.scale.x > playerB.scale.x) ? playerB : playerA;
 
-            biggerPlayer.changeSizeByCollision(+0.005);
-            smallerPlayer.changeSizeByCollision(-0.01);
+            // biggerPlayer.changeSizeByCollision(+0.005);
+            // smallerPlayer.changeSizeByCollision(-0.01);
+            biggerPlayer.changeSizeByCollision(+0.5 * deltaTime);
+            smallerPlayer.changeSizeByCollision(-1 * deltaTime);
 
             // const smallerPosition = smallerPlayer.position;
             // let pushVector = smallerPosition.sub(biggerPlayer.position).setLength(minDistance - curDistance);
             let fromBiggerToSmaller = new Vector3().copy(smallerPlayer.position).sub(biggerPlayer.position);
-            let pushSmallerVector = new Vector3().copy(fromBiggerToSmaller).setLength((minDistance - curDistance) * 0.8);
+            let pushSmallerVector = new Vector3().copy(fromBiggerToSmaller).setLength((minDistance - curDistance) * 0.7);
             let pushBiggerVector = new Vector3().copy(fromBiggerToSmaller).setLength((minDistance - curDistance) * -0.2);
 
             smallerPlayer.position.add(pushSmallerVector);
@@ -337,10 +340,9 @@ export default class World extends THREE.Scene {
             return;
 
         if (immediately === true)
-            window.navigator.vibrate(0);
+            DeviceManager.getInstance().vibrate(0);
 
-        window.navigator.vibrate(millisecond);
-        // console.log(`vibrate ${millisecond}`);
+        DeviceManager.getInstance().vibrate(millisecond);
 
         this.vibrateCooldown = true;
         setTimeout(() => {

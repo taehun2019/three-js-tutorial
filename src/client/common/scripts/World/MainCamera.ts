@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import ConfettiEffect from './ConfettiEffect';
 // import { THREE } from 'enable3d';
 import GUIManager from '../Managers/GUIManager';
+import { Vector3 } from 'three';
 
 export enum CameraState {
     Init,
@@ -54,7 +55,7 @@ export default class MainCamera extends THREE.Object3D {
     init(target: THREE.Object3D) {
         this.target = target;
         if (this.target != null) {
-            this.followTarget(this.target.position);
+            this.followTarget(this.target.getWorldPosition(new THREE.Vector3()));
         }
         this.setLength(5);
 
@@ -82,9 +83,6 @@ export default class MainCamera extends THREE.Object3D {
     update(deltaTime: number) {
         // this.camera.position.z += 100;
         // console.log("cameraZ:"+this.camera.position.z);
-        if (this.target != null) {
-            this.followTarget(this.target.position);
-        }
 
         const length = this.getLength();
         switch (this.state) {
@@ -92,9 +90,14 @@ export default class MainCamera extends THREE.Object3D {
             case CameraState.Start:
                 if (length !== 40)
                     this.setLength(THREE.MathUtils.lerp(length, 40, 4 * deltaTime));
+                if (this.target != null) {
+                    this.followTarget(this.target.getWorldPosition(new Vector3()));
+                }
                 break;
-            // case CameraState.End:
-                // if (length != )
+            case CameraState.End:
+                if (length != this.getLengthByTargetScale())
+                    this.setLength(THREE.MathUtils.lerp(length, this.getLengthByTargetScale(), 4 * deltaTime));
+                break;
         }
 
         if (this.confettiEffect.visible === true)
@@ -102,5 +105,9 @@ export default class MainCamera extends THREE.Object3D {
     }
     followTarget(targetPos: THREE.Vector3) {
         this.position.copy(targetPos);
+    }
+
+    getLengthByTargetScale() {
+        return 8 + Math.pow(this.target.scale.x, 1.8);
     }
 }

@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import World from './World';
 import * as EventEmitter from 'events';
 import MainUI from './MainUI';
+import { CameraState } from 'common/scripts/World/MainCamera';
 
 export default class MainScene extends THREE.Scene {
     world: World;
@@ -85,6 +86,9 @@ export default class MainScene extends THREE.Scene {
             return;
         this.world.update(deltaTime);
     }
+    updateInFinish(deltaTime: number) {
+        this.world.updateInFinish(deltaTime);
+    }
 
     win() {
         // if (this.isPlaying == false)
@@ -94,6 +98,8 @@ export default class MainScene extends THREE.Scene {
         // this.world.localPlayer.isAlive = false;
 
         this.world.processLocalPlayerWin();
+        this.world.mainCamera.state = CameraState.End;
+        this.updateAction = this.updateInFinish;
     }
 
     lose() {

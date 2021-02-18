@@ -13,7 +13,7 @@ export default class SnowTrail extends THREE.Object3D {
     particleList: THREE.Object3D[];
     activeParticleList: Map<THREE.Object3D, number>;
 
-    static particleCount = 100;
+    static particleCount = 200;
 
     constructor(scene: THREE.Scene) {
         super();

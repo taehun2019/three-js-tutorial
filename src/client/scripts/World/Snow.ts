@@ -4,6 +4,7 @@ import SnowFace from './SnowFace';
 // import { THREE } from 'enable3d';
 
 export default class Snow extends THREE.Object3D {
+    static groundOffset = 0.8;
     body: THREE.Mesh;
     bodyMaterial: THREE.MeshToonMaterial;
     eyes: SnowFace;
@@ -23,7 +24,7 @@ export default class Snow extends THREE.Object3D {
         this.body.add(this.eyes);
         this.eyes.position.set(0, 0.0, 1.0);
 
-        this.position.y = 0.8; //1;
+        this.position.y = Snow.groundOffset; //1;
 
         // const gui = GUIManager.getInstance().gui;
         

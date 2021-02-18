@@ -4,9 +4,8 @@ import * as THREE from 'three';
 import Snow from './Snow';
 import SnowTrail from './SnowTrail';
 
-import AssetManager from 'common/scripts/Managers/AssetManager'
-import shadow from 'common/images/circle.png'
 import DieEffect from './DieEffect';
+import Shadow from './Shadow';
 
 const Vector2 = THREE.Vector2;
 const Vector3 = THREE.Vector3;
@@ -19,10 +18,10 @@ export default class Player extends THREE.Object3D {
     killCountAction: Function = () => { };
 
     snow: Snow;
-    shadow: THREE.Mesh;
     color: THREE.Color;
     dieEffect: DieEffect;
     // keyboard: any;
+    shadow: Shadow;
 
     moveDirection: THREE.Vector2;
     timeGrowSize: number;
@@ -49,22 +48,8 @@ export default class Player extends THREE.Object3D {
         this.color = new THREE.Color('white');
         this.add(this.snow);
 
-        this.shadow = new THREE.Mesh();
-
-        AssetManager.getInstance().loadTexture(shadow, (texture: THREE.Texture) => {
-            this.shadow = new THREE.Mesh(
-                new THREE.PlaneGeometry(2.3, 2.3),
-                new THREE.MeshBasicMaterial({
-                    //https://discourse.threejs.org/t/threejs-and-the-transparent-problem/11553/4
-                    map: texture, color: 0x92a2b5, transparent: true, opacity: 0.5, depthWrite: false, depthTest: true //side: THREE.FrontSide
-                })
-            );
-            this.shadow.rotation.x = -Math.PI / 2;
-            this.shadow.position.y = 0.3;
-            // plane.receiveShadow = true;
-            // plane.position.y = -1;
-            this.add(this.shadow);
-        });
+        this.shadow = new Shadow();
+        this.add(this.shadow);
 
 
         // const gui = GUIManager.getInstance().gui;
@@ -234,7 +219,7 @@ export default class Player extends THREE.Object3D {
     }
     updateSpeed() {
         this.curMoveSpeed = THREE.MathUtils.lerp(Player.initMoveSpeed, Player.initMoveSpeed * 3.0, THREE.MathUtils.clamp((this.scale.x - 1) / (5 - 1), 0, 1));
-        this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.1, THREE.MathUtils.clamp((this.scale.x - 1) / (4 - 1), 0, 1));
+        this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.2, THREE.MathUtils.clamp((this.scale.x - 1) / (4 - 1), 0, 1));
     }
 
     changeSizeByElapsingTime(deltaTime: number) {

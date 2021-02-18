@@ -39,6 +39,7 @@ export default class World extends THREE.Object3D {
     
     enemyPlayers: Player[];
     totalPlayers: Player[];
+    // playerShadows: Shadow;
 
     crown: Crown;
 
@@ -254,26 +255,23 @@ export default class World extends THREE.Object3D {
 
         this.checkCollision(deltaTime);
     }
+    updateInFinish(deltaTime: number) {
+        this.localPlayer.update(deltaTime);
+        this.mainCamera.update(deltaTime);
+        this.crown.update(deltaTime);
+    }
 
     checkCollision(deltaTime: number) {
         for (let aIndex = 0; aIndex < this.totalPlayers.length; aIndex++) {
             const playerA = this.totalPlayers[aIndex];
             if (playerA.isAlive == false)
                 continue;
-            // const playerAPos = new Vector3();
-            // playerAPos.copy(playerA.position);
 
             //충돌 체크.
             for (let bIndex = aIndex + 1; bIndex < this.totalPlayers.length; bIndex++) {
                 const playerB = this.totalPlayers[bIndex];
                 if (playerB.isAlive == false)
                     continue;
-                // const playerBPos = new Vector3();
-                // playerBPos.copy(playerB.position);
-                
-                // playerB.position.add(playerA.position);
-                // const distance = playerBPos.addScaledVector(playerAPos, -1).length();
-                // console.log("distance:"+distance);
                 this.checkIntersection(playerA, playerB, deltaTime);
             }
 
@@ -358,11 +356,9 @@ export default class World extends THREE.Object3D {
     }
 
     processLocalPlayerWin() {
-        this.localPlayer.stopGrowing = true;
-        this.localPlayer.curMoveSpeed = 0;
-        this.localPlayer.curRotateSpeed = 0;
+        this.localPlayer.win();
 
-        this.crown.show(this.localPlayer);
+        this.crown.show(this.localPlayer.snow);
 
         this.mainCamera.confettiEffect.play();
     }

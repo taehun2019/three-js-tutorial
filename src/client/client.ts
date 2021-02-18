@@ -125,6 +125,11 @@ function LoadThree() {
         }
         window.addEventListener('resize', onWindowResize, false);
     
+    
+        // const controls = new OrbitControls(camera, renderer.domElement);
+        // //controls.addEventListener('change', render)
+        // controls.enabled = false;
+
         function onKeyDown(event: KeyboardEvent) {
             if (event.key == "q") {
                 gameScene.world.localPlayer.changeSizeImmediately(+0.1);
@@ -142,7 +147,9 @@ function LoadThree() {
             if (event.key == 'e') {
                 // gameScene.world.mainCamera.confettiEffect.play();
                 // gameScene.world.localPlayer.killEffect.play();
-                gameScene.ui.swipeTuto.testNextFingerPoint();
+                // gameScene.ui.swipeTuto.testNextFingerPoint();
+                // gameScene.world.crown.visible = true;
+                gameScene.world.mainCamera.setLength(gameScene.world.mainCamera.getLengthByTargetScale());
             }
         }
         function onKeyUp(event: KeyboardEvent) {
@@ -150,9 +157,7 @@ function LoadThree() {
         }
         document.addEventListener("keydown", onKeyDown, false);
         document.addEventListener("keyup", onKeyUp, false);
-    
-        // const controls = new OrbitControls(camera, renderer.domElement);
-        //controls.addEventListener('change', render)
+
     
         let preElapsedTime: number = 0;
         let curElapsedTime: number = 0;

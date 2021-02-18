@@ -3,6 +3,7 @@ import VirtualJoystickManager from "common/scripts/Managers/VirtualJoystickManag
 import Player from "./Player";
 import Arrow from "./Arrow";
 import KillEffect from './KillEffect';
+import Snow from './Snow';
 
 export default class LocalPlayer extends Player {
     elapsedTime: number = 0;
@@ -57,6 +58,8 @@ export default class LocalPlayer extends Player {
 
     update(deltaTime: number) {
         this.updateAction(deltaTime);
+        if (this.killEffect.visible === true)
+            this.killEffect.update(deltaTime);
     }
     toLeftTime = (1/3) * this.titleAnimMaxTime;
     toRightTime = (2/3) * this.titleAnimMaxTime;
@@ -97,9 +100,6 @@ export default class LocalPlayer extends Player {
 
     updateInPlay(deltaTime: number) {
         super.update(deltaTime);
-
-        if (this.killEffect.visible === true)
-            this.killEffect.update(deltaTime);
     }
     processInput(deltaTime: number) {
         const joystickOffset = VirtualJoystickManager.getInstance().offset;
@@ -108,5 +108,61 @@ export default class LocalPlayer extends Player {
         const inputDirection = joystickOffset.normalize();
         // this.moveDirection.lerp(inputDirection, deltaTime * 4);
         this.moveDirection.lerp(inputDirection, deltaTime * 10).normalize();
+    }
+
+    fromDirectionInFinish = new THREE.Vector2(0, 0);
+    toDirectionInFinsh = new THREE.Vector2(0, -1);
+    curRotateTimeInFinish = 0;
+    maxRotateTimeInFinish = 1;
+    win() {
+        this.stopGrowing = true;
+        this.curMoveSpeed = 0;
+        this.curRotateSpeed = 0;
+
+        this.arrow.visible = false;
+
+        this.fromDirectionInFinish.copy(this.moveDirection);
+        this.curRotateTimeInFinish = 0;
+
+        // this.rotation.y = 0;
+        // this.snow.rotation.x = (-35 / 180) * Math.PI;
+        this.updateAction = this.updateInFinish;
+    }
+    finishJumpVelocityY = 0;
+    finishJumpPower = 0;
+    updateInFinish(deltaTime: number) {
+        // this.rotation.y += (20 / 180) * Math.PI * deltaTime;
+        // this.rotation.y = THREE.MathUtils.lerp(this.rotation.y, 0, deltaTime * 3);
+        // console.log(this.rotation.y);
+
+        this.curRotateTimeInFinish += deltaTime;
+        const newDirection = new THREE.Vector2().copy(this.fromDirectionInFinish).lerp(this.toDirectionInFinsh, this.curRotateTimeInFinish / this.maxRotateTimeInFinish);
+        this.moveDirection.copy(newDirection);
+        this.rotate();
+
+        this.snow.rotation.x = (-35 / 180) * Math.PI;
+
+        if (this.curRotateTimeInFinish >= this.maxRotateTimeInFinish) {
+            this.finishJumpPower = this.scale.x;
+            this.finishJumpVelocityY = this.finishJumpPower;
+            this.updateAction = this.updateInFinishJump;
+        }
+
+        this.snowTrailLeft.update(deltaTime,  false);
+        this.snowTrailRight.update(deltaTime, false);
+    }
+    updateInFinishJump(deltaTime: number) {
+        this.finishJumpVelocityY -= this.finishJumpPower * 2 * deltaTime;
+        this.snow.position.y += this.finishJumpVelocityY * deltaTime;
+        // console.log(deltaPos.y, this.position.y);
+        if (this.snow.position.y < Snow.groundOffset) {
+            this.snow.position.y = Snow.groundOffset;
+            this.finishJumpVelocityY = this.finishJumpPower;
+        }
+
+        this.snowTrailLeft.update(deltaTime,  false);
+        this.snowTrailRight.update(deltaTime, false);
+
+        this.shadow.updateScale(this.snow.position.y - Snow.groundOffset);
     }
 }

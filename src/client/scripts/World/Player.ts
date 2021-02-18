@@ -1,12 +1,11 @@
-import GUIManager from '../../common/GUIManager';
+import GUIManager from 'common/scripts/Managers/GUIManager';
 import * as THREE from 'three';
 // import { THREE } from 'enable3d';
 import Snow from './Snow';
 import SnowTrail from './SnowTrail';
-// import { Vector2, Vector3 } from 'three';
 
 import AssetManager from 'common/scripts/Managers/AssetManager'
-import shadow from './../../assets/images/common/circle.png'
+import shadow from 'common/images/circle.png'
 import DieEffect from './DieEffect';
 
 const Vector2 = THREE.Vector2;

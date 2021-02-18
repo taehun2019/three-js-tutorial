@@ -6,15 +6,15 @@ import * as THREE from 'three'
 // import { THREE, Scene3D, PhysicsLoader, Project } from 'enable3d'
 const Vector3 = THREE.Vector3;
 
-import GUIManager from './../../common/GUIManager';
-import Player from './../World/Player';
-import LocalPlayer from './../World/LocalPlayer';
-import MainCamera from '../../common/MainCamera';
+import GUIManager from 'common/scripts/Managers/GUIManager';
+import DeviceManager from 'common/scripts/Managers/DeviceManager';
+import MainCamera from 'common/scripts/World/MainCamera';
+import Player from './World/Player';
+import LocalPlayer from './World/LocalPlayer';
+import Crown from './World/Crown';
 
 // v = require('./../../common/ParticleSystem');
 // import ParticleSystem from './../../common/ParticleSystem'
-import Crown from './Crown';
-import DeviceManager from './../../common/DeviceManager';
 
 const enemyNum = 7;
 

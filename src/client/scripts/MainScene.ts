@@ -1,8 +1,8 @@
 // import GameScene from '../common/GameScene';
-import VirtualJoystickManager from './../common/VirtualJoystickManager';
+import VirtualJoystickManager from 'common/scripts/Managers/VirtualJoystickManager';
 import * as THREE from 'three'
 // import { Scene3D, THREE } from 'enable3d';
-import World from './World/World';
+import World from './World';
 import * as EventEmitter from 'events';
 import MainUI from './MainUI';
 

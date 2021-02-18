@@ -3,9 +3,6 @@ import ConfettiParticle from "./ConfettiParticle";
 
 export default class ConfettiEffect extends THREE.Object3D {
     // static riseResistance = 10;
-
-
-
     leftFirePosition: THREE.Vector3;
     rightFirePosition: THREE.Vector3;
 

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import VirtualJoystickManager from "../../common/VirtualJoystickManager";
+import VirtualJoystickManager from "common/scripts/Managers/VirtualJoystickManager";
 import Player from "./Player";
 import Arrow from "./Arrow";
 import KillEffect from './KillEffect';

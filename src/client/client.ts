@@ -5,8 +5,8 @@ import AmmoModule from "ammojs-typed";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Stats from 'three/examples/jsm/libs/stats.module'
 import { GUI } from 'three/examples/jsm/libs/dat.gui.module'
-import MainScene from './main/MainScene';
-import VirtualJoystickManager from './common/VirtualJoystickManager';
+import MainScene from './scripts/MainScene';
+import VirtualJoystickManager from 'common/scripts/Managers/VirtualJoystickManager';
 import AssetManager from 'common/scripts/Managers/AssetManager';
 
 

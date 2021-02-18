@@ -1,4 +1,4 @@
-import GUIManager from '../../common/GUIManager';
+import GUIManager from 'common/scripts/Managers/GUIManager';
 import * as THREE from 'three';
 import SnowFace from './SnowFace';
 // import { THREE } from 'enable3d';

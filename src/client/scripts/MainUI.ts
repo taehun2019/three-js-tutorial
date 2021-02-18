@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import UIManager from './../common/UIManager';
+import UIManager from 'common/scripts/Managers/UIManager';
 import title from './../assets/images/Title.png';
-import circleBar from './../assets/images/common/circle_bar.png';
-import SwipeTutorial from './../common/scripts/UI/SwipeTutorial';
+import circleBar from 'common/images/circle_bar.png';
+import SwipeTutorial from '../common/scripts/UI/SwipeTutorial';
 // import titleFont from './assets/fonts/FredokaOne-Regular.ttf'
 
 export default class MainUI {

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import ConfettiEffect from './ConfettiEffect';
 // import { THREE } from 'enable3d';
-import GUIManager from './GUIManager';
+import GUIManager from '../Managers/GUIManager';
 
 export enum CameraState {
     Init,
@@ -17,10 +17,6 @@ export default class MainCamera extends THREE.Object3D {
     state: CameraState;
 
     confettiEffect: ConfettiEffect;
-
-    // _length:number;
-    // set length(value: number) { this._length = value }
-
 
     constructor() {
         super();

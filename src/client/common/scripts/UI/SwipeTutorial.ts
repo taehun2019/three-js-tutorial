@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import UIManager from '../../UIManager';
-import swipe from './../../assets/images/swipe.png';
-import finger from './../../assets/images/finger.png';
+import UIManager from './../Managers/UIManager';
+import swipe from './../../images/swipe.png';
+import finger from './../../images/finger.png';
 // import finger from 'assets/images/finger.png'
 
 export default class SwipeTutorial {

@@ -15,7 +15,6 @@ export default class UIManager {
         const result = document.createElement('div') as HTMLDivElement;
         result.style.position = 'fixed';
         result.style.zIndex = '100000';
-        result.style.top = '0px';
         result.style.width = width;
         result.style.height = height;
         document.body.append(result);
@@ -31,6 +30,7 @@ export default class UIManager {
         result.style.width = width;
         result.style.height = height;
         result.style.objectFit = 'contain';
+        result.style.position = 'absolute';
         if (parent === undefined) {
             result.style.position = 'fixed';
             result.style.zIndex = '100000';

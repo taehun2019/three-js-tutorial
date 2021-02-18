@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import AssetManager from "./../../common/AssetManager";
+import AssetManager from "common/scripts/Managers/AssetManager";
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 import crown from './../../assets/models/crown.glb'
 import Player from "./Player";

@@ -5,8 +5,8 @@ import Snow from './Snow';
 import SnowTrail from './SnowTrail';
 // import { Vector2, Vector3 } from 'three';
 
-import AssetManager from './../../common/AssetManager'
-import shadow from './../../assets/images/circle.png'
+import AssetManager from 'common/scripts/Managers/AssetManager'
+import shadow from './../../assets/images/common/circle.png'
 import DieEffect from './DieEffect';
 
 const Vector2 = THREE.Vector2;
@@ -144,6 +144,9 @@ export default class Player extends THREE.Object3D {
         this.dieEffect.visible = false;
 
         this.killCount = 0;
+    }
+    start() {
+
     }
 
     update(deltaTime: number) {

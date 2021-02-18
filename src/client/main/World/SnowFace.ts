@@ -1,4 +1,5 @@
-import AssetManager from '../../common/AssetManager';
+// import AssetManager from '../../common/AssetManager';
+import AssetManager from 'common/scripts/Managers/AssetManager'; //scripts/AssetManager';
 import * as THREE from 'three'
 //https://webpack.js.org/guides/asset-modules/
 //https://stackoverflow.com/questions/52286068/webpack-cannot-find-image-when-imported-module-not-found
@@ -12,7 +13,6 @@ export default class SnowFace extends THREE.Object3D {
 
         this.face = new THREE.Mesh();
 
-        // AssetManager.getInstance().load('resources/face.png', this.loadTexture.bind(this));
         AssetManager.getInstance().loadTexture(face, this.loadTexture.bind(this));
     }
 

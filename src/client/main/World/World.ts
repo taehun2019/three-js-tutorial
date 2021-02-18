@@ -12,7 +12,7 @@ import LocalPlayer from './../World/LocalPlayer';
 import MainCamera from '../../common/MainCamera';
 
 // v = require('./../../common/ParticleSystem');
-import ParticleSystem from './../../common/ParticleSystem'
+// import ParticleSystem from './../../common/ParticleSystem'
 import Crown from './Crown';
 import DeviceManager from './../../common/DeviceManager';
 
@@ -229,6 +229,10 @@ export default class World extends THREE.Object3D {
 
     start() {
         this.mainCamera.start();
+        for (let index = 0; index < this.totalPlayers.length; index++) {
+            const element = this.totalPlayers[index];
+            element.start();
+        }
     }
 
     update(deltaTime: number) {

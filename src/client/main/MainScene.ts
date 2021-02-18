@@ -9,9 +9,10 @@ import MainUI from './MainUI';
 export default class MainScene extends THREE.Scene {
     world: World;
     ui: MainUI;
-    isPlaying: boolean;
     pause: boolean;
     callbacks: EventEmitter;
+
+    updateAction: Function = () => { };
     // constructor(scene: THREE.Scene) {
     constructor() {
         super();
@@ -19,7 +20,6 @@ export default class MainScene extends THREE.Scene {
         this.ui = new MainUI();
         this.world = new World(this);
         this.add(this.world);
-        this.isPlaying = false;
         this.pause = false;
 
         this.world.localPlayer.killCountAction = (count: number) => {
@@ -43,11 +43,11 @@ export default class MainScene extends THREE.Scene {
     }
 
     init() {
-        this.isPlaying = false;
-
         this.world.init();
         this.ui.init();
         this.callbacks.emit('init');
+
+        this.updateAction = this.updateInTitle;
     }
 
     getCamera() {
@@ -55,22 +55,34 @@ export default class MainScene extends THREE.Scene {
     }
 
     start() {
-        this.isPlaying = true;
-        
         this.world.start();
         this.ui.start();
         this.callbacks.emit('start');
+
+        // this.updateAction = this.updateInPlay;
+        this.updateAction = this.updateInPrePlay;
+        setTimeout(() => {
+            this.updateAction = this.updateInPlay;
+            this.ui.swipeTuto.hide();
+        }, 2000);
     }
 
     update(deltaTime: number) {
-        if (this.pause == true)
+        this.updateAction(deltaTime);
+    }
+    updateInTitle(deltaTime: number) {
+        this.world.localPlayer.update(deltaTime);
+        this.ui.swipeTuto.update(deltaTime);
+        if (VirtualJoystickManager.getInstance().clicked == true)
+            this.start();
+    }
+    updateInPrePlay(deltaTime: number) {
+        this.ui.swipeTuto.update(deltaTime);
+        this.world.update(deltaTime);
+    }
+    updateInPlay(deltaTime: number) {
+        if (this.pause === true)
             return;
-        if (this.isPlaying == false)
-        {
-            if (VirtualJoystickManager.getInstance().clicked == true)
-                this.start();
-            return;
-        }
         this.world.update(deltaTime);
     }
 

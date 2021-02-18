@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import AssetManager from "./../../common/AssetManager";
+import AssetManager from "common/scripts/Managers/AssetManager";
 import image from './../../assets/images/level.png';
 
 export default class KillEffect extends THREE.Object3D {

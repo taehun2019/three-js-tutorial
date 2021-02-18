@@ -7,7 +7,7 @@ import Stats from 'three/examples/jsm/libs/stats.module'
 import { GUI } from 'three/examples/jsm/libs/dat.gui.module'
 import MainScene from './main/MainScene';
 import VirtualJoystickManager from './common/VirtualJoystickManager';
-import AssetManager from './common/AssetManager';
+import AssetManager from 'common/scripts/Managers/AssetManager';
 
 
 let mraidLoaded = false;
@@ -141,7 +141,8 @@ function LoadThree() {
             }
             if (event.key == 'e') {
                 // gameScene.world.mainCamera.confettiEffect.play();
-                gameScene.world.localPlayer.killEffect.play();
+                // gameScene.world.localPlayer.killEffect.play();
+                gameScene.ui.swipeTuto.testNextFingerPoint();
             }
         }
         function onKeyUp(event: KeyboardEvent) {

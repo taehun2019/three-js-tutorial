@@ -24,6 +24,12 @@ module.exports = {
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
+        //https://webpack.js.org/configuration/resolve/#resolvemodules
+        //https://stackoverflow.com/questions/43281741/how-to-use-paths-in-tsconfig-json
+        modules: [
+            'node_modules',
+            'src/client', 
+        ],
     },
     output: {
         filename: 'bundle.js',

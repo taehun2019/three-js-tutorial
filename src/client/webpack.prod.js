@@ -20,6 +20,10 @@ module.exports = {
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
+        modules: [
+            'node_modules',
+            'src/client', 
+        ],
     },
     output: {
         filename: 'bundle.js',

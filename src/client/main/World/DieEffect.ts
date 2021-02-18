@@ -1,4 +1,4 @@
-import AssetManager from './../../common/AssetManager'
+import AssetManager from 'common/scripts/Managers/AssetManager'
 import * as THREE from 'three';
 // import face from './../../assets/models/broken.gltf'
 import face from './../../assets/models/broken.glb'

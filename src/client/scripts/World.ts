@@ -13,6 +13,7 @@ import Player from './World/Player';
 import LocalPlayer from './World/LocalPlayer';
 import EnemyPlayer from './World/EnemyPlayer';
 import Crown from './World/Crown';
+import SnowfallEffect from './World/SnowfallEffect';
 
 // v = require('./../../common/ParticleSystem');
 // import ParticleSystem from './../../common/ParticleSystem'
@@ -51,6 +52,7 @@ export default class World extends THREE.Object3D {
     localPlayer: LocalPlayer;
     light: THREE.DirectionalLight;
     ground: THREE.Mesh;
+    snowfallEffect: SnowfallEffect;
     // physics: AmmoPhysics;
     
     enemyPlayers: EnemyPlayer[];
@@ -226,6 +228,9 @@ export default class World extends THREE.Object3D {
 
         this.crown = new Crown();
         this.add(this.crown);
+
+        this.snowfallEffect = new SnowfallEffect();
+        this.add(this.snowfallEffect);
     }
 
     init() {
@@ -268,6 +273,7 @@ export default class World extends THREE.Object3D {
     }
 
     update(deltaTime: number) {
+        this.snowfallEffect.update(deltaTime);
 
         // this.physics.update(deltaTime * 1000);
         // this.physics.updateDebugger();
@@ -285,8 +291,11 @@ export default class World extends THREE.Object3D {
             this.crown.update(deltaTime);
 
         this.checkCollision(deltaTime);
+
     }
     updateInFinish(deltaTime: number) {
+        this.snowfallEffect.update(deltaTime);
+        
         this.localPlayer.update(deltaTime);
         for (let index = 0; index < this.enemyPlayers.length; index++) {
             this.enemyPlayers[index].update(deltaTime);
@@ -342,6 +351,9 @@ export default class World extends THREE.Object3D {
             // smallerPlayer.changeSizeByCollision(-0.01);
             biggerPlayer.changeSizeByCollision(+0.3 * deltaTime);
             smallerPlayer.changeSizeByCollision(-1 * deltaTime);
+            if (smallerPlayer.scale.x < 1 || smallerPlayer.scale.x < biggerPlayer.scale.x * 0.3) {
+                smallerPlayer.die(true);
+            }
 
             // const smallerPosition = smallerPlayer.position;
             // let pushVector = smallerPosition.sub(biggerPlayer.position).setLength(minDistance - curDistance);
@@ -394,6 +406,6 @@ export default class World extends THREE.Object3D {
 
         this.crown.show(this.localPlayer.snow);
 
-        this.mainCamera.confettiEffect.play();
+        this.mainCamera.playConfettiEffects();
     }
 }

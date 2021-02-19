@@ -27,7 +27,7 @@ export default class Shadow extends THREE.Object3D {
 
     updateScale(lengthToTarget: number) {
         const scale = THREE.MathUtils.clamp(THREE.MathUtils.lerp(1, 0.5, lengthToTarget / 2), 0.5, 1);
-        console.log(`scale:${scale}`);
+        // console.log(`scale:${scale}`);
         this.scale.setScalar(scale);
         // console.log(this.scale.x);
     }

@@ -104,7 +104,7 @@ function LoadThree() {
         // console.log("physics loaded");
         // const virtualJoystickManager = new VirtualJoystickManager(canvas);
         const virtualJoystickManager = VirtualJoystickManager.getInstance(canvas);
-        const gizmosManager = GizmosManager.getInstance(gameScene); 
+        // const gizmosManager = GizmosManager.getInstance(gameScene); 
         const assetManager = AssetManager.getInstance();
     
         // let gameScene = new MainScene(rootScene);

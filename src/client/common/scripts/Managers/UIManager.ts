@@ -11,13 +11,19 @@ export default class UIManager {
 
     }
 
-    createDiv(width: string, height: string) {
+    createDiv(width: string, height: string, parent?: HTMLElement) {
         const result = document.createElement('div') as HTMLDivElement;
-        result.style.position = 'fixed';
-        result.style.zIndex = '100000';
+        // result.style.position = 'fixed';
+        // result.style.zIndex = '100000';
         result.style.width = width;
         result.style.height = height;
-        document.body.append(result);
+        if (parent === undefined) {
+            result.style.position = 'fixed';
+            result.style.zIndex = '100000';
+        }
+
+        // document.body.append(result);
+        (parent === undefined) ? document.body.append(result) : parent?.append(result);
 
         return result;
     }

@@ -189,11 +189,6 @@ export default class Player extends THREE.Object3D {
         // this.scale.set(newSize, newSize, newSize);
         this.scale.setScalar(newSize);
         this.updateSpeed();
-
-        if (newSize < 1)
-        {
-            this.die(true);
-        }
     }
     kill(player: Player) {
         if (this.stopGrowing === true)
@@ -219,7 +214,7 @@ export default class Player extends THREE.Object3D {
         }
     }
     updateSpeed() {
-        this.curMoveSpeed = THREE.MathUtils.lerp(Player.initMoveSpeed, Player.initMoveSpeed * 3.0, THREE.MathUtils.clamp((this.scale.x - 1) / (5 - 1), 0, 1));
+        this.curMoveSpeed = THREE.MathUtils.lerp(Player.initMoveSpeed, Player.initMoveSpeed * 2.5, THREE.MathUtils.clamp((this.scale.x - 1) / (5 - 1), 0, 1));
         this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.2, THREE.MathUtils.clamp((this.scale.x - 1) / (4 - 1), 0, 1));
     }
 

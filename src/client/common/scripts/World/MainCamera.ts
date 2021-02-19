@@ -17,7 +17,10 @@ export default class MainCamera extends THREE.Object3D {
 
     state: CameraState;
 
-    confettiEffect: ConfettiEffect;
+    confettiEffects: ConfettiEffect[] = [];
+    showConfettiEffects = false;
+    shotConfettiEffect = false;
+    curShotConfettiEffectIndex = 0;
 
     constructor() {
         super();
@@ -46,10 +49,17 @@ export default class MainCamera extends THREE.Object3D {
         // this._length = 0;
         this.state = CameraState.Init;
 
-        this.confettiEffect = new ConfettiEffect();
-        this.camera.add(this.confettiEffect);
-        this.confettiEffect.position.setScalar(0);
-        this.confettiEffect.position.z = -5;
+        for (let index = 0; index < 2; index++) {
+            const effect = new ConfettiEffect();
+            this.confettiEffects[index] = effect;
+            this.camera.add(effect);
+            effect.position.setScalar(0);
+            effect.position.z = -5;
+        }
+        // this.confettiEffect = new ConfettiEffect();
+        // this.camera.add(this.confettiEffect);
+        // this.confettiEffect.position.setScalar(0);
+        // this.confettiEffect.position.z = -5;
     }
 
     init(target: THREE.Object3D) {
@@ -60,7 +70,12 @@ export default class MainCamera extends THREE.Object3D {
         this.setLength(5);
         // this.setLength(80);
 
-        this.confettiEffect.init();
+        // this.confettiEffect.init();
+        this.showConfettiEffects = false;
+        for (let index = 0; index < this.confettiEffects.length; index++) {
+            const effect = this.confettiEffects[index];
+            effect.init();
+        }    
     }
     start() {
         // this.setLength(40);
@@ -101,8 +116,28 @@ export default class MainCamera extends THREE.Object3D {
                 break;
         }
 
-        if (this.confettiEffect.visible === true)
-            this.confettiEffect.update(deltaTime);
+        // if (this.confettiEffect.visible === true)
+        //     this.confettiEffect.update(deltaTime);
+        if (this.showConfettiEffects === true) {
+            for (let index = 0; index < this.confettiEffects.length; index++) {
+                const effect = this.confettiEffects[index];
+                effect.update(deltaTime);
+            }
+
+            //3초마다 쏴준다.
+            if (this.shotConfettiEffect === false) {
+                this.shotConfettiEffect = true;
+                const curShotEffect = this.confettiEffects[this.curShotConfettiEffectIndex];
+                curShotEffect.visible = true;
+                curShotEffect.init();
+                curShotEffect.play();
+                this.curShotConfettiEffectIndex = (this.curShotConfettiEffectIndex + 1) % this.confettiEffects.length;
+
+                setTimeout(()=>{
+                    this.shotConfettiEffect = false;
+                }, 5000)
+            }
+        }
     }
     followTarget(targetPos: THREE.Vector3) {
         this.position.copy(targetPos);
@@ -110,5 +145,14 @@ export default class MainCamera extends THREE.Object3D {
 
     getLengthByTargetScale() {
         return 8 + Math.pow(this.target.scale.x, 1.8);
+    }
+    playConfettiEffects() {
+        // for (let index = 0; index < this.confettiEffects.length; index++) {
+        //     const effect = this.confettiEffects[index];
+        //     effect.play();
+        // }    
+        this.showConfettiEffects = true;
+        this.shotConfettiEffect = false;
+        this.curShotConfettiEffectIndex = 0;
     }
 }

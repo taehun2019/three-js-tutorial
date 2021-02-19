@@ -73,6 +73,7 @@ export default class MainScene extends THREE.Scene {
     }
     updateInTitle(deltaTime: number) {
         this.world.localPlayer.update(deltaTime);
+        this.world.snowfallEffect.update(deltaTime);
         this.ui.swipeTuto.update(deltaTime);
         if (VirtualJoystickManager.getInstance().clicked == true)
             this.start();
@@ -88,6 +89,7 @@ export default class MainScene extends THREE.Scene {
     }
     updateInFinish(deltaTime: number) {
         this.world.updateInFinish(deltaTime);
+        this.ui.updateInFinish(deltaTime);
     }
 
     win() {

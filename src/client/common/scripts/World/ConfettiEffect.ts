@@ -58,6 +58,8 @@ export default class ConfettiEffect extends THREE.Object3D {
             return;
         for (let index = 0; index < this.particleCount; index++) {
             this.particles[index].update(deltaTime);
+            // if (index === 1)
+            //     console.log(this.particles[index].position);
         }
     }
 }

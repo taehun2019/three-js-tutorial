@@ -1,15 +1,18 @@
 import * as THREE from 'three';
 import UIManager from 'common/scripts/Managers/UIManager';
 import title from './../assets/images/Title.png';
-import circleBar from 'common/images/circle_bar.png';
 import SwipeTutorial from '../common/scripts/UI/SwipeTutorial';
 // import titleFont from './assets/fonts/FredokaOne-Regular.ttf'
+
+import circleBar from 'common/images/circle_bar.png';
+import awesome from 'common/images/awesome.png';
 
 export default class MainUI {
     titleImage: HTMLImageElement;
     killCount: HTMLDivElement;
     killCountText: HTMLTextAreaElement;
     swipeTuto: SwipeTutorial;
+    winScreen: HTMLDivElement;
     
     constructor() {
         // const image = UIManager.getInstance().createImg(title);
@@ -40,12 +43,26 @@ export default class MainUI {
         this.killCountText.style.fontSize = '25px';
         this.killCountText.style.left = '90px';
 
+
+
+
+        this.winScreen = UIManager.getInstance().createDiv('100%', '100%');
+        const blind = UIManager.getInstance().createDiv('100%', '100%', this.winScreen);
+        blind.style.backgroundColor = 'black';
+        blind.style.opacity = '20%';
+
+        const awesomeImage = UIManager.getInstance().createImg(awesome, '80%', '20%', this.winScreen);
+        awesomeImage.style.top = '10%';
+        awesomeImage.style.left = '10%';
         
+
+
         window.addEventListener('resize', () => this.onWindowResize(), false);
         this.onWindowResize();
     }
     onWindowResize() {
         this.swipeTuto.updateAspect();
+        this.winScreen.style.top = '0%';
     }
     init() {
         this.titleImage.style.visibility = 'visible';
@@ -53,6 +70,9 @@ export default class MainUI {
         this.killCountText.textContent = 'Kill : 0';
 
         this.swipeTuto.init();
+
+        this.finishElapsedTime = 0;
+        this.winScreen.style.visibility = 'hidden';
     }
     start() {
         this.titleImage.style.visibility = 'hidden';
@@ -64,5 +84,13 @@ export default class MainUI {
 
     setKillCount(value: number) {
         this.killCountText.textContent = 'Kill : ' + value;
+    }
+
+    finishElapsedTime = 0;
+    updateInFinish(deltaTime: number) {
+        if (this.finishElapsedTime === 0) {
+            this.winScreen.style.visibility = 'visible';
+        }
+        this.finishElapsedTime += deltaTime;
     }
 }

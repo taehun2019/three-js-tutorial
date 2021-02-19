@@ -8,6 +8,7 @@ import { GUI } from 'three/examples/jsm/libs/dat.gui.module'
 import MainScene from './scripts/MainScene';
 import VirtualJoystickManager from 'common/scripts/Managers/VirtualJoystickManager';
 import AssetManager from 'common/scripts/Managers/AssetManager';
+import GizmosManager from 'common/scripts/Managers/GizmosManager';
 
 
 let mraidLoaded = false;
@@ -103,6 +104,7 @@ function LoadThree() {
         // console.log("physics loaded");
         // const virtualJoystickManager = new VirtualJoystickManager(canvas);
         const virtualJoystickManager = VirtualJoystickManager.getInstance(canvas);
+        const gizmosManager = GizmosManager.getInstance(gameScene); 
         const assetManager = AssetManager.getInstance();
     
         // let gameScene = new MainScene(rootScene);
@@ -158,6 +160,7 @@ function LoadThree() {
         document.addEventListener("keydown", onKeyDown, false);
         document.addEventListener("keyup", onKeyUp, false);
 
+        gameScene.init();
     
         let preElapsedTime: number = 0;
         let curElapsedTime: number = 0;

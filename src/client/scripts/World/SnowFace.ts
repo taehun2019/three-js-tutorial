@@ -17,10 +17,10 @@ export default class SnowFace extends THREE.Object3D {
     }
 
     loadTexture(texture: THREE.Texture) {
-        const eyeGeometry = new THREE.PlaneGeometry(1.2, 1.2);
-        const eyeMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, transparent: true, depthWrite: false, depthTest: true });
+        const geometry = new THREE.PlaneGeometry(1.2, 1.2);
+        const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, transparent: true, depthWrite: false, depthTest: true });
         // const eyeMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-        this.face = new THREE.Mesh(eyeGeometry, eyeMaterial);
+        this.face = new THREE.Mesh(geometry, material);
         this.add(this.face);
     }
 

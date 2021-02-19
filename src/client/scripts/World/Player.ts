@@ -34,7 +34,7 @@ export default class Player extends THREE.Object3D {
     isAlive: boolean;
     onGround: boolean;
     scaling: boolean;
-    colliding: boolean;
+    // colliding: boolean;
     stopGrowing: boolean;
 
     snowTrailLeft: SnowTrail;
@@ -76,7 +76,7 @@ export default class Player extends THREE.Object3D {
         this.velocityY = 0;
         this.onGround = true;
         this.scaling = false;
-        this.colliding = false;
+        // this.colliding = false;
         this.isAlive = true;
         this.stopGrowing = false;
 
@@ -92,10 +92,10 @@ export default class Player extends THREE.Object3D {
         this.dieEffect.position.y = 3;
         this.add(this.dieEffect);
 
-        this.timeGrowSize = 0.2; //0.01;
+        this.timeGrowSize = 0.1; //0.01;
     }
 
-    init(color: THREE.Color, posX: number, posZ: number) {
+    init(color: THREE.Color, startPoint: THREE.Vector2) {
         this.visible = true;
 
         this.color = color;
@@ -103,7 +103,7 @@ export default class Player extends THREE.Object3D {
 
         this.shadow.visible = true;
 
-        this.position.set(posX, 0, posZ);
+        this.position.set(startPoint.x, 0, startPoint.y);
         this.scale.set(1,1,1);
 
         this.moveDirection.x = THREE.MathUtils.randFloat(-1, 1);
@@ -118,7 +118,7 @@ export default class Player extends THREE.Object3D {
         this.isAlive = true;
         this.onGround = true;
         this.scaling = false;
-        this.colliding = false;
+        // this.colliding = false;
         this.stopGrowing = false;
 
         this.snowTrailLeft.init();
@@ -134,7 +134,8 @@ export default class Player extends THREE.Object3D {
     }
 
     update(deltaTime: number) {
-        this.processInput(deltaTime);
+        if (this.isAlive === true)
+            this.processInput(deltaTime);
 
         this.snowTrailLeft.update(deltaTime,  (this.onGround && this.isAlive));
         this.snowTrailRight.update(deltaTime, (this.onGround && this.isAlive));
@@ -147,7 +148,7 @@ export default class Player extends THREE.Object3D {
         this.snow.rotation.x += this.curRotateSpeed * THREE.MathUtils.DEG2RAD * deltaTime;
 
         this.position.x += +this.moveDirection.x * this.curMoveSpeed * deltaTime;
-        this.position.z += -this.moveDirection.y * this.curMoveSpeed * deltaTime;
+        this.position.z += +this.moveDirection.y * this.curMoveSpeed * deltaTime;
 
         if (this.onGround == false)
         {
@@ -175,7 +176,7 @@ export default class Player extends THREE.Object3D {
 
         const newLook = new Vector3().copy(this.position);
         newLook.x += moveDirection.x;
-        newLook.z -= moveDirection.y;
+        newLook.z += moveDirection.y;
         
         this.lookAt(newLook);
 
@@ -223,15 +224,15 @@ export default class Player extends THREE.Object3D {
     }
 
     changeSizeByElapsingTime(deltaTime: number) {
-        if (this.colliding === true)
-            return;
+        // if (this.colliding === true)
+        //     return;
         if (this.stopGrowing === true)
             return;
 
         this.changeSizeImmediately(this.timeGrowSize * deltaTime);
     }
     changeSizeByCollision(deltaSize: number) {
-        this.colliding = true;
+        // this.colliding = true;
         this.changeSizeImmediately(deltaSize);
     }
 }

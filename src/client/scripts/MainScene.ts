@@ -37,9 +37,9 @@ export default class MainScene extends THREE.Scene {
         });
         this.callbacks = new EventEmitter();
         
-        this.init();
+        // this.init();
 
-        console.log(this);
+        // console.log(this);
 
     }
 

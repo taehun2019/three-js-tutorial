@@ -58,6 +58,7 @@ export default class MainCamera extends THREE.Object3D {
             this.followTarget(this.target.getWorldPosition(new THREE.Vector3()));
         }
         this.setLength(5);
+        // this.setLength(80);
 
         this.confettiEffect.init();
     }

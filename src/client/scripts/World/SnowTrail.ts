@@ -19,55 +19,16 @@ export default class SnowTrail extends THREE.Object3D {
         super();
         this.scene = scene;
 
-        // const geometry: THREE.BoxGeometry = new THREE.BoxGeometry(.5, .5, .5);
-        // // const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: false })
-        // // const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, })
-        // const material: THREE.MeshToonMaterial = new THREE.MeshToonMaterial({ color: 0x7777ff, })
-        
-        // this.sphere = new THREE.Mesh(geometry, material)
-        // this.add(this.sphere);
-
-
-        // const vertices = [];
-        // for ( let i = 0; i < 10000; i ++ ) {
-
-        //     // const x = THREE.MathUtils.randFloatSpread( 2000 );
-        //     // const y = THREE.MathUtils.randFloatSpread( 2000 );
-        //     // const z = THREE.MathUtils.randFloatSpread( 2000 );
-        //     const x = THREE.MathUtils.randFloatSpread( 100 );
-        //     const y = THREE.MathUtils.randFloatSpread( 100 );
-        //     const z = THREE.MathUtils.randFloatSpread( 100 );
-
-        //     vertices.push( x, y, z );
-        // }
-
-        // const geometry = new THREE.BufferGeometry();
-        // geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
-        // // const material = new THREE.PointsMaterial( { color: 0x888888 } );
-        // const material = new THREE.PointsMaterial( { color: 0xffffff } );
-        // const points = new THREE.Points( geometry, material );
-        // points.scale.setLength(0.1);
-        // // points.position.y = 2;
-        // this.add(points);
-
-
-
-
-
-
         this.particleList = [];
+        const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+        const material = new THREE.MeshToonMaterial( { color: 0xffffff } );
         for (let index = 0; index < SnowTrail.particleCount; index++) {
-            const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-            // const material = new THREE.PointsMaterial( { size:1, color: 0xffffff } );
-            // const points = new THREE.Points( geometry, material );
-            // const material = new THREE.MeshPhongMaterial( { color: 0xffffff } );
-            const material = new THREE.MeshToonMaterial( { color: 0xffffff } );
-            const points = new THREE.Mesh( geometry, material );
+            const particle = new THREE.Mesh( geometry, material );
             // points.scale.setLength(0.1);
             // points.position.y = 2;
-            this.add(points);
-            points.visible = false;
-            this.particleList[index] = points;
+            this.add(particle);
+            particle.visible = false;
+            this.particleList[index] = particle;
         }
 
         this.activeParticleList = new Map<Object3D, number>();

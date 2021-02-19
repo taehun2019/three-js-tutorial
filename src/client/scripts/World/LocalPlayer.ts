@@ -17,7 +17,7 @@ export default class LocalPlayer extends Player {
 
     constructor(scene: THREE.Scene) {
         super(scene);
-        this.timeGrowSize = 0.24; //0.012;
+        this.timeGrowSize = 0.14; //0.012;
 
         this.arrow = new Arrow(scene);
         this.arrow.position.y = 0.2;
@@ -30,11 +30,13 @@ export default class LocalPlayer extends Player {
 
     }
 
-    init(color: THREE.Color, posX: number, posZ: number) {
-        super.init(color, posX, posZ);
-        this.moveDirection.set(0, -1);
+    init(color: THREE.Color, startPoint: THREE.Vector2) {
+        super.init(color, startPoint);
+        this.moveDirection.set(0, 1);
         this.rotate();
+        this.snow.position.y = Snow.groundOffset;
         this.snow.rotation.x = (-50 / 180) * Math.PI;
+        this.shadow.scale.setScalar(1);
 
         this.arrow.visible = false;
         this.killEffect.visible = false;
@@ -105,13 +107,14 @@ export default class LocalPlayer extends Player {
         const joystickOffset = VirtualJoystickManager.getInstance().offset;
         if (joystickOffset.length() == 0)
             return;
-        const inputDirection = joystickOffset.normalize();
-        // this.moveDirection.lerp(inputDirection, deltaTime * 4);
+        const inputDirection = new THREE.Vector2().copy(joystickOffset.normalize());
+        inputDirection.y *= -1;
         this.moveDirection.lerp(inputDirection, deltaTime * 10).normalize();
+        // console.log(this.moveDirection);
     }
 
     fromDirectionInFinish = new THREE.Vector2(0, 0);
-    toDirectionInFinsh = new THREE.Vector2(0, -1);
+    toDirectionInFinsh = new THREE.Vector2(0, 1);
     curRotateTimeInFinish = 0;
     maxRotateTimeInFinish = 1;
     win() {

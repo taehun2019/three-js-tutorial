@@ -11,6 +11,7 @@ import DeviceManager from 'common/scripts/Managers/DeviceManager';
 import MainCamera from 'common/scripts/World/MainCamera';
 import Player from './World/Player';
 import LocalPlayer from './World/LocalPlayer';
+import EnemyPlayer from './World/EnemyPlayer';
 import Crown from './World/Crown';
 
 // v = require('./../../common/ParticleSystem');
@@ -28,6 +29,21 @@ const colors = [
     new THREE.Color(0xee9500),
     new THREE.Color(0x00e5e7),
 ]
+function generateStartPoint(angle: number) {
+    return new THREE.Vector2(Math.sin((angle / 180) * Math.PI), Math.cos((angle / 180) * Math.PI)).multiplyScalar(20);
+}
+
+const startPoints: THREE.Vector2[] = [
+    generateStartPoint(45 * 0),
+    generateStartPoint(45 * 1),
+    generateStartPoint(45 * 2),
+    generateStartPoint(45 * 3),
+    generateStartPoint(45 * 4),
+    generateStartPoint(45 * 5),
+    generateStartPoint(45 * 6),
+    generateStartPoint(45 * 7),
+]
+
 
 export default class World extends THREE.Object3D {
     // cube: THREE.Mesh;
@@ -37,7 +53,7 @@ export default class World extends THREE.Object3D {
     ground: THREE.Mesh;
     // physics: AmmoPhysics;
     
-    enemyPlayers: Player[];
+    enemyPlayers: EnemyPlayer[];
     totalPlayers: Player[];
     // playerShadows: Shadow;
 
@@ -119,7 +135,7 @@ export default class World extends THREE.Object3D {
 
         this.enemyPlayers = [];
         for (let index = 0; index < enemyNum; index++) {
-            this.enemyPlayers[index] = new Player(scene);
+            this.enemyPlayers[index] = new EnemyPlayer(scene);
             this.add(this.enemyPlayers[index]);
         }
 
@@ -213,12 +229,27 @@ export default class World extends THREE.Object3D {
     }
 
     init() {
-        this.localPlayer.init(colors[0], 0, 0);
+        const remainPointIndex = new Set<number>();
+        for (let index = 0; index < this.totalPlayers.length; index++) {
+            remainPointIndex.add(index); //[index] = index;            
+        }
+
+        let randomPick = THREE.MathUtils.randInt(0, remainPointIndex.size - 1);
+        let pointIndex = Array.from(remainPointIndex)[randomPick];
+        let point = startPoints[pointIndex];
+        remainPointIndex.delete(pointIndex);
+        // this.localPlayer.init(colors[0], 0, 0);
+        this.localPlayer.init(colors[0], point);
         
         for (let index = 0; index < this.enemyPlayers.length; index++) {
-            const posX = THREE.MathUtils.randInt(-30, 30);
-            const posZ = THREE.MathUtils.randInt(-30, 30);
-            this.enemyPlayers[index].init(colors[index + 1],posX, posZ);
+            // const posX = THREE.MathUtils.randInt(-30, 30);
+            // const posZ = THREE.MathUtils.randInt(-30, 30);
+            randomPick = THREE.MathUtils.randInt(0, remainPointIndex.size - 1);
+            pointIndex = Array.from(remainPointIndex)[randomPick];
+            point = startPoints[pointIndex];
+            remainPointIndex.delete(pointIndex);
+            // this.enemyPlayers[index].init(colors[index + 1],posX, posZ);
+            this.enemyPlayers[index].initWithWaypoints(colors[index + 1], point, startPoints);
         }
 
         this.mainCamera.init(this.localPlayer);
@@ -257,6 +288,9 @@ export default class World extends THREE.Object3D {
     }
     updateInFinish(deltaTime: number) {
         this.localPlayer.update(deltaTime);
+        for (let index = 0; index < this.enemyPlayers.length; index++) {
+            this.enemyPlayers[index].update(deltaTime);
+        }
         this.mainCamera.update(deltaTime);
         this.crown.update(deltaTime);
     }
@@ -306,7 +340,7 @@ export default class World extends THREE.Object3D {
 
             // biggerPlayer.changeSizeByCollision(+0.005);
             // smallerPlayer.changeSizeByCollision(-0.01);
-            biggerPlayer.changeSizeByCollision(+0.5 * deltaTime);
+            biggerPlayer.changeSizeByCollision(+0.3 * deltaTime);
             smallerPlayer.changeSizeByCollision(-1 * deltaTime);
 
             // const smallerPosition = smallerPlayer.position;

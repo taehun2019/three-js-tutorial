@@ -93,11 +93,16 @@ function LoadThree() {
     //     // console.log("HOHO");
     //     if (mraidService !== undefined)
     //         mraidService.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
-    // }, false);
+    // }, false);        
     
     const gameScene = new MainScene();
     // const axesHelper = new THREE.AxesHelper(5);
     // gameScene.add(axesHelper);
+
+    if (mraidService !== undefined)
+        gameScene.ui.onClickPlayNowAction = () => mraidService.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
+    else
+        gameScene.ui.onClickPlayNowAction = () => window.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
     
     
     const LoadGame = () => {
@@ -149,9 +154,9 @@ function LoadThree() {
             if (event.key == 'e') {
                 // gameScene.world.mainCamera.confettiEffect.play();
                 // gameScene.world.localPlayer.killEffect.play();
-                // gameScene.ui.swipeTuto.testNextFingerPoint();
+                gameScene.ui.swipeTuto.testNextFingerPoint();
                 // gameScene.world.crown.visible = true;
-                gameScene.world.mainCamera.setLength(gameScene.world.mainCamera.getLengthByTargetScale());
+                // gameScene.world.mainCamera.setLength(gameScene.world.mainCamera.getLengthByTargetScale());
             }
         }
         function onKeyUp(event: KeyboardEvent) {

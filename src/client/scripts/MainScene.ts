@@ -55,17 +55,20 @@ export default class MainScene extends THREE.Scene {
         return this.world.mainCamera.camera;
     }
 
+    readyToStart() {
+        this.world.readyToStart();
+        this.ui.readyToStart();
+        this.updateAction = this.updateInReady;
+        setTimeout(() => {
+            this.start();
+        }, 1000);
+    }
+
     start() {
         this.world.start();
         this.ui.start();
         this.callbacks.emit('start');
-
-        // this.updateAction = this.updateInPlay;
-        this.updateAction = this.updateInPrePlay;
-        setTimeout(() => {
-            this.updateAction = this.updateInPlay;
-            this.ui.swipeTuto.hide();
-        }, 2000);
+        this.updateAction = this.updateInPlay;
     }
 
     update(deltaTime: number) {
@@ -76,10 +79,10 @@ export default class MainScene extends THREE.Scene {
         this.world.snowfallEffect.update(deltaTime);
         this.ui.swipeTuto.update(deltaTime);
         if (VirtualJoystickManager.getInstance().clicked == true)
-            this.start();
+            this.readyToStart();
     }
-    updateInPrePlay(deltaTime: number) {
-        this.ui.swipeTuto.update(deltaTime);
+    updateInReady(deltaTime: number) {
+        this.ui.update(deltaTime);
         this.world.update(deltaTime);
     }
     updateInPlay(deltaTime: number) {
@@ -89,7 +92,7 @@ export default class MainScene extends THREE.Scene {
     }
     updateInFinish(deltaTime: number) {
         this.world.updateInFinish(deltaTime);
-        this.ui.updateInFinish(deltaTime);
+        this.ui.update(deltaTime);
     }
 
     win() {
@@ -101,6 +104,8 @@ export default class MainScene extends THREE.Scene {
 
         this.world.processLocalPlayerWin();
         this.world.mainCamera.state = CameraState.End;
+        this.ui.showWinScreen();
+
         this.updateAction = this.updateInFinish;
     }
 
@@ -109,5 +114,6 @@ export default class MainScene extends THREE.Scene {
         //     return;
         // this.isPlaying = false;
         console.log('lose');
+        this.ui.showLoseScreen();
     }
 }

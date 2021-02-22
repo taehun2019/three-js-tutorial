@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import UIManager from './../Managers/UIManager';
-import swipe from './../../images/swipe.png';
+import swipe from './../../images/Swipe_Back.png';
 import finger from './../../images/finger.png';
 // import finger from 'assets/images/finger.png'
 
@@ -38,7 +38,8 @@ export default class SwipeTutorial {
     curPointIndex = 0;
 
     constructor() {
-        this.swipeDiv = UIManager.getInstance().createDiv('200px', '200px');
+        // this.swipeDiv = UIManager.getInstance().createDiv('200px', '200px');
+        this.swipeDiv = UIManager.getInstance().createDiv('40%', '40%');
         const swipeImage = UIManager.getInstance().createImg(swipe, '100%', '100%', this.swipeDiv);
         this.swipeFinger = UIManager.getInstance().createImg(finger, '40%', '40%', this.swipeDiv);
         // console.log(this.fingerPoints[0]);
@@ -47,8 +48,15 @@ export default class SwipeTutorial {
     }
 
     updateAspect() {
-        this.swipeDiv.style.bottom = '10%';
-        this.swipeDiv.style.left = `${window.innerWidth * 0.5 - 100}px`;
+        // this.swipeDiv.style.bottom = '10%';
+        // this.swipeDiv.style.left = `${window.innerWidth * 0.5 - 100}px`;
+        // this.swipeDiv.style.bottom = '10%';
+        // this.swipeDiv.style.left = '30%';
+        const length = (window.innerWidth < window.innerHeight) ? window.innerWidth * 0.4 : window.innerHeight * 0.4;
+        this.swipeDiv.style.width = `${length}px`;
+        this.swipeDiv.style.height = `${length}px`;
+        this.swipeDiv.style.bottom = '15%';
+        this.swipeDiv.style.left = `${(window.innerWidth - length) * 0.5}px`;
     }
     init() {
         this.swipeDiv.style.visibility = 'visible';

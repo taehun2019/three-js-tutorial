@@ -1,0 +1,21 @@
+// import * as THREE from "three";
+import './TrailRenderer'
+
+// declare TrailRenderer: THREE:TrailRenderer
+
+// export class TrailRenderer extends THREE.Object3D{
+
+// }
+
+// declare namespace THREE.TrailRenderer {
+    
+// }
+
+declare class TrailRenderer {
+    constructor(scene: THREE.Scene, orientToMovement: boolean);
+    // createMaterial(): THREE.ShaderMaterial;
+    static createBaseMaterial(): THREE.ShaderMaterial;
+}
+
+// export as namespace THREE
+export { TrailRenderer }

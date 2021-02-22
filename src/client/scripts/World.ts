@@ -264,8 +264,11 @@ export default class World extends THREE.Object3D {
         // this.checkCollision();
     }
 
-    start() {
+    readyToStart() {
         this.mainCamera.start();
+    }
+
+    start() {
         for (let index = 0; index < this.totalPlayers.length; index++) {
             const element = this.totalPlayers[index];
             element.start();

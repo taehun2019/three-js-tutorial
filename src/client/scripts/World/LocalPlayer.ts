@@ -10,8 +10,6 @@ export default class LocalPlayer extends Player {
     arrow: Arrow;
     killEffect: KillEffect;
 
-    updateAction: Function = () => { };
-
     titleAnimMaxTime = 3;
     titleAnimCurTime = 0;
 
@@ -46,8 +44,8 @@ export default class LocalPlayer extends Player {
         this.titleAnimCurTime = 0;
     }
     start() {
+        super.start();
         this.arrow.visible = true;
-        this.updateAction = this.updateInPlay;
     }
     kill(player: Player) {
         super.kill(player);
@@ -100,9 +98,6 @@ export default class LocalPlayer extends Player {
         }
     }
 
-    updateInPlay(deltaTime: number) {
-        super.update(deltaTime);
-    }
     processInput(deltaTime: number) {
         const joystickOffset = VirtualJoystickManager.getInstance().offset;
         if (joystickOffset.length() == 0)

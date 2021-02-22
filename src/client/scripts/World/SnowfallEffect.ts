@@ -11,7 +11,7 @@ export default class SnowfallEffect extends THREE.Object3D {
 
         this.particleList = [];
         this.particleOnGround = [];
-        const geometry = new THREE.SphereGeometry(THREE.MathUtils.randFloat(0.2, 0.4));
+        const geometry = new THREE.SphereGeometry(THREE.MathUtils.randFloat(0.1, 0.15));
         const material = new THREE.MeshToonMaterial( { color: 0xffffff } );
         for (let index = 0; index < SnowfallEffect.particleCount; index++) {
             // const particle = new THREE.Mesh( geometry, material );

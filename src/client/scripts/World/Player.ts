@@ -1,5 +1,8 @@
 import GUIManager from 'common/scripts/Managers/GUIManager';
 import * as THREE from 'three';
+// import { TrailRenderer } from 'common/downloads/TrailRenderer/TrailRenderer'
+// require('common/downloads/TrailRenderer/TrailRenderer.js');
+
 // import { THREE } from 'enable3d';
 import Snow from './Snow';
 import SnowTrail from './SnowTrail';
@@ -42,6 +45,8 @@ export default class Player extends THREE.Object3D {
 
     killCount = 0;
 
+    updateAction: Function = () => { };
+
     constructor(scene: THREE.Scene) {
         super();
         this.snow = new Snow();
@@ -50,6 +55,10 @@ export default class Player extends THREE.Object3D {
 
         this.shadow = new Shadow();
         this.add(this.shadow);
+
+        // const trailRenderer = new TrailRenderer(scene, false);
+        // const trailMaterial = TrailRenderer.createBaseMaterial();
+        
 
 
         // const gui = GUIManager.getInstance().gui;
@@ -128,12 +137,17 @@ export default class Player extends THREE.Object3D {
         this.dieEffect.visible = false;
 
         this.killCount = 0;
+        this.updateAction = ()=>{};
     }
     start() {
-
+        this.updateAction = this.updateInPlay;
     }
 
     update(deltaTime: number) {
+        this.updateAction(deltaTime);
+    }
+
+    updateInPlay(deltaTime: number) {
         if (this.isAlive === true)
             this.processInput(deltaTime);
 
@@ -149,6 +163,7 @@ export default class Player extends THREE.Object3D {
 
         this.position.x += +this.moveDirection.x * this.curMoveSpeed * deltaTime;
         this.position.z += +this.moveDirection.y * this.curMoveSpeed * deltaTime;
+        this.snow.update(deltaTime);
 
         if (this.onGround == false)
         {
@@ -216,6 +231,7 @@ export default class Player extends THREE.Object3D {
     updateSpeed() {
         this.curMoveSpeed = THREE.MathUtils.lerp(Player.initMoveSpeed, Player.initMoveSpeed * 2.5, THREE.MathUtils.clamp((this.scale.x - 1) / (5 - 1), 0, 1));
         this.curRotateSpeed = THREE.MathUtils.lerp(Player.initRotateSpeed, Player.initRotateSpeed * 0.2, THREE.MathUtils.clamp((this.scale.x - 1) / (4 - 1), 0, 1));
+        // this.snow.updateMaxBounceTime(this.scale.x);
     }
 
     changeSizeByElapsingTime(deltaTime: number) {

@@ -154,9 +154,11 @@ function LoadThree() {
             if (event.key == 'e') {
                 // gameScene.world.mainCamera.confettiEffect.play();
                 // gameScene.world.localPlayer.killEffect.play();
-                gameScene.ui.swipeTuto.testNextFingerPoint();
+                // gameScene.ui.swipeTuto.testNextFingerPoint();
                 // gameScene.world.crown.visible = true;
                 // gameScene.world.mainCamera.setLength(gameScene.world.mainCamera.getLengthByTargetScale());
+                // gameScene.world.localPlayer.hitEffect.visible = !gameScene.world.localPlayer.hitEffect.visible;
+                gameScene.world.localPlayer.hitEffect.show();
             }
         }
         function onKeyUp(event: KeyboardEvent) {

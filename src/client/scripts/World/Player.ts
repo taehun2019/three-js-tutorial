@@ -7,8 +7,10 @@ import * as THREE from 'three';
 import Snow from './Snow';
 import SnowTrail from './SnowTrail';
 
-import DieEffect from './SnowDieEffect';
+import SnowDieEffect from './SnowDieEffect';
 import Shadow from './Shadow';
+import SnowHitEffect from './SnowHitEffect';
+import World from './../World';
 
 const Vector2 = THREE.Vector2;
 const Vector3 = THREE.Vector3;
@@ -22,7 +24,8 @@ export default class Player extends THREE.Object3D {
 
     snow: Snow;
     color: THREE.Color;
-    dieEffect: DieEffect;
+    hitEffect: SnowHitEffect;
+    dieEffect: SnowDieEffect;
     // keyboard: any;
     shadow: Shadow;
 
@@ -47,7 +50,7 @@ export default class Player extends THREE.Object3D {
 
     updateAction: Function = () => { };
 
-    constructor(scene: THREE.Scene) {
+    constructor(world: THREE.Object3D) {
         super();
         this.snow = new Snow();
         this.color = new THREE.Color('white');
@@ -89,15 +92,19 @@ export default class Player extends THREE.Object3D {
         this.isAlive = true;
         this.stopGrowing = false;
 
-        this.snowTrailLeft = new SnowTrail(scene);
+        this.snowTrailLeft = new SnowTrail(world);
         this.snowTrailLeft.position.set(0.7, 0.5, -0.7); // = -1;
         this.add(this.snowTrailLeft);
 
-        this.snowTrailRight = new SnowTrail(scene);
+        this.snowTrailRight = new SnowTrail(world);
         this.snowTrailRight.position.set(-0.7, 0.5, -0.7); // = -1;
         this.add(this.snowTrailRight);
 
-        this.dieEffect = new DieEffect();
+        this.hitEffect = new SnowHitEffect(world);
+        this.hitEffect.position.y = 2;
+        this.add(this.hitEffect);
+
+        this.dieEffect = new SnowDieEffect();
         this.dieEffect.position.y = 3;
         this.add(this.dieEffect);
 
@@ -133,6 +140,8 @@ export default class Player extends THREE.Object3D {
         this.snowTrailLeft.init();
         this.snowTrailRight.init();
 
+        this.hitEffect.init();
+
         this.dieEffect.init(color);
         this.dieEffect.visible = false;
 
@@ -153,6 +162,7 @@ export default class Player extends THREE.Object3D {
 
         this.snowTrailLeft.update(deltaTime,  (this.onGround && this.isAlive));
         this.snowTrailRight.update(deltaTime, (this.onGround && this.isAlive));
+        this.hitEffect.update(deltaTime);
         this.dieEffect.update(deltaTime);
 
         if (this.isAlive == false)

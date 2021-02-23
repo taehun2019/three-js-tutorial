@@ -1,4 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HTMLInlineCSSWebpackPlugin = require("html-inline-css-webpack-plugin").default;
 const path = require('path');
 
 module.exports = {
@@ -17,9 +19,20 @@ module.exports = {
                 exclude: /node_modules/,
             },
             {
+                test: /\.css$/i,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader"
+                ]
+            },
+            {
                 test: /\.(png|glb)/,
                 type: 'asset/inline'
             },
+			{
+				test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
+				use: 'base64-inline-loader'
+			}
         ],
     },
     resolve: {
@@ -37,12 +50,17 @@ module.exports = {
         path: path.resolve(__dirname, '../../dist/client')
     },
     plugins: [
+        new MiniCssExtractPlugin({
+          filename: "[name].css",
+          chunkFilename: "[id].css"
+        }),
         new HtmlWebpackPlugin({
             title: 'haha',
             template: 'template.html',
             filename: 'index.html',
             inject: 'body',
-        })
+        }),
+        new HTMLInlineCSSWebpackPlugin(),
     ],
     performance: {
         hints: false

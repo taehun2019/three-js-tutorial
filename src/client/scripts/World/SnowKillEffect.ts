@@ -2,7 +2,7 @@ import * as THREE from "three";
 import AssetManager from "common/scripts/Managers/AssetManager";
 import image from './../../assets/images/level.png';
 
-export default class KillEffect extends THREE.Object3D {
+export default class SnowKillEffect extends THREE.Object3D {
     fromSize = 0.8;
     toSize = 1.5;
     material: THREE.MeshBasicMaterial;

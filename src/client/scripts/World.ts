@@ -71,7 +71,7 @@ export default class World extends THREE.Object3D {
     // water: THREE.Mesh;
     // waterMaterial: THREE.MeshToonMaterial;
 
-    constructor(scene: THREE.Scene) {
+    constructor() {
         super();
 
         // this.physics = new AmmoPhysics(scene as any);
@@ -164,12 +164,12 @@ export default class World extends THREE.Object3D {
         // subFolder.add(this.light.rotation, "z", -5, 5, 0.1)
         // folder.open();
 
-        this.localPlayer = new LocalPlayer(scene);
+        this.localPlayer = new LocalPlayer(this);
         this.add(this.localPlayer);
 
         this.enemyPlayers = [];
         for (let index = 0; index < enemyNum; index++) {
-            this.enemyPlayers[index] = new EnemyPlayer(scene);
+            this.enemyPlayers[index] = new EnemyPlayer(this);
             this.add(this.enemyPlayers[index]);
         }
 
@@ -388,6 +388,9 @@ export default class World extends THREE.Object3D {
             smallerPlayer.changeSizeByCollision(-1 * deltaTime);
             if (smallerPlayer.scale.x < 1 || smallerPlayer.scale.x < biggerPlayer.scale.x * 0.3) {
                 smallerPlayer.die(true);
+            }
+            else {
+                smallerPlayer.hitEffect.show();
             }
 
             // const smallerPosition = smallerPlayer.position;

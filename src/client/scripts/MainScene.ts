@@ -19,12 +19,12 @@ export default class MainScene extends THREE.Scene {
         super();
         
         this.ui = new MainUI();
-        this.world = new World(this);
+        this.world = new World();
         this.add(this.world);
         this.pause = false;
 
         this.world.localPlayer.killCountAction = (count: number) => {
-            this.ui.setKillCount(count);
+            this.ui.playScreen.setKillCount(count);
         }
         this.world.localPlayer.dieAction = () => {
             this.lose();
@@ -58,11 +58,12 @@ export default class MainScene extends THREE.Scene {
 
     readyToStart() {
         this.world.readyToStart();
-        this.ui.readyToStart();
+        const readyTime = 1.5;
+        this.ui.readyToStart(readyTime);
         this.updateAction = this.updateInReady;
         setTimeout(() => {
             this.start();
-        }, 1000);
+        }, readyTime * 1000);
     }
 
     start() {
@@ -81,6 +82,9 @@ export default class MainScene extends THREE.Scene {
         this.ui.swipeTuto.update(deltaTime);
         if (VirtualJoystickManager.getInstance().clicked == true)
             this.readyToStart();
+
+
+        this.world.localPlayer.hitEffect.update(deltaTime);
     }
     updateInReady(deltaTime: number) {
         this.ui.update(deltaTime);

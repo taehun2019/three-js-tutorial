@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { Object3D } from "three";
 
 export default class Arrow extends Object3D {
-    constructor(scene: THREE.Scene) {
+    constructor() {
         super();
 
         const geometry: THREE.BoxGeometry = new THREE.BoxGeometry(5, 1, 2);

@@ -2,28 +2,28 @@ import * as THREE from 'three';
 import VirtualJoystickManager from "common/scripts/Managers/VirtualJoystickManager";
 import Player from "./Player";
 import Arrow from "./Arrow";
-import KillEffect from './SnowKillEffect';
+import SnowKillEffect from './SnowKillEffect';
 import Snow from './Snow';
 
 export default class LocalPlayer extends Player {
     elapsedTime: number = 0;
     arrow: Arrow;
-    killEffect: KillEffect;
+    killEffect: SnowKillEffect;
 
     titleAnimMaxTime = 3;
     titleAnimCurTime = 0;
 
-    constructor(scene: THREE.Scene) {
-        super(scene);
+    constructor(world: THREE.Object3D) {
+        super(world);
         this.timeGrowSize = 0.2; //0.012;
 
-        this.arrow = new Arrow(scene);
+        this.arrow = new Arrow();
         this.arrow.position.y = 0.2;
         this.add(this.arrow);
         this.arrow.scale.set(0.2, 0.2, 0.2);
 
 
-        this.killEffect = new KillEffect();
+        this.killEffect = new SnowKillEffect();
         this.add(this.killEffect);
 
     }

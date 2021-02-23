@@ -3,78 +3,63 @@ import * as THREE from 'three';
 import UIManager from 'common/scripts/Managers/UIManager';
 import title from './../assets/images/Title.png';
 import SwipeTutorial from '../common/scripts/UI/SwipeTutorial';
-// import titleFont from './assets/fonts/FredokaOne-Regular.ttf'
 
 import circleBar from 'common/images/circle_bar.png';
 import FinishScreen from 'common/scripts/UI/FinishScreen';
 import PlayNowButton from 'common/scripts/UI/PlayNowButton';
+// import font from './../assets/fonts/FredokaOne-Regular.ttf'
+
+const css = require("./../assets/fonts/fonts.css");
 
 export default class MainUI {
 
     titleImage: HTMLImageElement;
-    killCount: HTMLDivElement;
-    killCountText: HTMLTextAreaElement;
     swipeTuto: SwipeTutorial;
-
-    finishScreen: FinishScreen;
-    // playnowImage: HTMLImageElement;
-    playNowButton: PlayNowButton;
-
-    topText: HTMLElement;
-    topTextDiv: HTMLElement;
 
     startCountdownText: HTMLTextAreaElement;
 
+    playScreen: PlayScreen;
+    finishScreen: FinishScreen;
+    playNowButton: PlayNowButton;
+
+    // topText: HTMLElement;
+    // topTextDiv: HTMLElement;
+
+
     updateAction: Function = () => { };
+
+    readyTime = 0;
     
     constructor() {
-        // const image = UIManager.getInstance().createImg(title);
-        // this.titleImage = document.getElementById("title") as HTMLImageElement;
-        // this.titleImage.src = title;
-        // image.style.visibility = 'hidden';
         this.swipeTuto = new SwipeTutorial();
 
         this.startCountdownText = UIManager.getInstance().createText("3", '20%', '20%');
-        this.startCountdownText.style.top = '10%';
+        this.startCountdownText.style.top = '40%';
         this.startCountdownText.style.left = '40%';
         this.startCountdownText.style.textAlign = 'center';
         //https://stackoverflow.com/questions/16056591/font-scaling-based-on-width-of-container
         this.startCountdownText.style.fontSize = '20vw';
-
-        this.killCount = UIManager.getInstance().createDiv('180px', '180px');
-        this.killCount.style.left = '-80px';
-        // div.style.left = '50%';
-        this.killCount.style.top = '0%';
+        this.startCountdownText.style.fontWeight = 'bold';
 
         this.titleImage = UIManager.getInstance().createImg(title, '80%', '20%');
         this.titleImage.style.left = '10%';
         this.titleImage.style.top = '10%';
 
 
-        const circleBarImage = UIManager.getInstance().createImg(circleBar, '100%','100%', this.killCount);
-        // circleBarImage.style.opacity = `${76/255}`;
-        // circleBarImage.style.color = 'black';
-        //https://stackoverflow.com/questions/7415872/change-color-of-png-image-via-css
-        circleBarImage.style.filter = 'opacity(0.3) drop-shadow(0 0 0 black)';
 
-        this.killCountText = UIManager.getInstance().createText('Kill : 10', '90px', '20px', this.killCount);
-        this.killCountText.style.top = `${90 - 10- 5}px`;
-        this.killCountText.style.color = 'white';
-        this.killCountText.style.fontSize = '25px';
-        this.killCountText.style.left = '90px';
+        // this.topTextDiv = UIManager.getInstance().createDiv('100%', '10%');
+        // this.topTextDiv.style.top = '0%';
+        // this.topTextDiv.style.height = '10%';
+        // this.topTextDiv.style.background = 'black';
+        // // this.topTextDiv.textContent = "MAKE A BIG SNOWBALL!";
 
+        // this.topText = document.createElement('div') as HTMLDivElement;
+        // this.topText.textContent = "MAKE A BIG SNOWBALL!";
+        // this.topText.style.textAlign = 'center';
+        // this.topText.style.color = 'white';
+        // this.topTextDiv?.append(this.topText);
+        // // fitty(this.topText);
 
-        this.topTextDiv = UIManager.getInstance().createDiv('100%', '10%');
-        this.topTextDiv.style.top = '0%';
-        this.topTextDiv.style.height = '10%';
-        this.topTextDiv.style.background = 'black';
-        // this.topTextDiv.textContent = "MAKE A BIG SNOWBALL!";
-        this.topText = document.createElement('div') as HTMLDivElement;
-        this.topText.textContent = "MAKE A BIG SNOWBALL!";
-        this.topText.style.textAlign = 'center';
-        this.topText.style.color = 'white';
-        this.topTextDiv?.append(this.topText);
-        // fitty(this.topText);
 
 
         // div.style.background = 'black';
@@ -115,6 +100,7 @@ export default class MainUI {
 
         // this.topText.append(div3);
 
+        this.playScreen = new PlayScreen();
         this.finishScreen = new FinishScreen();
         this.playNowButton = new PlayNowButton();
 
@@ -123,12 +109,11 @@ export default class MainUI {
     }
     onWindowResize() {
         this.swipeTuto.updateAspect();
+        this.playScreen.updateAspect();
         // fitty(this.topText);
     }
     init() {
         this.titleImage.style.visibility = 'visible';
-        this.killCount.style.visibility = 'hidden';
-        this.killCountText.textContent = 'Kill : 0';
 
         this.startCountdownText.style.visibility = 'hidden';
         this.swipeTuto.init();
@@ -137,9 +122,12 @@ export default class MainUI {
 
         this.playNowButton.init();
 
+        this.playScreen.init();
         this.finishScreen.init();
     }
-    readyToStart() {
+    readyToStart(readyTime: number) {
+        this.readyTime = readyTime;
+
         this.titleImage.style.visibility = 'hidden';
         this.swipeTuto.hide();
 
@@ -149,8 +137,8 @@ export default class MainUI {
         this.updateAction = this.updateInReady;
     }
     start() {
-        this.killCount.style.visibility = 'visible';
         this.startCountdownText.style.visibility = 'hidden';
+        this.playScreen.show();
 
         this.updateAction = () => { };
     }
@@ -163,19 +151,58 @@ export default class MainUI {
         this.updateAction = this.updateInFinish;
     }
 
-    setKillCount(value: number) {
-        this.killCountText.textContent = 'Kill : ' + value;
-    }
     update(deltaTime: number) {
         this.updateAction(deltaTime);
     }
     readyElapsedTime = 0;
     updateInReady(deltaTime: number) {
         this.readyElapsedTime += deltaTime;
-        const remainTime = 4 - (this.readyElapsedTime * (3 / 1));
+        const remainTime = 4 - (this.readyElapsedTime * (3 / this.readyTime));
         this.startCountdownText.textContent = `${Math.floor(remainTime)}`;
     }
     updateInFinish(deltaTime: number) {
         this.playNowButton.animateScale(deltaTime);
+    }
+}
+
+class PlayScreen {
+    rootDiv: HTMLDivElement;
+    killCountText: HTMLTextAreaElement;
+    constructor() {
+        this.rootDiv = UIManager.getInstance().createDiv('180px', '180px');
+        this.rootDiv.style.top = '0%';
+        
+        const circleBarImage = UIManager.getInstance().createImg(circleBar, '100%','100%', this.rootDiv);
+        // circleBarImage.style.opacity = `${76/255}`;
+        // circleBarImage.style.color = 'black';
+        //https://stackoverflow.com/questions/7415872/change-color-of-png-image-via-css
+        circleBarImage.style.filter = 'opacity(0.3) drop-shadow(0 0 0 black)';
+
+        this.killCountText = UIManager.getInstance().createText('Kill : 10', '90px', '20px', this.rootDiv);
+        this.killCountText.style.fontFamily = 'Fredoka';
+    }
+    updateAspect() {
+        // let length = (window.innerWidth > window.innerHeight) ? window.innerWidth : window.innerHeight;
+        let length = window.innerWidth;
+        length *= 0.4;
+        this.rootDiv.style.width = `${length}px`;
+        this.rootDiv.style.height = `${length}px`;
+        this.rootDiv.style.left = `-${length * 0.4}px`;
+
+        this.killCountText.style.width = `${length * 0.5}px`;
+        this.killCountText.style.top = `${length * 0.44}px`;
+        this.killCountText.style.color = 'white';
+        this.killCountText.style.fontSize = `${length * 0.12}px`;
+        this.killCountText.style.left = `${length * 0.45}px`;
+    }
+    init() {
+        this.rootDiv.style.visibility = 'hidden';
+        this.killCountText.textContent = 'Kill : 0';
+    }
+    show() {
+        this.rootDiv.style.visibility = 'visible';
+    }
+    setKillCount(value: number) {
+        this.killCountText.textContent = 'Kill : ' + value;
     }
 }

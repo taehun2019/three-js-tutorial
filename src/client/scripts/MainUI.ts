@@ -166,28 +166,28 @@ export default class MainUI {
 }
 
 class PlayScreen {
-    rootDiv: HTMLDivElement;
+    killCountDiv: HTMLDivElement;
     killCountText: HTMLTextAreaElement;
     constructor() {
-        this.rootDiv = UIManager.getInstance().createDiv('180px', '180px');
-        this.rootDiv.style.top = '0%';
+        this.killCountDiv = UIManager.getInstance().createDiv('180px', '180px');
+        this.killCountDiv.style.top = '0%';
         
-        const circleBarImage = UIManager.getInstance().createImg(circleBar, '100%','100%', this.rootDiv);
+        const circleBarImage = UIManager.getInstance().createImg(circleBar, '100%','100%', this.killCountDiv);
         // circleBarImage.style.opacity = `${76/255}`;
         // circleBarImage.style.color = 'black';
         //https://stackoverflow.com/questions/7415872/change-color-of-png-image-via-css
         circleBarImage.style.filter = 'opacity(0.3) drop-shadow(0 0 0 black)';
 
-        this.killCountText = UIManager.getInstance().createText('Kill : 10', '90px', '20px', this.rootDiv);
+        this.killCountText = UIManager.getInstance().createText('Kill : 10', '90px', '20px', this.killCountDiv);
         this.killCountText.style.fontFamily = 'Fredoka';
     }
     updateAspect() {
         // let length = (window.innerWidth > window.innerHeight) ? window.innerWidth : window.innerHeight;
         let length = window.innerWidth;
         length *= 0.4;
-        this.rootDiv.style.width = `${length}px`;
-        this.rootDiv.style.height = `${length}px`;
-        this.rootDiv.style.left = `-${length * 0.4}px`;
+        this.killCountDiv.style.width = `${length}px`;
+        this.killCountDiv.style.height = `${length}px`;
+        this.killCountDiv.style.left = `-${length * 0.4}px`;
 
         this.killCountText.style.width = `${length * 0.5}px`;
         this.killCountText.style.top = `${length * 0.44}px`;
@@ -196,11 +196,11 @@ class PlayScreen {
         this.killCountText.style.left = `${length * 0.45}px`;
     }
     init() {
-        this.rootDiv.style.visibility = 'hidden';
+        this.killCountDiv.style.visibility = 'hidden';
         this.killCountText.textContent = 'Kill : 0';
     }
     show() {
-        this.rootDiv.style.visibility = 'visible';
+        this.killCountDiv.style.visibility = 'visible';
     }
     setKillCount(value: number) {
         this.killCountText.textContent = 'Kill : ' + value;

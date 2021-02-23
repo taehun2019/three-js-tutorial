@@ -1,7 +1,7 @@
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HTMLInlineCSSWebpackPlugin = require("html-inline-css-webpack-plugin").default;
-const path = require('path');
 
 module.exports = {
     mode: 'development',
@@ -25,14 +25,14 @@ module.exports = {
                     "css-loader"
                 ]
             },
+			{
+				test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
+				use: 'base64-inline-loader'
+			},
             {
                 test: /\.(png|glb)/,
                 type: 'asset/inline'
             },
-			{
-				test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
-				use: 'base64-inline-loader'
-			}
         ],
     },
     resolve: {

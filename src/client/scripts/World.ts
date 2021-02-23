@@ -15,6 +15,11 @@ import EnemyPlayer from './World/EnemyPlayer';
 import Crown from './World/Crown';
 import SnowfallEffect from './World/SnowfallEffect';
 
+import waterTexture from 'common/images/Water_Texture.png';
+import AssetManager from 'common/scripts/Managers/AssetManager';
+import stage from './../assets/models/Stage.glb';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
+
 // v = require('./../../common/ParticleSystem');
 // import ParticleSystem from './../../common/ParticleSystem'
 
@@ -63,6 +68,9 @@ export default class World extends THREE.Object3D {
 
     vibrateCooldown: boolean;
 
+    // water: THREE.Mesh;
+    // waterMaterial: THREE.MeshToonMaterial;
+
     constructor(scene: THREE.Scene) {
         super();
 
@@ -74,22 +82,46 @@ export default class World extends THREE.Object3D {
         this.mainCamera.setRotationX((300 / 180) * Math.PI);
         this.add(this.mainCamera);
 
-        const groundGeometry: THREE.CylinderGeometry = new THREE.CylinderGeometry(40, 40, 5, 20);
-        const groundMaterial = new THREE.MeshToonMaterial({ color: 0xaabbff,})
-        this.ground = new THREE.Mesh(groundGeometry, groundMaterial);
-        // this.ground.receiveShadow = true;
-        this.ground.name = 'Ground'
-        this.add(this.ground)
-        this.ground.position.y = -2.52;
+        // const groundGeometry: THREE.CylinderGeometry = new THREE.CylinderGeometry(40, 40, 5, 20);
+        // const groundMaterial = new THREE.MeshToonMaterial({ color: 0xaabbff,})
+        // this.ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        // // this.ground.receiveShadow = true;
+        // this.ground.name = 'Ground'
+        // this.add(this.ground)
+        // this.ground.position.y = -2.52;
+
 
 
         const waterGeometry: THREE.PlaneGeometry = new THREE.PlaneGeometry(1000, 1000);
-        const waterMaterial = new THREE.MeshToonMaterial({ color: 0x6783ee, opacity: 0.8, transparent: true})
+        // const waterMaterial = new THREE.MeshToonMaterial({ map:texture, color: 0x6783ee, opacity: 0.8, transparent: true})
+        const waterMaterial = new THREE.MeshToonMaterial({ opacity: 0.8, transparent: true})
         const water = new THREE.Mesh(waterGeometry, waterMaterial)
         water.rotation.x = -90 * THREE.MathUtils.DEG2RAD;
-        water.position.y = -5;
-        water.name = 'Water'
-        this.add(water)
+        water.position.y = -1;
+        water.name = 'Water';
+        this.add(water);
+
+        AssetManager.getInstance().loadTexture(waterTexture, (texture:THREE.Texture) => {
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            const timesToRepeatHorizontally = 100;
+            const timesToRepeatVertically = 100;
+            texture.repeat.set(timesToRepeatHorizontally, timesToRepeatVertically);
+
+            waterMaterial.map = texture;
+            waterMaterial.needsUpdate = true;
+        });
+
+        this.ground = new THREE.Mesh();
+        AssetManager.getInstance().loadGltf(stage, (gltf: GLTF) => {
+            const mesh = gltf.scene.children[0] as THREE.Mesh;
+            this.ground.copy(mesh);
+            this.ground.name = 'Ground'
+            this.ground.material = new THREE.MeshPhongMaterial({ color: 0xaabbff, shininess: 0});
+            this.add(this.ground)
+            this.ground.position.y = -5.5;
+            this.ground.scale.setScalar(0.7);
+        });
 
         // this.physics.add.existing(this.ground);
         // PhysicsLoader('/lib', () => { });

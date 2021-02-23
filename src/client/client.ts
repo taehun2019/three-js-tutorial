@@ -100,9 +100,9 @@ function LoadThree() {
     // gameScene.add(axesHelper);
 
     if (mraidService !== undefined)
-        gameScene.ui.onClickPlayNowAction = () => mraidService.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
+        gameScene.ui.playNowButton.onClickAction = () => mraidService.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
     else
-        gameScene.ui.onClickPlayNowAction = () => window.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
+        gameScene.ui.playNowButton.onClickAction = () => window.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
     
     
     const LoadGame = () => {

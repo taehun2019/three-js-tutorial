@@ -41,6 +41,7 @@ export default class MainScene extends THREE.Scene {
 
         // console.log(this);
 
+        this.ui.finishScreen.onClickTryAgainAction = this.processTryAction.bind(this);
     }
 
     init() {
@@ -115,5 +116,12 @@ export default class MainScene extends THREE.Scene {
         // this.isPlaying = false;
         console.log('lose');
         this.ui.showLoseScreen();
+    }
+
+    processTryAction(tryCount: number) {
+        if (tryCount === 0)
+            this.init();
+        else
+            this.ui.playNowButton.onClickAction();
     }
 }

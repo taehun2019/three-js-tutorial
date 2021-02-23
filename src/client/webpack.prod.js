@@ -23,6 +23,7 @@ module.exports = {
         modules: [
             'node_modules',
             'src/client', 
+            'download_modules',
         ],
     },
     output: {

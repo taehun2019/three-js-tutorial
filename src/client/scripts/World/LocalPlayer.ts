@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import VirtualJoystickManager from "common/scripts/Managers/VirtualJoystickManager";
 import Player from "./Player";
 import Arrow from "./Arrow";
-import KillEffect from './KillEffect';
+import KillEffect from './SnowKillEffect';
 import Snow from './Snow';
 
 export default class LocalPlayer extends Player {
@@ -15,7 +15,7 @@ export default class LocalPlayer extends Player {
 
     constructor(scene: THREE.Scene) {
         super(scene);
-        this.timeGrowSize = 0.14; //0.012;
+        this.timeGrowSize = 0.2; //0.012;
 
         this.arrow = new Arrow(scene);
         this.arrow.position.y = 0.2;
@@ -30,6 +30,7 @@ export default class LocalPlayer extends Player {
 
     init(color: THREE.Color, startPoint: THREE.Vector2) {
         super.init(color, startPoint);
+
         this.moveDirection.set(0, 1);
         this.rotate();
         this.snow.position.y = Snow.groundOffset;

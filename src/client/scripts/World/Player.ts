@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import Snow from './Snow';
 import SnowTrail from './SnowTrail';
 
-import DieEffect from './DieEffect';
+import DieEffect from './SnowDieEffect';
 import Shadow from './Shadow';
 
 const Vector2 = THREE.Vector2;

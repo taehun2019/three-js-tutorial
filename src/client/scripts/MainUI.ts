@@ -1,25 +1,24 @@
 import * as THREE from 'three';
-import fitty from 'fitty'
+// import fitty from 'fitty';
 import UIManager from 'common/scripts/Managers/UIManager';
 import title from './../assets/images/Title.png';
 import SwipeTutorial from '../common/scripts/UI/SwipeTutorial';
 // import titleFont from './assets/fonts/FredokaOne-Regular.ttf'
 
 import circleBar from 'common/images/circle_bar.png';
-import awesome from 'common/images/awesome.png';
-import playnow from 'common/images/play_now.png';
+import FinishScreen from 'common/scripts/UI/FinishScreen';
+import PlayNowButton from 'common/scripts/UI/PlayNowButton';
 
 export default class MainUI {
-    onClickPlayNowAction: Function = () => { };
 
     titleImage: HTMLImageElement;
     killCount: HTMLDivElement;
     killCountText: HTMLTextAreaElement;
     swipeTuto: SwipeTutorial;
 
-    finishScreen: HTMLDivElement;
-    awesomeImage: HTMLImageElement;
-    playnowImage: HTMLImageElement;
+    finishScreen: FinishScreen;
+    // playnowImage: HTMLImageElement;
+    playNowButton: PlayNowButton;
 
     topText: HTMLElement;
     topTextDiv: HTMLElement;
@@ -75,7 +74,9 @@ export default class MainUI {
         this.topText.style.textAlign = 'center';
         this.topText.style.color = 'white';
         this.topTextDiv?.append(this.topText);
-        fitty(this.topText);
+        // fitty(this.topText);
+
+
         // div.style.background = 'black';
 
         // div.style.verticalAlign = 'middle';
@@ -114,35 +115,15 @@ export default class MainUI {
 
         // this.topText.append(div3);
 
-
-        
-
-
-
-        this.finishScreen = UIManager.getInstance().createDiv('100%', '100%');
-        const blind = UIManager.getInstance().createDiv('100%', '100%', this.finishScreen);
-        blind.style.backgroundColor = 'black';
-        blind.style.opacity = '20%';
-
-        this.awesomeImage = UIManager.getInstance().createImg(awesome, '80%', '20%', this.finishScreen);
-        this.awesomeImage.style.top = '10%';
-        this.awesomeImage.style.left = '10%';
-        
-        this.playnowImage = UIManager.getInstance().createImg(playnow, '80%', '20%');
-        this.updatePlaynowImage(80, 20);
-        this.playnowImage.addEventListener('click', ()=>{
-            // console.log('click');
-            this.onClickPlayNowAction();
-        })
-
+        this.finishScreen = new FinishScreen();
+        this.playNowButton = new PlayNowButton();
 
         window.addEventListener('resize', () => this.onWindowResize(), false);
         this.onWindowResize();
     }
     onWindowResize() {
         this.swipeTuto.updateAspect();
-        this.finishScreen.style.top = '0%';
-        fitty(this.topText);
+        // fitty(this.topText);
     }
     init() {
         this.titleImage.style.visibility = 'visible';
@@ -153,44 +134,32 @@ export default class MainUI {
         this.swipeTuto.init();
 
         this.readyElapsedTime = 0;
-        this.finishElapsedTime = 0;
-        this.finishScreen.style.visibility = 'hidden';
-        this.awesomeImage.style.visibility = 'hidden';
 
-        this.playnowImage.style.visibility = 'hidden';
+        this.playNowButton.init();
+
+        this.finishScreen.init();
     }
     readyToStart() {
         this.titleImage.style.visibility = 'hidden';
         this.swipeTuto.hide();
 
         this.startCountdownText.style.visibility = 'visible';
-        this.playnowImage.style.visibility = 'visible';
+        this.playNowButton.readyToStart();
 
         this.updateAction = this.updateInReady;
     }
     start() {
         this.killCount.style.visibility = 'visible';
-        // setTimeout(() => {
-        //     this.swipeTuto.hide();
-        // }, 1000);
         this.startCountdownText.style.visibility = 'hidden';
 
         this.updateAction = () => { };
     }
-    // hideTuto() {
-    //     this.swipeTuto.hide();
-    //     this.playnowImage.style.visibility = 'visible';
-    // }
     showWinScreen() {
-        this.finishScreen.style.visibility = 'visible';
-        this.awesomeImage.style.visibility = 'visible';
-        
+        this.finishScreen.show(true);
         this.updateAction = this.updateInFinish;
     }
     showLoseScreen() {
-        this.finishScreen.style.visibility = 'visible';
-        this.awesomeImage.style.visibility = 'hidden';
-
+        this.finishScreen.show(false);
         this.updateAction = this.updateInFinish;
     }
 
@@ -206,20 +175,7 @@ export default class MainUI {
         const remainTime = 4 - (this.readyElapsedTime * (3 / 1));
         this.startCountdownText.textContent = `${Math.floor(remainTime)}`;
     }
-    finishElapsedTime = 0;
-    // playnowAnimScaleTime = 1;
     updateInFinish(deltaTime: number) {
-        this.finishElapsedTime += deltaTime;
-
-        const time = 0.5;
-        const interpolation = Math.abs(Math.abs((this.finishElapsedTime % (time * 2)) - time) - time);
-        const scale = THREE.MathUtils.lerp(1, 1.05, interpolation);
-        this.updatePlaynowImage(scale * 80, scale * 20);
-    }
-    updatePlaynowImage(width: number, height: number) {
-        this.playnowImage.style.width = `${width}%`;
-        this.playnowImage.style.height = `${height}%`;
-        this.playnowImage.style.top = `${100 - (height + 10)}%`; //'80%';
-        this.playnowImage.style.left = `${(100 - width) * 0.5}%`;//'10%';
+        this.playNowButton.animateScale(deltaTime);
     }
 }

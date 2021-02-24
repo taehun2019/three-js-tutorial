@@ -35,6 +35,15 @@ export default class MainScene extends THREE.Scene {
                     this.win();
             };
         });
+        for (let index = 0; index < this.world.totalPlayers.length; index++) {
+            // if(index !== 2)
+            //     continue;
+            const player = this.world.totalPlayers[index];
+            const profile = this.ui.playScreen.playerProfiles[index];
+            player.updateProfileAction = profile.updatePosition.bind(profile);
+            player.hideProfileAction = profile.hide.bind(profile);
+        }
+
         this.callbacks = new EventEmitter();
         
         // this.init();

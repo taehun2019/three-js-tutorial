@@ -104,8 +104,8 @@ export default class World extends THREE.Object3D {
         AssetManager.getInstance().loadTexture(waterTexture, (texture:THREE.Texture) => {
             texture.wrapS = THREE.RepeatWrapping;
             texture.wrapT = THREE.RepeatWrapping;
-            const timesToRepeatHorizontally = 100;
-            const timesToRepeatVertically = 100;
+            const timesToRepeatHorizontally = 20;
+            const timesToRepeatVertically = 20;
             texture.repeat.set(timesToRepeatHorizontally, timesToRepeatVertically);
 
             waterMaterial.map = texture;
@@ -178,6 +178,9 @@ export default class World extends THREE.Object3D {
         for (let index = 0; index < enemyNum; index++) {
             this.totalPlayers[index + 1] = this.enemyPlayers[index];
         }
+        this.totalPlayers.forEach(player => {
+            player.getScreenPosAction = this.mainCamera.convertPositionWorldToScreen.bind(this.mainCamera);
+        });
 
         // this.physics.add.box({ x: 0.05, y: 10 }, { lambert: { color: 0x2194ce } })
 
@@ -276,7 +279,7 @@ export default class World extends THREE.Object3D {
         let point = startPoints[pointIndex];
         remainPointIndex.delete(pointIndex);
         // this.localPlayer.init(colors[0], 0, 0);
-        this.localPlayer.init(colors[0], point);
+        this.localPlayer.init(colors[0], point, 1);
         
         for (let index = 0; index < this.enemyPlayers.length; index++) {
             // const posX = THREE.MathUtils.randInt(-30, 30);
@@ -286,7 +289,7 @@ export default class World extends THREE.Object3D {
             point = startPoints[pointIndex];
             remainPointIndex.delete(pointIndex);
             // this.enemyPlayers[index].init(colors[index + 1],posX, posZ);
-            this.enemyPlayers[index].initWithWaypoints(colors[index + 1], point, startPoints);
+            this.enemyPlayers[index].initWithWaypoints(colors[index + 1], point, index + 2, startPoints);
         }
 
         this.mainCamera.init(this.localPlayer);

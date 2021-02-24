@@ -155,4 +155,14 @@ export default class MainCamera extends THREE.Object3D {
         this.shotConfettiEffect = false;
         this.curShotConfettiEffectIndex = 0;
     }
+
+    convertPositionWorldToScreen(worldPosition: THREE.Vector3) {
+        console.log(worldPosition);
+        var position = worldPosition.clone();
+        this.camera.updateMatrixWorld();
+        position.project(this.camera);
+        // console.log(worldPosition);
+        // console.log(position);
+        return position;
+    }
 }

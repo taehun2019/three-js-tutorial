@@ -28,8 +28,8 @@ export default class LocalPlayer extends Player {
 
     }
 
-    init(color: THREE.Color, startPoint: THREE.Vector2) {
-        super.init(color, startPoint);
+    init(color: THREE.Color, startPoint: THREE.Vector2, faceNum: number) {
+        super.init(color, startPoint, faceNum);
 
         this.moveDirection.set(0, 1);
         this.rotate();
@@ -58,7 +58,7 @@ export default class LocalPlayer extends Player {
     }
 
     update(deltaTime: number) {
-        this.updateAction(deltaTime);
+        super.update(deltaTime);
         if (this.killEffect.visible === true)
             this.killEffect.update(deltaTime);
     }

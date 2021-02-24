@@ -11,7 +11,7 @@ export default class Snow extends THREE.Object3D {
     static initBounceTime = 0.5;
     body: THREE.Mesh;
     bodyMaterial: THREE.MeshToonMaterial;
-    eyes: SnowFace;
+    face: SnowFace;
     constructor() {
         super();
 
@@ -24,9 +24,9 @@ export default class Snow extends THREE.Object3D {
         // this.body.castShadow = true;
         this.add(this.body);
 
-        this.eyes = new SnowFace();
-        this.body.add(this.eyes);
-        this.eyes.position.set(0, 0.0, 1.0);
+        this.face = new SnowFace();
+        this.body.add(this.face);
+        this.face.position.set(0, 0.0, 1.0);
 
         this.position.y = Snow.groundOffset; //1;
 
@@ -44,13 +44,15 @@ export default class Snow extends THREE.Object3D {
     curBounceTime = 0;
     maxBounceTime = 0.5;
 
-    init(color: THREE.Color) {
+    init(color: THREE.Color, faceNum: number) {
         this.visible = true;
         this.bodyMaterial.color = color;
         // console.log(color);
         this.body.material = this.bodyMaterial;
 
         this.curBounceTime = 0;
+
+        this.face.init(faceNum);
     }
 
 

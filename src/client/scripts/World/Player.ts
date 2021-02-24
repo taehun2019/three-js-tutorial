@@ -22,6 +22,10 @@ export default class Player extends THREE.Object3D {
     dieAction: Function = () => { };
     killCountAction: Function = () => { };
 
+    getScreenPosAction: Function = () => { };
+    updateProfileAction: Function = () => { };
+    hideProfileAction: Function = () => { };
+
     snow: Snow;
     color: THREE.Color;
     hitEffect: SnowHitEffect;
@@ -111,11 +115,11 @@ export default class Player extends THREE.Object3D {
         this.timeGrowSize = 0.1; //0.01;
     }
 
-    init(color: THREE.Color, startPoint: THREE.Vector2) {
+    init(color: THREE.Color, startPoint: THREE.Vector2, faceNum: number) {
         this.visible = true;
 
         this.color = color;
-        this.snow.init(color);
+        this.snow.init(color, faceNum);
 
         this.shadow.visible = true;
 
@@ -154,6 +158,9 @@ export default class Player extends THREE.Object3D {
 
     update(deltaTime: number) {
         this.updateAction(deltaTime);
+        // console.log(this.getScreenPosAction(this.position));
+        if (this.isAlive === true)
+            this.updateProfileAction(this.getScreenPosAction(this.position));
     }
 
     updateInPlay(deltaTime: number) {
@@ -229,6 +236,7 @@ export default class Player extends THREE.Object3D {
         this.snow.visible = false;
         this.shadow.visible = false;
         this.dieAction();
+        this.hideProfileAction();
 
         if (showEffect === true) {
             this.dieEffect.visible = true;

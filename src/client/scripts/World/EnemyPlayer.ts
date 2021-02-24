@@ -32,8 +32,8 @@ export default class EnemyPlayer extends Player {
     //     super(scene);
     // }
 
-    initWithWaypoints(color: THREE.Color, startPoint: THREE.Vector2, waypoints: THREE.Vector2[]) {
-        super.init(color, startPoint);
+    initWithWaypoints(color: THREE.Color, startPoint: THREE.Vector2, faceNum: number, waypoints: THREE.Vector2[]) {
+        super.init(color, startPoint, faceNum);
         this.waypoints = waypoints;
         this.curWaypointIndex = -1;
 

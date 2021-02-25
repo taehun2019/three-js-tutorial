@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 export default class UIManager {
     private static instance: UIManager;
     static getInstance() { 
@@ -72,5 +74,13 @@ export default class UIManager {
         (parent === undefined) ? document.body.append(result) : parent?.append(result);
         
         return result;
+    }
+
+    static convertScreenToCanvas(screenPos: THREE.Vector3) {
+        // screenPos.y *= -1;
+        // const canvasPos = screenPos.clone().multiplyScalar(0.5).addScalar(0.5); //-1~1 => 0~1
+        const result = screenPos.clone();
+        result.y *= -1;
+        return result.multiplyScalar(0.5).addScalar(0.5); //-1~1 => 0~1
     }
 }

@@ -178,10 +178,12 @@ export default class World extends THREE.Object3D {
         for (let index = 0; index < enemyNum; index++) {
             this.totalPlayers[index + 1] = this.enemyPlayers[index];
         }
-        this.totalPlayers.forEach(player => {
-            player.getScreenPosAction = this.mainCamera.convertPositionWorldToScreen.bind(this.mainCamera);
-        });
+        // this.totalPlayers.forEach(player => {
+        //     player.getScreenPosAction = this.mainCamera.convertPositionWorldToScreen.bind(this.mainCamera);
+        // });
 
+
+        
         // this.physics.add.box({ x: 0.05, y: 10 }, { lambert: { color: 0x2194ce } })
 
         // // green sphere

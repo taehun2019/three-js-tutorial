@@ -15,6 +15,8 @@ import World from './../World';
 const Vector2 = THREE.Vector2;
 const Vector3 = THREE.Vector3;
 
+const headHeight = 1.8;
+
 export default class Player extends THREE.Object3D {
     static initMoveSpeed: number = 7; //4; //10;
     static initRotateSpeed: number = 800; //200;
@@ -26,6 +28,7 @@ export default class Player extends THREE.Object3D {
     updateProfileAction: Function = () => { };
     hideProfileAction: Function = () => { };
 
+    // head: THREE.Object3D;
     snow: Snow;
     color: THREE.Color;
     hitEffect: SnowHitEffect;
@@ -56,6 +59,12 @@ export default class Player extends THREE.Object3D {
 
     constructor(world: THREE.Object3D) {
         super();
+
+        // this.head = new THREE.Object3D();
+        // this.add(this.head);
+        // this.head.position.setScalar(0);
+        // this.head.position.y = 2;
+        
         this.snow = new Snow();
         this.color = new THREE.Color('white');
         this.add(this.snow);
@@ -167,7 +176,15 @@ export default class Player extends THREE.Object3D {
             this.updateProfile();
     }
     updateProfile() {
-        this.updateProfileAction(this.getScreenPosAction(this.position));
+
+        // this.updateProfileAction(this.getScreenPosAction(this.position));
+        this.updateProfileAction(this.getScreenPosAction(this.getHeadPos()));
+    }
+    getHeadPos() {
+        const headPos = this.position.clone();
+        headPos.y = headHeight * this.scale.x;
+        headPos.y += 2;
+        return headPos;
     }
 
     updateInPlay(deltaTime: number) {

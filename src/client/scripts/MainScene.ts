@@ -25,6 +25,9 @@ export default class MainScene extends THREE.Scene {
 
         this.world.localPlayer.killCountAction = (count: number) => {
             this.ui.playScreen.setKillCount(count);
+            const screenPos = this.world.mainCamera.convertWorldToScreen(this.world.localPlayer.getHeadPos());
+            this.ui.playScreen.showCenterKillCount(count, screenPos);
+            // this.updateProfileAction(this.getScreenPosAction(this.position));
         }
         this.world.localPlayer.dieAction = () => {
             this.lose();
@@ -42,6 +45,8 @@ export default class MainScene extends THREE.Scene {
             const profile = this.ui.playScreen.playerProfiles[index - 1];
             player.updateProfileAction = profile.updatePosition.bind(profile);
             player.hideProfileAction = profile.hide.bind(profile);
+
+            player.getScreenPosAction = this.world.mainCamera.convertWorldToScreen.bind(this.world.mainCamera);
         }
 
         this.callbacks = new EventEmitter();

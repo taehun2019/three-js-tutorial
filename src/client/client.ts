@@ -165,7 +165,7 @@ function LoadThree() {
                 // gameScene.world.mainCamera.setLength(gameScene.world.mainCamera.getLengthByTargetScale());
                 // gameScene.world.localPlayer.hitEffect.visible = !gameScene.world.localPlayer.hitEffect.visible;
                 // gameScene.world.localPlayer.hitEffect.show();
-                gameScene.ui.playScreen.showCenterKillCount();
+                // gameScene.ui.playScreen.showCenterKillCount();
             }
         }
         function onKeyUp(event: KeyboardEvent) {

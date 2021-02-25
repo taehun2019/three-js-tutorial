@@ -4,12 +4,12 @@ import UIManager from 'common/scripts/Managers/UIManager';
 import title from './../assets/images/Title.png';
 import SwipeTutorial from '../common/scripts/UI/SwipeTutorial';
 
-import circleBar from 'common/images/circle_bar.png';
 import FinishScreen from 'common/scripts/UI/FinishScreen';
 import PlayNowButton from 'common/scripts/UI/PlayNowButton';
+import PlayScreen from './UI/PlayScreen';
 // import font from './../assets/fonts/FredokaOne-Regular.ttf'
 
-const css = require("./../assets/fonts/fonts.css");
+require('./../assets/fonts/fonts.css');
 
 export default class MainUI {
 
@@ -47,61 +47,6 @@ export default class MainUI {
         this.titleImage.style.left = '10%';
         this.titleImage.style.top = '10%';
 
-
-
-        // this.topTextDiv = UIManager.getInstance().createDiv('100%', '10%');
-        // this.topTextDiv.style.top = '0%';
-        // this.topTextDiv.style.height = '10%';
-        // this.topTextDiv.style.background = 'black';
-        // // this.topTextDiv.textContent = "MAKE A BIG SNOWBALL!";
-
-        // this.topText = document.createElement('div') as HTMLDivElement;
-        // this.topText.textContent = "MAKE A BIG SNOWBALL!";
-        // this.topText.style.textAlign = 'center';
-        // this.topText.style.color = 'white';
-        // this.topTextDiv?.append(this.topText);
-        // // fitty(this.topText);
-
-
-
-        // div.style.background = 'black';
-
-        // div.style.verticalAlign = 'middle';
-
-        // this.topText = UIManager.getInstance().createText("MAKE A BIG SNOWBALL!", '100%', '80%', div);
-        // this.topText.style.color = 'white';
-
-        // this.topText.style.fontSize = '7vw';
-        // this.topText.style.textAlign = 'center';
-        // this.topText.style.marginTop = 'auto';
-        // this.topText.style.marginBottom = 'auto';
-        // text.style.verticalAlign = 'middle';
-
-        // const div2 = document.createElement('div') as HTMLDivElement;
-        // this.topText = document.createElement('text') as HTMLTextAreaElement;
-        // this.topText.textContent = "MAKE A BIG SNOWBALL!";
-        // // this.topText.style.width = '100%';
-        // // this.topText.style.height = '100%';
-        // // this.topText.style.display = 'inline-block';
-        // div2?.append(this.topText);
-        // div?.append(div2);
-        // // document.body.append(this.topText)
-        // this.topText.style.color = 'white';
-        // fitty(this.topText, {
-        //     minSize: 12,
-        //     maxSize: 300,
-        // });
-
-        // const div3 = document.createElement('div') as HTMLDivElement;
-        // div3.style.position = 'absolute';
-        // div3.style.zIndex = '-1';
-        // div3.style.top = '0%';
-        // div3.style.width = '100%';
-        // div3.style.height = '100%';
-        // div3.style.background = 'black';
-
-        // this.topText.append(div3);
-
         this.playScreen = new PlayScreen();
         this.finishScreen = new FinishScreen();
         this.playNowButton = new PlayNowButton();
@@ -112,8 +57,6 @@ export default class MainUI {
     onWindowResize() {
         this.swipeTuto.updateAspect();
         this.playScreen.updateAspect();
-        // fitty(this.topText);
-
 
         this.startCountdownText.style.fontSize = (window.innerWidth < window.innerHeight) ? '20vw' : '20vh';
     }
@@ -174,201 +117,5 @@ export default class MainUI {
     updateInFinish(deltaTime: number) {
         this.playNowButton.animateScale(deltaTime);
         this.finishScreen.update(deltaTime);
-    }
-}
-
-import { ScaleAnimation, ScaleAnimationInfo } from 'common/scripts/UI/ScaleAnimation';
-
-class PlayScreen {
-    killCountDiv: HTMLDivElement;
-    killCountText: HTMLTextAreaElement;
-
-    centerKillAnimInfo: ScaleAnimationInfo;
-    centerKillCountText: HTMLElement;
-    showKillTextCallNum = 0;
-
-    playerProfiles: PlayerProfile[];
-
-    constructor() {
-        this.killCountDiv = UIManager.createDiv('180px', '180px');
-        this.killCountDiv.style.top = '0%';
-        
-        const circleBarImage = UIManager.createImg(circleBar, '100%','100%', this.killCountDiv);
-        // circleBarImage.style.opacity = `${76/255}`;
-        // circleBarImage.style.color = 'black';
-        //https://stackoverflow.com/questions/7415872/change-color-of-png-image-via-css
-        // circleBarImage.style.filter = 'opacity(0.3) drop-shadow(0 0 0 black)';
-        circleBarImage.style.filter = 'invert(1) opacity(0.3)';
-
-        this.killCountText = UIManager.createText('Kill : 10', '90px', '20px', this.killCountDiv);
-        this.killCountText.style.fontFamily = 'Fredoka';
-
-        // this.centerKillCountText = UIManager.getInstance().createText('+1', '10%', '10%');
-        this.centerKillCountText = UIManager.createText('asdf', '10%', '10%');
-        this.centerKillCountText.style.fontFamily = 'Fredoka';
-        // this.centerKillCountText.style.fontSize = '10vw';
-        this.centerKillCountText.style.top = '30%'
-        this.centerKillCountText.style.left = '45%'
-        this.centerKillCountText.style.textAlign = 'center'
-        this.centerKillCountText.style.color = '#242246';
-        
-
-        this.centerKillAnimInfo = {
-            element: this.centerKillCountText,
-            curTime: 0, maxTime: 0.2,
-            baseWidthPercent: 10, baseHeightPercent: 10,
-            topPercent: 45, leftPercent: 50,
-            fromScale: 3, toScale: 1,
-        }
-
-        this.playerProfiles = [];
-        for (let index = 0; index < 7; index++) {
-            this.playerProfiles[index] = new PlayerProfile(index);
-        }
-    }
-    updateAspect() {
-        let length = (window.innerWidth < window.innerHeight) ? window.innerWidth : window.innerHeight;
-        // let length = window.innerWidth;
-        length *= 0.4;
-        this.killCountDiv.style.width = `${length}px`;
-        this.killCountDiv.style.height = `${length}px`;
-        this.killCountDiv.style.left = `-${length * 0.4}px`;
-
-        this.killCountText.style.width = `${length * 0.5}px`;
-        this.killCountText.style.top = `${length * 0.42}px`;
-        this.killCountText.style.color = 'white';
-        this.killCountText.style.fontSize = `${length * 0.12}px`;
-        this.killCountText.style.left = `${length * 0.45}px`;
-
-        this.centerKillCountText.style.fontSize = (window.innerWidth < window.innerHeight) ? '10vw' : '10vh';
-
-        this.playerProfiles.forEach(profile => {
-            profile.updateAspect();
-        });
-    }
-    init() {
-        this.killCountDiv.style.visibility = 'hidden';
-        this.killCountText.textContent = 'Kill : 0';
-
-        this.showKillTextCallNum = 0;
-        this.centerKillCountText.style.visibility = 'hidden';
-        for (let index = 0; index < this.playerProfiles.length; index++) {
-            this.playerProfiles[index].hide();
-        }
-    }
-    // show() {
-
-    // }
-    readyToStart() {
-        for (let index = 0; index < this.playerProfiles.length; index++) {
-            this.playerProfiles[index].show();
-        }
-    }
-    start() {
-        this.killCountDiv.style.visibility = 'visible';
-    }
-    update(deltaTime: number) {
-        if (this.centerKillCountText.style.visibility === 'visible')
-            ScaleAnimation.animate(this.centerKillAnimInfo, deltaTime);
-    }
-    showCenterKillCount() {
-        // this.setKillCount(10);
-        this.centerKillCountText.textContent = '+10';
-        this.centerKillCountText.style.visibility = 'visible';
-        this.centerKillAnimInfo.curTime = 0;
-    }
-    setKillCount(value: number) {
-        this.killCountText.textContent = 'Kill : ' + value;
-
-        this.showKillTextCallNum++;
-        this.centerKillCountText.textContent = '+' + value;
-        this.centerKillCountText.style.visibility = 'visible';
-        this.centerKillAnimInfo.curTime = 0;
-        
-        setTimeout(() => {
-            this.showKillTextCallNum--;
-            if (this.showKillTextCallNum === 0) {
-                this.centerKillCountText.style.visibility = 'hidden';
-            }
-        }, 1000)
-    }
-}
-
-import korea from './../common/images/flags/South-Korea.png';
-import japan from './../common/images/flags/Japan.png';
-import china from './../common/images/flags/China.png';
-import us from './../common/images/flags/United-States.png';
-import uk from './../common/images/flags/United-Kingdom.png';
-import canada from './../common/images/flags/Canada.png';
-import germany from './../common/images/flags/Germany.png';
-
-const countries = [
-    korea, japan, china, us, uk, canada, germany
-]
-const names = [
-    'Jack',
-    'James',
-    'Max',
-    'Leo',
-    'Joy',
-    'Kelly',
-    'Risa',
-
-
-    // 'Michael',
-    // 'Christopher',
-    // 'Matthew',
-    // 'Jason',
-    // 'Jessica',
-    // 'Ashley',
-    // 'Emily'
-]
-
-class PlayerProfile {
-    rootDiv: HTMLDivElement;
-    image: HTMLImageElement;
-    divSize: THREE.Vector2;
-    text: HTMLTextAreaElement;
-    constructor(countryIndex: number) {
-        this.rootDiv = UIManager.createDiv('10%', '10%');
-        this.image = UIManager.createImg(countries[countryIndex], '20%', '100%', this.rootDiv);
-        this.image.style.left = '0%';
-
-        this.divSize = new THREE.Vector2();
-
-        this.text = UIManager.createText(names[countryIndex], '70%', '100%', this.rootDiv);
-        this.text.style.right = '0%';
-        this.text.style.justifyContent = 'start';
-        this.text.style.fontFamily = 'Fredoka';
-        this.text.style.color = '#242246';
-    }
-    // init() {
-    //     this.rootDiv.style.visibility = 'hidden';
-    // }
-    show() {
-        // console.log('PlayerProfile.show');
-        this.rootDiv.style.visibility = 'visible';
-    }
-    updateAspect() {
-        let length = (window.innerWidth < window.innerHeight) ? window.innerWidth : window.innerHeight;
-        length *= 0.2;
-        this.divSize.x = length;
-        this.divSize.y = length * 0.5;
-        this.rootDiv.style.width = `${this.divSize.x}px`;
-        this.rootDiv.style.height = `${this.divSize.y}px`;
-
-        this.text.style.fontSize = (window.innerWidth < window.innerHeight) ? '4vw' : '4vh';
-    }
-    updatePosition(screenPos: THREE.Vector3) {
-        // console.log(screenPosition);
-        screenPos.y *= -1;
-        const canvasPos = screenPos.clone().multiplyScalar(0.5).addScalar(0.5); //-1~1 => 0~1
-        canvasPos.y -= 0.05;
-        // canvasPos.y *= -1;
-        this.rootDiv.style.left = `${(window.innerWidth * canvasPos.x) - (this.divSize.x * 0.5)}px`
-        this.rootDiv.style.top = `${(window.innerHeight * canvasPos.y) - (this.divSize.y * 0.5)}px`
-    }
-    hide() {
-        this.rootDiv.style.visibility = 'hidden';
     }
 }

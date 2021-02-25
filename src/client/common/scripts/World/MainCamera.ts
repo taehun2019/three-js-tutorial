@@ -67,8 +67,8 @@ export default class MainCamera extends THREE.Object3D {
         if (this.target != null) {
             this.followTarget(this.target.getWorldPosition(new THREE.Vector3()));
         }
-        // this.setLength(5);
-        this.setLength(40);
+        this.setLength(5);
+        // this.setLength(40);
 
         // this.confettiEffect.init();
         this.showConfettiEffects = false;
@@ -156,7 +156,7 @@ export default class MainCamera extends THREE.Object3D {
         this.curShotConfettiEffectIndex = 0;
     }
 
-    convertPositionWorldToScreen(worldPosition: THREE.Vector3) {
+    convertWorldToScreen(worldPosition: THREE.Vector3) {
         // console.log(worldPosition);
         var position = worldPosition.clone();
         this.camera.updateMatrixWorld();

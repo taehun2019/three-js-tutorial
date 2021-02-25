@@ -3,7 +3,7 @@ import UIManager from "../Managers/UIManager";
 import playNow from '../../images/play_now.png';
 
 const baseWidth = 60;
-const baseHeght = 10;
+const baseHeght = 15;
 
 export default class PlayNowButton {
     onClickAction: Function = () => { };
@@ -37,5 +37,8 @@ export default class PlayNowButton {
         const interpolation = Math.abs(Math.abs((this.animElapsedTime % (time * 2)) - time) - time);
         const scale = THREE.MathUtils.lerp(1, 1.05, interpolation);
         this.setSize(scale * baseWidth, scale * baseHeght);
+    }
+    async animateScale2() {
+
     }
 }

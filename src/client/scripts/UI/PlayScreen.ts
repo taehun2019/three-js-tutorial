@@ -28,6 +28,7 @@ export default class PlayScreen {
 
         this.killCountText = UIManager.createText('Kill : 10', '90px', '20px', this.killCountDiv);
         this.killCountText.style.fontFamily = 'Fredoka';
+        this.killCountText.style.height = '100%';
 
         // this.centerKillCountText = UIManager.getInstance().createText('+1', '10%', '10%');
         this.centerKillCountText = UIManager.createText('asdf', '10%', '10%');
@@ -61,7 +62,8 @@ export default class PlayScreen {
         this.killCountDiv.style.left = `-${length * 0.4}px`;
 
         this.killCountText.style.width = `${length * 0.5}px`;
-        this.killCountText.style.top = `${length * 0.42}px`;
+        // this.killCountText.style.top = `${length * 0.42}px`;
+        // this.killCountText.style.top = `${length * 0.5}px`;
         this.killCountText.style.color = 'white';
         this.killCountText.style.fontSize = `${length * 0.12}px`;
         this.killCountText.style.left = `${length * 0.45}px`;
@@ -78,17 +80,18 @@ export default class PlayScreen {
 
         this.showKillTextCallNum = 0;
         this.centerKillCountText.style.visibility = 'hidden';
+        // for (let index = 0; index < this.playerProfiles.length; index++) {
+        //     this.playerProfiles[index].hide();
+        // }
         for (let index = 0; index < this.playerProfiles.length; index++) {
-            this.playerProfiles[index].hide();
+            this.playerProfiles[index].show();
         }
     }
     // show() {
 
     // }
     readyToStart() {
-        for (let index = 0; index < this.playerProfiles.length; index++) {
-            this.playerProfiles[index].show();
-        }
+        
     }
     start() {
         this.killCountDiv.style.visibility = 'visible';

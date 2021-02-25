@@ -279,7 +279,9 @@ export default class World extends THREE.Object3D {
         let randomPick = THREE.MathUtils.randInt(0, remainPointIndex.size - 1);
         let pointIndex = Array.from(remainPointIndex)[randomPick];
         let point = startPoints[pointIndex];
-        remainPointIndex.delete(pointIndex);
+        // remainPointIndex.delete(pointIndex);
+        point = startPoints[0];
+        remainPointIndex.delete(0);
         // this.localPlayer.init(colors[0], 0, 0);
         this.localPlayer.init(colors[0], point, 1);
         

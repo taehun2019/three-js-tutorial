@@ -29,6 +29,7 @@ export default class MainUI {
     updateAction: Function = () => { };
 
     readyTime = 0;
+    win = true;
     
     constructor() {
         this.swipeTuto = new SwipeTutorial();
@@ -94,10 +95,12 @@ export default class MainUI {
         this.updateAction = this.updateInPlay;
     }
     showWinScreen() {
+        this.win = true;
         this.finishScreen.show(true);
         this.updateAction = this.updateInFinish;
     }
     showLoseScreen() {
+        this.win = false;
         this.finishScreen.show(false);
         this.updateAction = this.updateInFinish;
     }
@@ -115,7 +118,8 @@ export default class MainUI {
         this.playScreen.update(deltaTime);
     }
     updateInFinish(deltaTime: number) {
-        this.playNowButton.animateScale(deltaTime);
+        if (this.win === true)
+            this.playNowButton.animateScale(deltaTime);
         this.finishScreen.update(deltaTime);
     }
 }

@@ -46,6 +46,10 @@ export default class LocalPlayer extends Player {
     }
     start() {
         super.start();
+        this.moveDirection.x = this.position.x;
+        this.moveDirection.y = this.position.z;
+        this.moveDirection.multiplyScalar(-1).normalize();
+        VirtualJoystickManager.getInstance().offset.copy(this.moveDirection);
         this.arrow.visible = true;
     }
     kill(player: Player) {

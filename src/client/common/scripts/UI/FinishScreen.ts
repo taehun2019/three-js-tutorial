@@ -15,6 +15,9 @@ export default class FinishScreen {
     tryCount = 0;
     
     awesomeAnimInfo: ScaleAnimationInfo;
+    failedAnimInfo: ScaleAnimationInfo;
+
+    tryAgainAnimInfo: ScaleAnimationInfo;
     
     constructor(parent?: HTMLElement) {
         this.rootDiv = UIManager.createDiv('100%', '100%', parent);
@@ -32,9 +35,10 @@ export default class FinishScreen {
         this.failedImage.style.top = '10%';
         this.failedImage.style.left = '10%';
         
-        this.tryAgainImage = UIManager.createImg(tryAgain, '60%', '10%', this.rootDiv);
-        this.tryAgainImage.style.left = '20%';
-        this.tryAgainImage.style.top = '70%';
+        this.tryAgainImage = UIManager.createImg(tryAgain, '60%', '15%', this.rootDiv);
+        // this.tryAgainImage.style.left = '20%';
+        // this.tryAgainImage.style.top = '60%';
+        // this.tryAgainImage.style.top = `${UIManager.getCenterPercent(15, 60)}%`;
         this.tryAgainImage.addEventListener('click', () => this.onClickTryAgain());
 
         // window.addEventListener('resize', () => this.onWindowResize(), false);
@@ -46,6 +50,22 @@ export default class FinishScreen {
             baseWidthPercent: 80, baseHeightPercent: 20,
             fromScale: 3, toScale: 1,
             topPercent: 20, leftPercent: 50,
+        }
+
+        this.failedAnimInfo = {
+            element: this.failedImage,
+            curTime: 0, maxTime: 0.5,
+            baseWidthPercent: 80, baseHeightPercent: 20,
+            fromScale: 3, toScale: 1,
+            topPercent: 20, leftPercent: 50,
+        }
+
+        this.tryAgainAnimInfo = {
+            element: this.tryAgainImage,
+            curTime: 0, maxTime: 0.5,
+            baseWidthPercent: 60, baseHeightPercent: 15,
+            fromScale: 3, toScale: 1,
+            topPercent: 70, leftPercent: 50,
         }
     }
     // onWindowResize() {
@@ -68,6 +88,10 @@ export default class FinishScreen {
     update(deltaTime: number) {
         if (this.awesomeImage.style.visibility === 'visible')
             ScaleAnimation.animate(this.awesomeAnimInfo, deltaTime);
+        if (this.failedImage.style.visibility === 'visible')
+            ScaleAnimation.animate(this.failedAnimInfo, deltaTime);
+        if (this.tryAgainImage.style.visibility === 'visible')
+            ScaleAnimation.animate(this.tryAgainAnimInfo, deltaTime);
     }
     onClickTryAgain() {
         this.onClickTryAgainAction(this.tryCount);

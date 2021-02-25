@@ -83,4 +83,8 @@ export default class UIManager {
         result.y *= -1;
         return result.multiplyScalar(0.5).addScalar(0.5); //-1~1 => 0~1
     }
+
+    // static getCenterPercent(lengthPercent: number, startPercentnumber: number) {
+    //     return startPercentnumber + (lengthPercent * 0.5);
+    // }
 }

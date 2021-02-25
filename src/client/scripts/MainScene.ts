@@ -14,6 +14,9 @@ export default class MainScene extends THREE.Scene {
     callbacks: EventEmitter;
 
     updateAction: Function = () => { };
+
+    touch: boolean = false;
+
     // constructor(scene: THREE.Scene) {
     constructor() {
         super();
@@ -72,6 +75,14 @@ export default class MainScene extends THREE.Scene {
         this.callbacks.emit('init');
 
         this.updateAction = this.updateInTitle;
+
+        this.touch = false;
+        setTimeout(() => {
+            if (this.touch === false) {
+                this.readyToStart();
+                this.touch = true;
+            }
+        }, 3000)
     }
 
     getCamera() {
@@ -102,8 +113,10 @@ export default class MainScene extends THREE.Scene {
         this.world.localPlayer.update(deltaTime);
         this.world.snowfallEffect.update(deltaTime);
         this.ui.swipeTuto.update(deltaTime);
-        if (VirtualJoystickManager.getInstance().clicked == true)
+        if (VirtualJoystickManager.getInstance().clicked == true) {
             this.readyToStart();
+            this.touch = true;
+        }
 
 
         this.world.localPlayer.hitEffect.update(deltaTime);

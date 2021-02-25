@@ -125,7 +125,7 @@ function LoadThree() {
             camera.fov = THREE.MathUtils.lerp(squareFov, 75, THREE.MathUtils.clamp(ratio, 1, 2) - 1);
             if (window.innerWidth > window.innerHeight)
                 camera.fov = squareFov - (camera.fov - squareFov);
-            console.log(camera.fov);
+            // console.log(camera.fov);
 
             camera.updateProjectionMatrix();
             // renderer.setSize(window.innerWidth, window.innerHeight);

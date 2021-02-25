@@ -11,7 +11,7 @@ export default class PlayNowButton {
     animElapsedTime = 0;
 
     constructor() {
-        this.image = UIManager.getInstance().createImg(playNow, '80%', '20%');
+        this.image = UIManager.createImg(playNow, '80%', '20%');
         this.setSize(baseWidth, baseHeght);
         this.image.addEventListener('click', ()=>{
             this.onClickAction();

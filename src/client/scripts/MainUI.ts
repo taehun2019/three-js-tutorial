@@ -33,7 +33,7 @@ export default class MainUI {
     constructor() {
         this.swipeTuto = new SwipeTutorial();
 
-        this.startCountdownText = UIManager.getInstance().createText("3", '20%', '20%');
+        this.startCountdownText = UIManager.createText("3", '20%', '20%');
         this.startCountdownText.style.top = '40%';
         this.startCountdownText.style.left = '40%';
         this.startCountdownText.style.textAlign = 'center';
@@ -41,8 +41,9 @@ export default class MainUI {
         this.startCountdownText.style.fontSize = '20vw';
         this.startCountdownText.style.fontWeight = 'bold';
         this.startCountdownText.style.color = '#242246';
+        this.startCountdownText.style.fontFamily = 'Fredoka';
 
-        this.titleImage = UIManager.getInstance().createImg(title, '80%', '20%');
+        this.titleImage = UIManager.createImg(title, '80%', '20%');
         this.titleImage.style.left = '10%';
         this.titleImage.style.top = '10%';
 
@@ -112,6 +113,9 @@ export default class MainUI {
         this.swipeTuto.updateAspect();
         this.playScreen.updateAspect();
         // fitty(this.topText);
+
+
+        this.startCountdownText.style.fontSize = (window.innerWidth < window.innerHeight) ? '20vw' : '20vh';
     }
     init() {
         this.titleImage.style.visibility = 'visible';
@@ -169,6 +173,7 @@ export default class MainUI {
     }
     updateInFinish(deltaTime: number) {
         this.playNowButton.animateScale(deltaTime);
+        this.finishScreen.update(deltaTime);
     }
 }
 
@@ -179,26 +184,27 @@ class PlayScreen {
     killCountText: HTMLTextAreaElement;
 
     centerKillAnimInfo: ScaleAnimationInfo;
-    centerKillCountText: HTMLTextAreaElement;
+    centerKillCountText: HTMLElement;
     showKillTextCallNum = 0;
 
     playerProfiles: PlayerProfile[];
 
     constructor() {
-        this.killCountDiv = UIManager.getInstance().createDiv('180px', '180px');
+        this.killCountDiv = UIManager.createDiv('180px', '180px');
         this.killCountDiv.style.top = '0%';
         
-        const circleBarImage = UIManager.getInstance().createImg(circleBar, '100%','100%', this.killCountDiv);
+        const circleBarImage = UIManager.createImg(circleBar, '100%','100%', this.killCountDiv);
         // circleBarImage.style.opacity = `${76/255}`;
         // circleBarImage.style.color = 'black';
         //https://stackoverflow.com/questions/7415872/change-color-of-png-image-via-css
         // circleBarImage.style.filter = 'opacity(0.3) drop-shadow(0 0 0 black)';
         circleBarImage.style.filter = 'invert(1) opacity(0.3)';
 
-        this.killCountText = UIManager.getInstance().createText('Kill : 10', '90px', '20px', this.killCountDiv);
+        this.killCountText = UIManager.createText('Kill : 10', '90px', '20px', this.killCountDiv);
         this.killCountText.style.fontFamily = 'Fredoka';
 
-        this.centerKillCountText = UIManager.getInstance().createText('+1', '10%', '10%');
+        // this.centerKillCountText = UIManager.getInstance().createText('+1', '10%', '10%');
+        this.centerKillCountText = UIManager.createText('asdf', '10%', '10%');
         this.centerKillCountText.style.fontFamily = 'Fredoka';
         // this.centerKillCountText.style.fontSize = '10vw';
         this.centerKillCountText.style.top = '30%'
@@ -209,10 +215,10 @@ class PlayScreen {
 
         this.centerKillAnimInfo = {
             element: this.centerKillCountText,
-            curTime: 0, maxTime: 0.5,
-            baseWidth: 10, baseHeight: 10,
-            top: 45, left: 45,
-            fromScale: 3, toScale: 1
+            curTime: 0, maxTime: 0.2,
+            baseWidthPercent: 10, baseHeightPercent: 10,
+            topPercent: 45, leftPercent: 50,
+            fromScale: 3, toScale: 1,
         }
 
         this.playerProfiles = [];
@@ -262,8 +268,8 @@ class PlayScreen {
         this.killCountDiv.style.visibility = 'visible';
     }
     update(deltaTime: number) {
-        // if (this.centerKillCountText.style.visibility === 'visible')
-        //     ScaleAnimation.animate(this.centerKillAnimInfo, deltaTime);
+        if (this.centerKillCountText.style.visibility === 'visible')
+            ScaleAnimation.animate(this.centerKillAnimInfo, deltaTime);
     }
     showCenterKillCount() {
         // this.setKillCount(10);
@@ -277,6 +283,7 @@ class PlayScreen {
         this.showKillTextCallNum++;
         this.centerKillCountText.textContent = '+' + value;
         this.centerKillCountText.style.visibility = 'visible';
+        this.centerKillAnimInfo.curTime = 0;
         
         setTimeout(() => {
             this.showKillTextCallNum--;
@@ -323,16 +330,15 @@ class PlayerProfile {
     divSize: THREE.Vector2;
     text: HTMLTextAreaElement;
     constructor(countryIndex: number) {
-        this.rootDiv = UIManager.getInstance().createDiv('10%', '10%');
-        this.image = UIManager.getInstance().createImg(countries[countryIndex], '20%', '100%', this.rootDiv);
-        this.image.style.top = '0%';
+        this.rootDiv = UIManager.createDiv('10%', '10%');
+        this.image = UIManager.createImg(countries[countryIndex], '20%', '100%', this.rootDiv);
         this.image.style.left = '0%';
 
         this.divSize = new THREE.Vector2();
 
-        this.text = UIManager.getInstance().createText(names[countryIndex], '70%', '80%', this.rootDiv);
-        this.text.style.top = '25%';
+        this.text = UIManager.createText(names[countryIndex], '70%', '100%', this.rootDiv);
         this.text.style.right = '0%';
+        this.text.style.justifyContent = 'start';
         this.text.style.fontFamily = 'Fredoka';
         this.text.style.color = '#242246';
     }

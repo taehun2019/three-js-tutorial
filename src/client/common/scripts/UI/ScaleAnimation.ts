@@ -5,39 +5,34 @@ export interface ScaleAnimationInfo {
     curTime: number;
     maxTime: number;
 
-    baseWidth: number;
-    baseHeight: number;
+    baseWidthPercent: number;
+    baseHeightPercent: number;
     fromScale: number;
     toScale: number;
 
-    top: number;
-    left: number;
+    topPercent: number;
+    leftPercent: number;
 }
 export class ScaleAnimation {
     static animate(animInfo: ScaleAnimationInfo, deltaTime: number) {
         animInfo.curTime += deltaTime;
         if (animInfo.curTime > animInfo.maxTime) {
-            // console.log(`animInfo.curTime:${animInfo.curTime}/animInfo.maxTime:${animInfo.maxTime}`);
-            ScaleAnimation.setSize(animInfo, animInfo.baseWidth * animInfo.toScale, animInfo.baseHeight * animInfo.toScale);
+            ScaleAnimation.setSize(animInfo, animInfo.baseWidthPercent * animInfo.toScale, animInfo.baseHeightPercent * animInfo.toScale);
             return;
         }
 
-        // const interpolation = Math.abs(Math.abs((curTime % (time * 2)) - time) - time);
         const interpolation = animInfo.curTime / animInfo.maxTime;
         const scale = THREE.MathUtils.lerp(animInfo.fromScale, animInfo.toScale, interpolation);
-        ScaleAnimation.setSize(animInfo, animInfo.baseWidth * scale, animInfo.baseHeight * scale);
+        ScaleAnimation.setSize(animInfo, animInfo.baseWidthPercent * scale, animInfo.baseHeightPercent * scale);
     }
-    static setSize(animInfo: ScaleAnimationInfo, width: number, height: number) {
-        // console.log(`ScaleAnimation.setSize. width:${width}/height:${height}`);
-        animInfo.element.style.width = `${width}%`;
-        animInfo.element.style.height = `${height}%`;
-        animInfo.element.style.top = `${animInfo.top}%`;//`${100 - (height + 10)}%`; //'80%';
-        animInfo.element.style.left = `${animInfo.left}%`;//`${(100 - width) * 0.5}%`;//'10%';
+    static setSize(animInfo: ScaleAnimationInfo, widthPercent: number, heightPercent: number) {
+        animInfo.element.style.width = `${widthPercent}%`;
+        animInfo.element.style.height = `${heightPercent}%`;
+        animInfo.element.style.top = `${animInfo.topPercent - (heightPercent * 0.5)}%`;
+        animInfo.element.style.left = `${animInfo.leftPercent - (widthPercent * 0.5)}%`;
         
-        // if (animInfo.element instanceof HTMLTextAreaElement) {
         if (animInfo.element.tagName.toLowerCase() === 'text') {
-            animInfo.element.style.fontSize = (window.innerWidth < window.innerHeight) ? `${width}vw` : `${height}vh`;
-            // animInfo.element.style.fontSize = (window.innerWidth < window.innerHeight) ? `${width}px` : `${height}px`;
+            animInfo.element.style.fontSize = (window.innerWidth < window.innerHeight) ? `${widthPercent}vw` : `${heightPercent}vh`;
         }
     }
 }

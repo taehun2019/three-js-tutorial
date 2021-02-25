@@ -39,9 +39,9 @@ export default class SwipeTutorial {
 
     constructor() {
         // this.swipeDiv = UIManager.getInstance().createDiv('200px', '200px');
-        this.swipeDiv = UIManager.getInstance().createDiv('40%', '40%');
-        const swipeImage = UIManager.getInstance().createImg(swipe, '100%', '100%', this.swipeDiv);
-        this.swipeFinger = UIManager.getInstance().createImg(finger, '40%', '40%', this.swipeDiv);
+        this.swipeDiv = UIManager.createDiv('40%', '40%');
+        const swipeImage = UIManager.createImg(swipe, '100%', '100%', this.swipeDiv);
+        this.swipeFinger = UIManager.createImg(finger, '40%', '40%', this.swipeDiv);
         // console.log(this.fingerPoints[0]);
         this.swipeFinger.style.left = `${this.fingerPoints[0].x}%`;
         this.swipeFinger.style.top = `${this.fingerPoints[0].y}%`;

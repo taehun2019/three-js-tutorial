@@ -15,5 +15,5 @@
     },
     "include": [
         "**/*.ts"
-    ]
+, "common/downloads/TrailRenderer/TrailRenderer.d.ts.disable"    ]
 }

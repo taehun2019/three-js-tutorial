@@ -157,7 +157,7 @@ export default class MainCamera extends THREE.Object3D {
     }
 
     convertPositionWorldToScreen(worldPosition: THREE.Vector3) {
-        console.log(worldPosition);
+        // console.log(worldPosition);
         var position = worldPosition.clone();
         this.camera.updateMatrixWorld();
         position.project(this.camera);

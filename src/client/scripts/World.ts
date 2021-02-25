@@ -389,7 +389,8 @@ export default class World extends THREE.Object3D {
             // smallerPlayer.changeSizeByCollision(-0.01);
             biggerPlayer.changeSizeByCollision(+0.3 * deltaTime);
             smallerPlayer.changeSizeByCollision(-1 * deltaTime);
-            if (smallerPlayer.scale.x < 1 || smallerPlayer.scale.x < biggerPlayer.scale.x * 0.3) {
+            // if (smallerPlayer.scale.x < 1 || smallerPlayer.scale.x < biggerPlayer.scale.x * 0.3) {
+            if (smallerPlayer.scale.x < 0.5 || smallerPlayer.scale.x < biggerPlayer.scale.x * 0.1) {
                 smallerPlayer.die(true);
             }
             else {

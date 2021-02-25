@@ -40,6 +40,7 @@ export default class MainUI {
         //https://stackoverflow.com/questions/16056591/font-scaling-based-on-width-of-container
         this.startCountdownText.style.fontSize = '20vw';
         this.startCountdownText.style.fontWeight = 'bold';
+        this.startCountdownText.style.color = '#242246';
 
         this.titleImage = UIManager.getInstance().createImg(title, '80%', '20%');
         this.titleImage.style.left = '10%';
@@ -135,12 +136,15 @@ export default class MainUI {
         this.playNowButton.readyToStart();
 
         this.updateAction = this.updateInReady;
+
+        // this.playScreen.show();
+        this.playScreen.readyToStart();
     }
     start() {
         this.startCountdownText.style.visibility = 'hidden';
-        this.playScreen.show();
+        this.playScreen.start();
 
-        this.updateAction = () => { };
+        this.updateAction = this.updateInPlay;
     }
     showWinScreen() {
         this.finishScreen.show(true);
@@ -160,16 +164,21 @@ export default class MainUI {
         const remainTime = 4 - (this.readyElapsedTime * (3 / this.readyTime));
         this.startCountdownText.textContent = `${Math.floor(remainTime)}`;
     }
+    updateInPlay(deltaTime: number) {
+        this.playScreen.update(deltaTime);
+    }
     updateInFinish(deltaTime: number) {
         this.playNowButton.animateScale(deltaTime);
     }
 }
 
+import { ScaleAnimation, ScaleAnimationInfo } from 'common/scripts/UI/ScaleAnimation';
 
 class PlayScreen {
     killCountDiv: HTMLDivElement;
     killCountText: HTMLTextAreaElement;
 
+    centerKillAnimInfo: ScaleAnimationInfo;
     centerKillCountText: HTMLTextAreaElement;
     showKillTextCallNum = 0;
 
@@ -192,11 +201,22 @@ class PlayScreen {
         this.centerKillCountText = UIManager.getInstance().createText('+1', '10%', '10%');
         this.centerKillCountText.style.fontFamily = 'Fredoka';
         // this.centerKillCountText.style.fontSize = '10vw';
-        this.centerKillCountText.style.top = '45%'
+        this.centerKillCountText.style.top = '30%'
         this.centerKillCountText.style.left = '45%'
+        this.centerKillCountText.style.textAlign = 'center'
+        this.centerKillCountText.style.color = '#242246';
+        
+
+        this.centerKillAnimInfo = {
+            element: this.centerKillCountText,
+            curTime: 0, maxTime: 0.5,
+            baseWidth: 10, baseHeight: 10,
+            top: 45, left: 45,
+            fromScale: 3, toScale: 1
+        }
 
         this.playerProfiles = [];
-        for (let index = 0; index < 8; index++) {
+        for (let index = 0; index < 7; index++) {
             this.playerProfiles[index] = new PlayerProfile(index);
         }
     }
@@ -226,9 +246,30 @@ class PlayScreen {
 
         this.showKillTextCallNum = 0;
         this.centerKillCountText.style.visibility = 'hidden';
+        for (let index = 0; index < this.playerProfiles.length; index++) {
+            this.playerProfiles[index].hide();
+        }
     }
-    show() {
+    // show() {
+
+    // }
+    readyToStart() {
+        for (let index = 0; index < this.playerProfiles.length; index++) {
+            this.playerProfiles[index].show();
+        }
+    }
+    start() {
         this.killCountDiv.style.visibility = 'visible';
+    }
+    update(deltaTime: number) {
+        // if (this.centerKillCountText.style.visibility === 'visible')
+        //     ScaleAnimation.animate(this.centerKillAnimInfo, deltaTime);
+    }
+    showCenterKillCount() {
+        // this.setKillCount(10);
+        this.centerKillCountText.textContent = '+10';
+        this.centerKillCountText.style.visibility = 'visible';
+        this.centerKillAnimInfo.curTime = 0;
     }
     setKillCount(value: number) {
         this.killCountText.textContent = 'Kill : ' + value;
@@ -246,22 +287,41 @@ class PlayScreen {
     }
 }
 
-import korea from './../common/images/flags/South Korea.png';
+import korea from './../common/images/flags/South-Korea.png';
 import japan from './../common/images/flags/Japan.png';
 import china from './../common/images/flags/China.png';
-import us from './../common/images/flags/United States.png';
-import uk from './../common/images/flags/United Kingdom.png';
+import us from './../common/images/flags/United-States.png';
+import uk from './../common/images/flags/United-Kingdom.png';
 import canada from './../common/images/flags/Canada.png';
 import germany from './../common/images/flags/Germany.png';
 
 const countries = [
     korea, japan, china, us, uk, canada, germany
 ]
+const names = [
+    'Jack',
+    'James',
+    'Max',
+    'Leo',
+    'Joy',
+    'Kelly',
+    'Risa',
+
+
+    // 'Michael',
+    // 'Christopher',
+    // 'Matthew',
+    // 'Jason',
+    // 'Jessica',
+    // 'Ashley',
+    // 'Emily'
+]
 
 class PlayerProfile {
     rootDiv: HTMLDivElement;
     image: HTMLImageElement;
     divSize: THREE.Vector2;
+    text: HTMLTextAreaElement;
     constructor(countryIndex: number) {
         this.rootDiv = UIManager.getInstance().createDiv('10%', '10%');
         this.image = UIManager.getInstance().createImg(countries[countryIndex], '20%', '100%', this.rootDiv);
@@ -269,8 +329,18 @@ class PlayerProfile {
         this.image.style.left = '0%';
 
         this.divSize = new THREE.Vector2();
+
+        this.text = UIManager.getInstance().createText(names[countryIndex], '70%', '80%', this.rootDiv);
+        this.text.style.top = '25%';
+        this.text.style.right = '0%';
+        this.text.style.fontFamily = 'Fredoka';
+        this.text.style.color = '#242246';
     }
-    init() {
+    // init() {
+    //     this.rootDiv.style.visibility = 'hidden';
+    // }
+    show() {
+        // console.log('PlayerProfile.show');
         this.rootDiv.style.visibility = 'visible';
     }
     updateAspect() {
@@ -280,6 +350,8 @@ class PlayerProfile {
         this.divSize.y = length * 0.5;
         this.rootDiv.style.width = `${this.divSize.x}px`;
         this.rootDiv.style.height = `${this.divSize.y}px`;
+
+        this.text.style.fontSize = (window.innerWidth < window.innerHeight) ? '4vw' : '4vh';
     }
     updatePosition(screenPos: THREE.Vector3) {
         // console.log(screenPosition);

@@ -126,6 +126,10 @@ export default class Player extends THREE.Object3D {
         this.position.set(startPoint.x, 0, startPoint.y);
         this.scale.set(1,1,1);
 
+        setTimeout(() => {
+            this.updateProfile();
+        }, 100)
+
         this.moveDirection.x = THREE.MathUtils.randFloat(-1, 1);
         this.moveDirection.y = THREE.MathUtils.randFloat(-1, 1);
         this.moveDirection = this.moveDirection.normalize();
@@ -160,7 +164,10 @@ export default class Player extends THREE.Object3D {
         this.updateAction(deltaTime);
         // console.log(this.getScreenPosAction(this.position));
         if (this.isAlive === true)
-            this.updateProfileAction(this.getScreenPosAction(this.position));
+            this.updateProfile();
+    }
+    updateProfile() {
+        this.updateProfileAction(this.getScreenPosAction(this.position));
     }
 
     updateInPlay(deltaTime: number) {

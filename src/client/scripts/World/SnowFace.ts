@@ -5,6 +5,7 @@ import * as THREE from 'three'
 //https://stackoverflow.com/questions/52286068/webpack-cannot-find-image-when-imported-module-not-found
 //https://github.com/microsoft/TypeScript-React-Starter/issues/12
 // import face from './../../assets/images/face.png'
+
 import face1 from './../../assets/images/faces/Face01.png'
 import face2 from './../../assets/images/faces/Face02.png'
 import face3 from './../../assets/images/faces/Face03.png'
@@ -30,7 +31,6 @@ export default class SnowFace extends THREE.Object3D {
         this.plane = new THREE.Mesh(geometry, this.material);
         this.add(this.plane);
 
-        // AssetManager.getInstance().loadTexture(face1, this.loadTexture.bind(this));
         if (AssetManager.getInstance().textures.has(face1) === false)
         {
             faces.forEach(face => {

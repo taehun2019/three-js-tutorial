@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import SnowFace from './SnowFace';
 // import { THREE } from 'enable3d';
 
-require('common/downloads/TrailRenderer/TrailRenderer');
+// require('common/downloads/TrailRenderer/TrailRenderer');
 
 export default class Snow extends THREE.Object3D {
     static groundOffset = 0.8;

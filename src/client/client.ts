@@ -118,9 +118,15 @@ function LoadThree() {
         // console.log(gameScene);
         // printGraph(gameScene);
 
-    
+        const squareFov = 60;
         function updateAspect() {
             camera.aspect = window.innerWidth / window.innerHeight;
+            const ratio = (window.innerWidth > window.innerHeight) ? (window.innerWidth / window.innerHeight) : (window.innerHeight / window.innerWidth);
+            camera.fov = THREE.MathUtils.lerp(squareFov, 75, THREE.MathUtils.clamp(ratio, 1, 2) - 1);
+            if (window.innerWidth > window.innerHeight)
+                camera.fov = squareFov - (camera.fov - squareFov);
+            console.log(camera.fov);
+
             camera.updateProjectionMatrix();
             // renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setSize(window.innerWidth * 2, window.innerHeight * 2, false);
@@ -158,7 +164,8 @@ function LoadThree() {
                 // gameScene.world.crown.visible = true;
                 // gameScene.world.mainCamera.setLength(gameScene.world.mainCamera.getLengthByTargetScale());
                 // gameScene.world.localPlayer.hitEffect.visible = !gameScene.world.localPlayer.hitEffect.visible;
-                gameScene.world.localPlayer.hitEffect.show();
+                // gameScene.world.localPlayer.hitEffect.show();
+                gameScene.ui.playScreen.showCenterKillCount();
             }
         }
         function onKeyUp(event: KeyboardEvent) {

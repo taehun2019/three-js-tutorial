@@ -36,10 +36,10 @@ export default class MainScene extends THREE.Scene {
             };
         });
         for (let index = 0; index < this.world.totalPlayers.length; index++) {
-            // if(index !== 2)
-            //     continue;
+            if(index === 0)
+                continue;
             const player = this.world.totalPlayers[index];
-            const profile = this.ui.playScreen.playerProfiles[index];
+            const profile = this.ui.playScreen.playerProfiles[index - 1];
             player.updateProfileAction = profile.updatePosition.bind(profile);
             player.hideProfileAction = profile.hide.bind(profile);
         }
@@ -51,6 +51,14 @@ export default class MainScene extends THREE.Scene {
         // console.log(this);
 
         this.ui.finishScreen.onClickTryAgainAction = this.processTryAction.bind(this);
+
+        window.addEventListener('resize', () => this.onWindowResize(), false);
+        this.onWindowResize();
+    }
+    onWindowResize() {
+        for (let index = 0; index < this.world.totalPlayers.length; index++) {
+            this.world.totalPlayers[index].updateProfile();
+        }
     }
 
     init() {
@@ -103,6 +111,7 @@ export default class MainScene extends THREE.Scene {
         if (this.pause === true)
             return;
         this.world.update(deltaTime);
+        this.ui.update(deltaTime);
     }
     updateInFinish(deltaTime: number) {
         this.world.updateInFinish(deltaTime);

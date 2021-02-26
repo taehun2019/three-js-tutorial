@@ -6,6 +6,7 @@ import World from './World';
 import * as EventEmitter from 'events';
 import MainUI from './MainUI';
 import { CameraState } from 'common/scripts/World/MainCamera';
+import { TrailRenderer } from 'common/downloads/TrailRenderer/TrailRenderer'
 
 export default class MainScene extends THREE.Scene {
     world: World;
@@ -62,6 +63,9 @@ export default class MainScene extends THREE.Scene {
 
         window.addEventListener('resize', () => this.onWindowResize(), false);
         this.onWindowResize();
+
+        const trailRenderer = new TrailRenderer(this, false);
+        const trailMaterial = TrailRenderer.createBaseMaterial();
     }
     onWindowResize() {
         for (let index = 0; index < this.world.totalPlayers.length; index++) {

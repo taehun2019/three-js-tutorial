@@ -2,7 +2,7 @@ import UIManager from "../Managers/UIManager";
 import awesome from '../../images/awesome.png';
 import failed from '../../images/FAILED.png';
 import tryAgain from '../../images/TryAgain.png';
-import { ScaleAnimation, ScaleAnimationInfo } from "./ScaleAnimation";
+import { ScaleAnimation } from "./ScaleAnimation";
 
 export default class FinishScreen {
     onClickTryAgainAction: Function = () => { };
@@ -14,10 +14,10 @@ export default class FinishScreen {
 
     tryCount = 0;
     
-    awesomeAnimInfo: ScaleAnimationInfo;
-    failedAnimInfo: ScaleAnimationInfo;
+    awesomeAnim: ScaleAnimation;
+    failedAnim: ScaleAnimation;
 
-    tryAgainAnimInfo: ScaleAnimationInfo;
+    tryAgainAnim: ScaleAnimation;
     
     constructor(parent?: HTMLElement) {
         this.rootDiv = UIManager.createDiv('100%', '100%', parent);
@@ -28,70 +28,72 @@ export default class FinishScreen {
         blind.style.opacity = '20%';
 
         this.awesomeImage = UIManager.createImg(awesome, '80%', '20%', this.rootDiv);
-        this.awesomeImage.style.top = '10%';
-        this.awesomeImage.style.left = '10%';
-
         this.failedImage = UIManager.createImg(failed, '80%', '20%', this.rootDiv);
-        this.failedImage.style.top = '10%';
-        this.failedImage.style.left = '10%';
-        
         this.tryAgainImage = UIManager.createImg(tryAgain, '60%', '15%', this.rootDiv);
-        // this.tryAgainImage.style.left = '20%';
-        // this.tryAgainImage.style.top = '60%';
-        // this.tryAgainImage.style.top = `${UIManager.getCenterPercent(15, 60)}%`;
+
         this.tryAgainImage.addEventListener('click', () => this.onClickTryAgain());
 
-        // window.addEventListener('resize', () => this.onWindowResize(), false);
-        // this.onWindowResize();
-
-        this.awesomeAnimInfo = {
+        this.awesomeAnim = new ScaleAnimation({
             element: this.awesomeImage,
-            curTime: 0, maxTime: 0.5,
+            maxTime: 0.5,
             baseWidthPercent: 80, baseHeightPercent: 20,
             fromScale: 3, toScale: 1,
             topPercent: 20, leftPercent: 50,
-        }
+        });
 
-        this.failedAnimInfo = {
+        this.failedAnim = new ScaleAnimation({
             element: this.failedImage,
-            curTime: 0, maxTime: 0.5,
+            maxTime: 0.2,
             baseWidthPercent: 80, baseHeightPercent: 20,
             fromScale: 3, toScale: 1,
-            topPercent: 20, leftPercent: 50,
-        }
+            leftPercent: 50, topPercent: 20,
+        });
 
-        this.tryAgainAnimInfo = {
+        this.tryAgainAnim = new ScaleAnimation({
             element: this.tryAgainImage,
-            curTime: 0, maxTime: 0.5,
+            maxTime: 0.2,
             baseWidthPercent: 60, baseHeightPercent: 15,
             fromScale: 3, toScale: 1,
-            topPercent: 70, leftPercent: 50,
-        }
+            leftPercent: 50, topPercent: 65,
+            startDelay: 0.3,
+        });
     }
     // onWindowResize() {
     //     // this.finishScreen.style.top = '0%';
     // }
     init() {
         this.rootDiv.style.visibility = 'hidden';
-        this.awesomeImage.style.visibility = 'hidden';
-        this.failedImage.style.visibility = 'hidden';
-        this.tryAgainImage.style.visibility = 'hidden';
+        // this.awesomeImage.style.visibility = 'hidden';
+        // this.failedImage.style.visibility = 'hidden';
+        // this.tryAgainImage.style.visibility = 'hidden';
+    
+        this.awesomeAnim.init();
+        this.failedAnim.init();
+        this.tryAgainAnim.init();
     }
     show(win: boolean) {
         this.rootDiv.style.visibility = 'visible';
 
-        this.awesomeAnimInfo.curTime = 0;
-        this.awesomeImage.style.visibility = (win === true) ? 'visible' : 'hidden';
-        this.failedImage.style.visibility = (win === false) ? 'visible' : 'hidden';
-        this.tryAgainImage.style.visibility = (win === false) ? 'visible' : 'hidden';
+        // this.awesomeAnimInfo.curTime = 0;
+        // this.awesomeImage.style.visibility = (win === true) ? 'visible' : 'hidden';
+        // this.failedImage.style.visibility = (win === false) ? 'visible' : 'hidden';
+        // this.tryAgainImage.style.visibility = (win === false) ? 'visible' : 'hidden';
+
+        if (win === true) {
+            this.awesomeAnim.play();
+        }
+        else {
+            this.failedAnim.play();
+            this.tryAgainAnim.play();
+        }
     }
     update(deltaTime: number) {
-        if (this.awesomeImage.style.visibility === 'visible')
-            ScaleAnimation.animate(this.awesomeAnimInfo, deltaTime);
-        if (this.failedImage.style.visibility === 'visible')
-            ScaleAnimation.animate(this.failedAnimInfo, deltaTime);
-        if (this.tryAgainImage.style.visibility === 'visible')
-            ScaleAnimation.animate(this.tryAgainAnimInfo, deltaTime);
+        if (this.awesomeAnim.playing === true)
+            this.awesomeAnim.animate(deltaTime);
+        if (this.failedAnim.playing === true)
+            this.failedAnim.animate(deltaTime);
+        if (this.tryAgainAnim.playing === true)
+            this.tryAgainAnim.animate(deltaTime);
     }
     onClickTryAgain() {
         this.onClickTryAgainAction(this.tryCount);

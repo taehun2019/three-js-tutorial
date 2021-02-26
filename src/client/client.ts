@@ -9,6 +9,7 @@ import MainScene from './scripts/MainScene';
 import VirtualJoystickManager from 'common/scripts/Managers/VirtualJoystickManager';
 import AssetManager from 'common/scripts/Managers/AssetManager';
 import GizmosManager from 'common/scripts/Managers/GizmosManager';
+import DeviceManager from 'common/scripts/Managers/DeviceManager';
 
 
 let mraidLoaded = false;
@@ -62,6 +63,13 @@ function LoadThree() {
         return;
     // console.log('C');
 
+    
+    // mraidService.addEventListener("stateChange", function(){
+    //     if (mraidService.getState() == 'hidden') {
+    //    // Mute all audio here (audiocontext, inline, etc.)}
+    // })
+       
+
     //https://threejsfundamentals.org/threejs/lessons/threejs-fundamentals.html
     const canvas = document.querySelector('#c') as HTMLCanvasElement;
     canvas.getBoundingClientRect();
@@ -100,9 +108,26 @@ function LoadThree() {
     // gameScene.add(axesHelper);
 
     if (mraidService !== undefined)
-        gameScene.ui.playNowButton.onClickAction = () => mraidService.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
+        gameScene.ui.playNowButton.onClickAction = () => {
+            if (DeviceManager.getInstance().osName === 'iOS') {
+                // mraidService.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
+            }
+            else {
+                // mraidService.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
+            }
+        }
     else
-        gameScene.ui.playNowButton.onClickAction = () => window.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
+        gameScene.ui.playNowButton.onClickAction = () => {
+            // console.log("A");
+            if (DeviceManager.getInstance().osName === 'iOS') {
+                // console.log("B");
+                window.location.href = "https://apps.apple.com/us/app/snow-roll-io/id1545852074";
+            }
+            else {
+                // console.log("C");
+                window.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
+            }
+        }
     
     
     const LoadGame = () => {
@@ -126,6 +151,7 @@ function LoadThree() {
             if (window.innerWidth > window.innerHeight)
                 camera.fov = squareFov - (camera.fov - squareFov);
             // console.log(camera.fov);
+            // camera.fov = 15;
 
             camera.updateProjectionMatrix();
             // renderer.setSize(window.innerWidth, window.innerHeight);
@@ -175,6 +201,13 @@ function LoadThree() {
         document.addEventListener("keyup", onKeyUp, false);
 
         gameScene.init();
+
+        // console.log('----------------------');
+        // console.log(document);
+        // console.log(window);
+        // console.log(window.parent);
+        // console.log(window.parent.document);
+        // console.log('----------------------');
     
         let preElapsedTime: number = 0;
         let curElapsedTime: number = 0;
@@ -186,9 +219,14 @@ function LoadThree() {
             deltaTime = curElapsedTime - preElapsedTime;
             deltaTime *= 0.001;
             // console.log(deltaTime);
-    
-    
-            gameScene.update(deltaTime);
+
+            // console.log(deltaTime);
+            // console.log(document.hasFocus());
+            // if (deltaTime < 1 && document.hasFocus() === true)
+            if (deltaTime < 1)
+                // (document.hasFocus() || (window.parent !== undefined && window.parent.document.hasFocus())))
+            // if (document.hasFocus() === true)
+                gameScene.update(deltaTime);
     
             render();
     

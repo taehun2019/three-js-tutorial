@@ -35,7 +35,7 @@ export default class EnemyPlayer extends Player {
     initWithWaypoints(color: THREE.Color, startPoint: THREE.Vector2, faceNum: number, waypoints: THREE.Vector2[]) {
         super.init(color, startPoint, faceNum);
         this.waypoints = waypoints;
-        this.curWaypointIndex = -1;
+        this.curWaypointIndex = 0;
 
         this.state = EnemyState.Move;
         this.maxMoveTime = 0;

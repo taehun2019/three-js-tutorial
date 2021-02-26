@@ -45,6 +45,7 @@ export default class UIManager {
         result.style.height = height;
         result.style.objectFit = 'contain';
         result.style.position = 'absolute';
+        // result.style.cursor = 'pointer';
         if (parent === undefined) {
             result.style.position = 'fixed';
             result.style.zIndex = '100000';

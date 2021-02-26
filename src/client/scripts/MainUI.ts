@@ -97,11 +97,13 @@ export default class MainUI {
     showWinScreen() {
         this.win = true;
         this.finishScreen.show(true);
+        this.playNowButton.show(true);
         this.updateAction = this.updateInFinish;
     }
     showLoseScreen() {
         this.win = false;
         this.finishScreen.show(false);
+        this.playNowButton.show(false);
         this.updateAction = this.updateInFinish;
     }
 
@@ -118,8 +120,9 @@ export default class MainUI {
         this.playScreen.update(deltaTime);
     }
     updateInFinish(deltaTime: number) {
-        if (this.win === true)
-            this.playNowButton.animateScale(deltaTime);
+        // if (this.win === true)
+        //     this.playNowButton.animateScale(deltaTime);
         this.finishScreen.update(deltaTime);
+        this.playNowButton.update(deltaTime);
     }
 }

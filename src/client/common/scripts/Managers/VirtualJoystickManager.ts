@@ -38,7 +38,7 @@ export default class VirtualJoystickManager {
         // window.addEventListener('pointerdown', VirtualJoystickManager.onPointerDown, {passive: false});
         // window.addEventListener('pointermove', VirtualJoystickManager.onPointerMove, {passive: false});
         // window.addEventListener('pointerup', VirtualJoystickManager.onPointerUp, {passive: false});
-        const useTouch = (DeviceManager.getInstance().osName === 'iOS') ? true : false;
+        const useTouch = DeviceManager.getInstance().useTouch;
         this.getCanvasRelativePositionFunction = (useTouch === true) ? this.getCanvasRelativePositionByTouch : this.getCanvasRelativePosition;
         //https://discourse.threejs.org/t/mobile-device-click-not-working/7775/3
         const controlStart = (useTouch === true) ? 'touchstart' : 'pointerdown';

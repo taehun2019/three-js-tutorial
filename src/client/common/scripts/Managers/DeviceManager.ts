@@ -9,11 +9,15 @@ export default class DeviceManager {
 
     osName: string;
     useVibration: boolean;
+    useTouch: boolean;
+    clickEventName: string;
 
     constructor() {
         this.osName = (this.getOS() !== null) ? this.getOS() as string : '';
         console.log(this.osName);
         this.useVibration = (this.osName === 'iOS' || this.osName === 'Mac OS') ? false : true;
+        this.useTouch = (this.osName === 'iOS') ? true : false;
+        this.clickEventName = (this.useTouch === false) ? 'click' : 'touchstart';
     }
 
     //https://stackoverflow.com/questions/9514179/how-to-find-the-operating-system-version-using-javascript

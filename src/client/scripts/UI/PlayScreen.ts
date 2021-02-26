@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import UIManager from 'common/scripts/Managers/UIManager';
-import { ScaleAnimation, ScaleAnimationInfo } from 'common/scripts/UI/ScaleAnimation';
+import { ScaleAnimation } from 'common/scripts/UI/ScaleAnimation';
 import PlayerProfile from './PlayerProfile';
 
 import circleBar from 'common/images/circle_bar.png';
@@ -9,7 +9,7 @@ export default class PlayScreen {
     killCountDiv: HTMLDivElement;
     killCountText: HTMLTextAreaElement;
 
-    centerKillAnimInfo: ScaleAnimationInfo;
+    centerKillAnim: ScaleAnimation
     centerKillCountText: HTMLElement;
     showKillTextCallNum = 0;
 
@@ -39,14 +39,13 @@ export default class PlayScreen {
         this.centerKillCountText.style.textAlign = 'center'
         this.centerKillCountText.style.color = '#242246';
         
-
-        this.centerKillAnimInfo = {
+        this.centerKillAnim = new ScaleAnimation({
             element: this.centerKillCountText,
-            curTime: 0, maxTime: 0.2,
+            maxTime: 0.2,
             baseWidthPercent: 10, baseHeightPercent: 10,
             topPercent: 45, leftPercent: 50,
             fromScale: 3, toScale: 1,
-        }
+        });
 
         this.playerProfiles = [];
         for (let index = 0; index < 7; index++) {
@@ -98,17 +97,17 @@ export default class PlayScreen {
     }
     update(deltaTime: number) {
         if (this.centerKillCountText.style.visibility === 'visible')
-            ScaleAnimation.animate(this.centerKillAnimInfo, deltaTime);
+            this.centerKillAnim.animate(deltaTime);
     }
     showCenterKillCount(value: number, screenPos: THREE.Vector3) {
         const canvasPos = UIManager.convertScreenToCanvas(screenPos);
-        this.centerKillAnimInfo.topPercent = canvasPos.y * 100;
-        this.centerKillAnimInfo.leftPercent = canvasPos.x * 100;
+        this.centerKillAnim.topPercent = canvasPos.y * 100;
+        this.centerKillAnim.leftPercent = canvasPos.x * 100;
 
         // this.setKillCount(10);
         this.centerKillCountText.textContent = '+' + value;
         this.centerKillCountText.style.visibility = 'visible';
-        this.centerKillAnimInfo.curTime = 0;
+        this.centerKillAnim.curTime = 0;
 
         this.showKillTextCallNum++;
         setTimeout(() => {

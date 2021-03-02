@@ -9,6 +9,7 @@ export enum AdNetwork {
     None,
     Mintegral,
     AppLovin,
+    IronSource,
 }
 
 export default class PublishManager {
@@ -20,12 +21,17 @@ export default class PublishManager {
     //     return PublishManager.instance; 
     // }
     static adNetwork: AdNetwork;
+    static loadGameAction: Function;
     
     static load(loadGameAction: Function) {
+        PublishManager.loadGameAction = loadGameAction;
         switch (this.adNetwork) {
             case AdNetwork.AppLovin:
                 PublishManager.loadWithMraid(loadGameAction);
                 break
+            case AdNetwork.IronSource:
+                PublishManager.loadWithDapi(loadGameAction);
+                break;
             case AdNetwork.Mintegral:
             default:
                 loadGameAction();
@@ -53,6 +59,20 @@ export default class PublishManager {
             console.log("mraid is not exist")
             loadGameAction();
         }
+    }
+
+    static loadWithDapi(loadGameAction: Function) {
+        //@ts-ignore
+        console.log(dapi);
+        //@ts-ignore
+        console.log(window.dapi);
+        //@ts-ignore
+        (dapi.isReady()) ? loadGameAction() : dapi.addEventListener("ready", PublishManager.onDapiReadyCallback());
+    }
+    static onDapiReadyCallback() {
+        //@ts-ignore
+        dapi.removeEventListener("ready", PublishManager.onDapiReadyCallback);
+        PublishManager.loadGameAction();
     }
 
     static onClickDownloadButton() {

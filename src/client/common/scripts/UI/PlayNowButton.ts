@@ -16,11 +16,12 @@ export default class PlayNowButton {
 
     constructor() {
         this.image = UIManager.createImg(playNow, '60%', '15%');
+        UIManager.setElementProportion(this.image, 60, 15, 50, 80);
         // this.setSize(baseWidth, baseHeght);
-        this.image.addEventListener(DeviceManager.getInstance().clickEventName, ()=>{
-            // console.log('click PlayNowButton');
-            this.onClickAction();
-        });
+        this.image.addEventListener(
+            DeviceManager.getInstance().clickEventName, 
+            ()=>this.onClickAction()
+        );
 
         this.scaleAnim = new ScaleAnimation({
             element: this.image,
@@ -73,7 +74,7 @@ export default class PlayNowButton {
             }
         }
         else {
-            this.scaleAnim.startDelay = 0.6;
+            this.scaleAnim.startDelay = 1;
             this.scaleAnim.endAction = () => {}
         }
         this.scaleAnim.play();

@@ -10,151 +10,65 @@ import VirtualJoystickManager from 'common/scripts/Managers/VirtualJoystickManag
 import AssetManager from 'common/scripts/Managers/AssetManager';
 import GizmosManager from 'common/scripts/Managers/GizmosManager';
 import DeviceManager from 'common/scripts/Managers/DeviceManager';
+import PublishManager, { AdNetwork } from 'common/scripts/Managers/PublishManager';
 
+PublishManager.adNetwork = AdNetwork.Mintegral;
+PublishManager.load(loadThree);
 
-let mraidLoaded = false;
-let windowLoaded = false;
-
-let mraidService: any;
-// console.log('A');
-try {
-    //@ts-ignore
-    mraidService = mraid;
-    if (mraidService.getState() === 'loading')
-        mraidService.addEventListener('ready', () => {
-            mraidLoaded = true;
-            LoadThree();
-        });
-    else {
-        mraidLoaded = true;
-        LoadThree();
-    }
-}
-catch(error) {
-    console.log(error);
-    console.log("mraid is not exist")
-}
-// console.log('B');
-
-// // appendChild에서 null일 때 : https://stackoverflow.com/questions/9916747/why-is-document-body-null-in-my-javascript
-// window.onload = () => {
-//     windowLoaded = true;
-//     LoadThree();
+////@ts-ignore
+// window.gameStart && window.gameStart();
+// function gameStart() {
+//     console.log('gamestart!!');
 // }
-
-if (mraidService === undefined) {
-    LoadThree();
-    // setTimeout(()=>LoadThree(), 1000);
+// gameStart();
+////@ts-ignore
+// window.gameClose && window.gameClose();
+// function gameClose() {
+// }
+(window as any).gameStart = function() {
+    console.log('gamestart!!');
 }
 
-function printGraph(obj: THREE.Object3D) {
-    // console.group(obj.name + ' <%o> ', obj);
-    const groupName = obj.constructor.name + ((obj.name === '') ? '' : ` (${obj.name})`);
-    console.groupCollapsed(groupName);
-    obj.children.forEach(printGraph);
-    console.groupEnd();
-};
-
-
-function LoadThree() {
-    // if (windowLoaded === false)
-    //     return;
-    if (mraidService !== undefined && mraidLoaded === false)
-        return;
-    // console.log('C');
-
-    
-    // mraidService.addEventListener("stateChange", function(){
-    //     if (mraidService.getState() == 'hidden') {
-    //    // Mute all audio here (audiocontext, inline, etc.)}
-    // })
-       
+function loadThree() {
 
     //https://threejsfundamentals.org/threejs/lessons/threejs-fundamentals.html
     const canvas = document.querySelector('#c') as HTMLCanvasElement;
     canvas.getBoundingClientRect();
 
-    // const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
-    // renderer.setSize(window.innerWidth, window.innerHeight);
-    // // renderer.shadowMap.enabled = true;
-    // document.body.append(renderer.domElement);
-
     const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({canvas});
-    // renderer.setSize(window.innerWidth, window.innerHeight);
     //참고: https://threejsfundamentals.org/threejs/lessons/threejs-responsive.html
     renderer.setSize(window.innerWidth * 2, window.innerHeight * 2, false);
     // renderer.setRenderTarget(null, undefined, 0);
     // renderer.setClearColor(0x459ce5);
+    // renderer.shadowMap.enabled = true;
     renderer.setClearColor(0x6783ee);
-    // const canvas = document.body.lastChild as HTMLCanvasElement;
-
-    // titleImage.onclick = () => {
-    //     console.log('hahaha');
-    // }
 
     // 프레임 수 보기.
     // const stats = Stats()
     // document.body.appendChild(stats.dom)
     
-    // //@ts-ignore
-    // document.getElementById("bottomBtn").addEventListener("click", function() {
-    //     // console.log("HOHO");
-    //     if (mraidService !== undefined)
-    //         mraidService.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
-    // }, false);        
-    
-    const gameScene = new MainScene();
-    // const axesHelper = new THREE.AxesHelper(5);
-    // gameScene.add(axesHelper);
+    const gameScene = new MainScene((scene: THREE.Scene) => {
+        VirtualJoystickManager.getInstance(canvas);
+        // GizmosManager.getInstance(scene);
+        AssetManager.getInstance();
 
-    if (mraidService !== undefined)
-        gameScene.ui.playNowButton.onClickAction = () => {
-            if (DeviceManager.getInstance().osName === 'iOS') {
-                // mraidService.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
-            }
-            else {
-                // mraidService.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
-            }
-        }
-    else
-        gameScene.ui.playNowButton.onClickAction = () => {
-            // console.log("A");
-            if (DeviceManager.getInstance().osName === 'iOS') {
-                // console.log("B");
-                window.location.href = "https://apps.apple.com/us/app/snow-roll-io/id1545852074";
-            }
-            else {
-                // console.log("C");
-                window.open("https://apps.apple.com/us/app/snow-roll-io/id1545852074");
-            }
-        }
+        // const axesHelper = new THREE.AxesHelper(5);
+        // scene.add(axesHelper);
     
-    
+        // const controls = new OrbitControls(camera, renderer.domElement);
+        // //controls.addEventListener('change', render)
+        // controls.enabled = false;
+    });
+
+    gameScene.ui.playNowButton.onClickAction = () => PublishManager.onClickDownloadButton();
+
     const LoadGame = () => {
         // console.log("physics loaded");
-        // const virtualJoystickManager = new VirtualJoystickManager(canvas);
-        const virtualJoystickManager = VirtualJoystickManager.getInstance(canvas);
-        // const gizmosManager = GizmosManager.getInstance(gameScene); 
-        const assetManager = AssetManager.getInstance();
     
-        // let gameScene = new MainScene(rootScene);
-        // rootScene.add(gameScene);
         let camera = gameScene.getCamera();
-        // console.log(gameScene);
-        // printGraph(gameScene);
 
-        const squareFov = 60;
         function updateAspect() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            const ratio = (window.innerWidth > window.innerHeight) ? (window.innerWidth / window.innerHeight) : (window.innerHeight / window.innerWidth);
-            camera.fov = THREE.MathUtils.lerp(squareFov, 75, THREE.MathUtils.clamp(ratio, 1, 2) - 1);
-            if (window.innerWidth > window.innerHeight)
-                camera.fov = squareFov - (camera.fov - squareFov);
-            // console.log(camera.fov);
-            // camera.fov = 15;
-
-            camera.updateProjectionMatrix();
-            // renderer.setSize(window.innerWidth, window.innerHeight);
+            gameScene.world.mainCamera.updateAspect();
             renderer.setSize(window.innerWidth * 2, window.innerHeight * 2, false);
         }
         updateAspect();
@@ -163,11 +77,6 @@ function LoadThree() {
             render()
         }
         window.addEventListener('resize', onWindowResize, false);
-    
-    
-        // const controls = new OrbitControls(camera, renderer.domElement);
-        // //controls.addEventListener('change', render)
-        // controls.enabled = false;
 
         function onKeyDown(event: KeyboardEvent) {
             if (event.key == "q") {
@@ -194,20 +103,13 @@ function LoadThree() {
                 // gameScene.ui.playScreen.showCenterKillCount();
             }
         }
-        function onKeyUp(event: KeyboardEvent) {
-            // console.log("hoho!");
-        }
         document.addEventListener("keydown", onKeyDown, false);
-        document.addEventListener("keyup", onKeyUp, false);
+        // function onKeyUp(event: KeyboardEvent) {
+        //     // console.log("hoho!");
+        // }
+        // document.addEventListener("keyup", onKeyUp, false);
 
         gameScene.init();
-
-        // console.log('----------------------');
-        // console.log(document);
-        // console.log(window);
-        // console.log(window.parent);
-        // console.log(window.parent.document);
-        // console.log('----------------------');
     
         let preElapsedTime: number = 0;
         let curElapsedTime: number = 0;
@@ -218,14 +120,13 @@ function LoadThree() {
             curElapsedTime = time;
             deltaTime = curElapsedTime - preElapsedTime;
             deltaTime *= 0.001;
-            // console.log(deltaTime);
 
             // console.log(deltaTime);
             // console.log(document.hasFocus());
             // if (deltaTime < 1 && document.hasFocus() === true)
-            if (deltaTime < 1)
                 // (document.hasFocus() || (window.parent !== undefined && window.parent.document.hasFocus())))
             // if (document.hasFocus() === true)
+            if (deltaTime < 1)
                 gameScene.update(deltaTime);
     
             render();
@@ -245,7 +146,6 @@ function LoadThree() {
 }
 
 // PhysicsLoader('/ammo', () => LoadGame());
-
 
 // function loadGame() {
 //     console.log("physics loaded");
@@ -296,3 +196,24 @@ function LoadThree() {
 // };
 
 // PhysicsLoader('.', () => LoadGame());
+
+
+
+// // appendChild에서 null일 때 : https://stackoverflow.com/questions/9916747/why-is-document-body-null-in-my-javascript
+// // body로 inject해서 괜찮아짐.
+// window.onload = () => {
+//     windowLoaded = true;
+//     LoadThree();
+// }
+
+function printGraph(obj: THREE.Object3D) {
+    // console.group(obj.name + ' <%o> ', obj);
+    const groupName = obj.constructor.name + ((obj.name === '') ? '' : ` (${obj.name})`);
+    console.groupCollapsed(groupName);
+    obj.children.forEach(printGraph);
+    console.groupEnd();
+};
+
+// const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
+// document.body.append(renderer.domElement);
+// const canvas = document.body.lastChild as HTMLCanvasElement;

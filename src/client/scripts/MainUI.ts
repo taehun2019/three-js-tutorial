@@ -113,7 +113,9 @@ export default class MainUI {
     readyElapsedTime = 0;
     updateInReady(deltaTime: number) {
         this.readyElapsedTime += deltaTime;
-        const remainTime = 4 - (this.readyElapsedTime * (3 / this.readyTime));
+        let remainTime = 4 - (this.readyElapsedTime * (3 / this.readyTime));
+        if (remainTime < 0)
+            remainTime = 0;
         this.startCountdownText.textContent = `${Math.floor(remainTime)}`;
     }
     updateInPlay(deltaTime: number) {

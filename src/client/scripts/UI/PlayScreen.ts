@@ -78,7 +78,8 @@ export default class PlayScreen {
         this.killCountText.textContent = 'Kill : 0';
 
         this.showKillTextCallNum = 0;
-        this.centerKillCountText.style.visibility = 'hidden';
+        // this.centerKillCountText.style.visibility = 'hidden';
+        this.centerKillAnim.init();
         // for (let index = 0; index < this.playerProfiles.length; index++) {
         //     this.playerProfiles[index].hide();
         // }
@@ -96,24 +97,30 @@ export default class PlayScreen {
         this.killCountDiv.style.visibility = 'visible';
     }
     update(deltaTime: number) {
-        if (this.centerKillCountText.style.visibility === 'visible')
+        // if (this.centerKillCountText.style.visibility === 'visible')
+        if (this.centerKillAnim.playing === true)
             this.centerKillAnim.animate(deltaTime);
     }
     showCenterKillCount(value: number, screenPos: THREE.Vector3) {
         const canvasPos = UIManager.convertScreenToCanvas(screenPos);
-        this.centerKillAnim.topPercent = canvasPos.y * 100;
         this.centerKillAnim.leftPercent = canvasPos.x * 100;
+        this.centerKillAnim.topPercent = canvasPos.y * 100;
 
         // this.setKillCount(10);
         this.centerKillCountText.textContent = '+' + value;
         this.centerKillCountText.style.visibility = 'visible';
-        this.centerKillAnim.curTime = 0;
+
+        // this.centerKillAnim.playing = true;
+        // this.centerKillAnim.curTime = 0;
+        this.centerKillAnim.play();
 
         this.showKillTextCallNum++;
         setTimeout(() => {
             this.showKillTextCallNum--;
             if (this.showKillTextCallNum === 0) {
-                this.centerKillCountText.style.visibility = 'hidden';
+                // this.centerKillCountText.style.visibility = 'hidden';
+                // this.centerKillAnim.playing = false;
+                this.centerKillAnim.init();
             }
         }, 1000)
     }

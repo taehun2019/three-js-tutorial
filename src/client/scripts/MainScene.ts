@@ -19,8 +19,11 @@ export default class MainScene extends THREE.Scene {
     touch: boolean = false;
 
     // constructor(scene: THREE.Scene) {
-    constructor() {
+    constructor(initManagersAction?: Function) {
         super();
+
+        if (initManagersAction !== undefined)
+            initManagersAction(this);
         
         this.ui = new MainUI();
         this.world = new World();
@@ -74,6 +77,9 @@ export default class MainScene extends THREE.Scene {
     }
 
     init() {
+        //@ts-ignore
+        window.gameReady && window.gameReady();
+
         this.world.init();
         this.ui.init();
         this.callbacks.emit('init');
@@ -104,6 +110,9 @@ export default class MainScene extends THREE.Scene {
     }
 
     start() {
+        //@ts-ignore
+        window.gameStart && window.gameStart();
+
         this.world.start();
         this.ui.start();
         this.callbacks.emit('start');
@@ -141,6 +150,9 @@ export default class MainScene extends THREE.Scene {
     }
 
     win() {
+        //@ts-ignore
+        window.gameEnd && window.gameEnd();
+
         // if (this.isPlaying == false)
         //     return;
         // this.isPlaying = false;
@@ -148,6 +160,7 @@ export default class MainScene extends THREE.Scene {
         // this.world.localPlayer.isAlive = false;
 
         this.world.processLocalPlayerWin();
+        this.world.stopGrowPlayers();
         this.world.mainCamera.state = CameraState.End;
         this.ui.showWinScreen();
 
@@ -155,17 +168,25 @@ export default class MainScene extends THREE.Scene {
     }
 
     lose() {
+        //@ts-ignore
+        window.gameEnd && window.gameEnd();
+
         // if (this.isPlaying == false)
         //     return;
         // this.isPlaying = false;
         console.log('lose');
+        this.world.stopGrowPlayers();
         this.ui.showLoseScreen();
     }
 
     processTryAction(tryCount: number) {
-        if (tryCount === 0)
+        if (tryCount === 0) {
+            //@ts-ignore
+            window.gameRetry && window.gameRetry();
             this.init();
-        else
+        }
+        else {
             this.ui.playNowButton.onClickAction();
+        }
     }
 }

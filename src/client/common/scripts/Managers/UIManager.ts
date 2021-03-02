@@ -85,6 +85,13 @@ export default class UIManager {
         return result.multiplyScalar(0.5).addScalar(0.5); //-1~1 => 0~1
     }
 
+    static setElementProportion(element: HTMLElement, width: number, height: number, left: number, top: number) {
+        element.style.width     = `${width}%`;
+        element.style.height    = `${height}%`;
+        element.style.left  = `${left - (width * 0.5)}%`;
+        element.style.top   = `${top - (height * 0.5)}%`;
+    }
+
     // static getCenterPercent(lengthPercent: number, startPercentnumber: number) {
     //     return startPercentnumber + (lengthPercent * 0.5);
     // }

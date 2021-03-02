@@ -3,6 +3,7 @@ import awesome from '../../images/awesome.png';
 import failed from '../../images/FAILED.png';
 import tryAgain from '../../images/TryAgain.png';
 import { ScaleAnimation } from "./ScaleAnimation";
+import DeviceManager from "../Managers/DeviceManager";
 
 export default class FinishScreen {
     onClickTryAgainAction: Function = () => { };
@@ -31,7 +32,10 @@ export default class FinishScreen {
         this.failedImage = UIManager.createImg(failed, '80%', '20%', this.rootDiv);
         this.tryAgainImage = UIManager.createImg(tryAgain, '60%', '15%', this.rootDiv);
 
-        this.tryAgainImage.addEventListener('click', () => this.onClickTryAgain());
+        this.tryAgainImage.addEventListener(
+            DeviceManager.getInstance().clickEventName, 
+            () => this.onClickTryAgain()
+        );
 
         this.awesomeAnim = new ScaleAnimation({
             element: this.awesomeImage,
@@ -55,7 +59,7 @@ export default class FinishScreen {
             baseWidthPercent: 60, baseHeightPercent: 15,
             fromScale: 3, toScale: 1,
             leftPercent: 50, topPercent: 65,
-            startDelay: 0.3,
+            startDelay: 0.5,
         });
     }
     // onWindowResize() {
@@ -96,6 +100,7 @@ export default class FinishScreen {
             this.tryAgainAnim.animate(deltaTime);
     }
     onClickTryAgain() {
+        // console.log('onClickTryAgain. tryCount:' + this.tryCount);
         this.onClickTryAgainAction(this.tryCount);
         if (this.tryCount === 0) {
             this.tryCount++;

@@ -61,6 +61,18 @@ export default class MainCamera extends THREE.Object3D {
         // this.confettiEffect.position.setScalar(0);
         // this.confettiEffect.position.z = -5;
     }
+    updateAspect() {
+        const squareFov = 60;
+        const camera = this.camera;
+        
+        camera.aspect = window.innerWidth / window.innerHeight;
+        const ratio = (window.innerWidth > window.innerHeight) ? (window.innerWidth / window.innerHeight) : (window.innerHeight / window.innerWidth);
+        camera.fov = THREE.MathUtils.lerp(squareFov, 75, THREE.MathUtils.clamp(ratio, 1, 2) - 1);
+        if (window.innerWidth > window.innerHeight)
+            camera.fov = squareFov - (camera.fov - squareFov);
+
+        camera.updateProjectionMatrix();
+    }
 
     init(target: THREE.Object3D) {
         this.target = target;

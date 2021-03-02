@@ -293,7 +293,7 @@ export default class World extends THREE.Object3D {
             point = startPoints[pointIndex];
             remainPointIndex.delete(pointIndex);
             // this.enemyPlayers[index].init(colors[index + 1],posX, posZ);
-            this.enemyPlayers[index].initWithWaypoints(colors[index + 1], point, index + 2, startPoints);
+            this.enemyPlayers[index].initWithWaypoints(colors[index + 1], pointIndex, startPoints, index + 2);
         }
 
         this.mainCamera.init(this.localPlayer);
@@ -394,7 +394,7 @@ export default class World extends THREE.Object3D {
             biggerPlayer.changeSizeByCollision(+0.3 * deltaTime);
             smallerPlayer.changeSizeByCollision(-1 * deltaTime);
             // if (smallerPlayer.scale.x < 1 || smallerPlayer.scale.x < biggerPlayer.scale.x * 0.3) {
-            if (smallerPlayer.scale.x < 0.5 || smallerPlayer.scale.x < biggerPlayer.scale.x * 0.1) {
+            if (smallerPlayer.scale.x < 0.8 || smallerPlayer.scale.x < biggerPlayer.scale.x * 0.2) {
                 smallerPlayer.die(true);
             }
             else {
@@ -453,5 +453,10 @@ export default class World extends THREE.Object3D {
         this.crown.show(this.localPlayer.snow);
 
         this.mainCamera.playConfettiEffects();
+    }
+    stopGrowPlayers() {
+        this.totalPlayers.forEach(player => {
+            player.stopGrowing = true;
+        });
     }
 }

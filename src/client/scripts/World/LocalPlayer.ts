@@ -4,6 +4,7 @@ import Player from "./Player";
 import Arrow from "./Arrow";
 import SnowKillEffect from './SnowKillEffect';
 import Snow from './Snow';
+import { LineGizmo } from 'common/scripts/Managers/GizmosManager';
 
 export default class LocalPlayer extends Player {
     elapsedTime: number = 0;
@@ -12,6 +13,8 @@ export default class LocalPlayer extends Player {
 
     titleAnimMaxTime = 3;
     titleAnimCurTime = 0;
+    
+    lineGizmo: LineGizmo | undefined;
 
     constructor(world: THREE.Object3D) {
         super(world);
@@ -26,6 +29,7 @@ export default class LocalPlayer extends Player {
         this.killEffect = new SnowKillEffect();
         this.add(this.killEffect);
 
+        this.lineGizmo = new LineGizmo();
     }
 
     init(color: THREE.Color, startPoint: THREE.Vector2, faceNum: number) {
@@ -43,6 +47,9 @@ export default class LocalPlayer extends Player {
         this.updateAction = this.updateInTitle;
         this.rotation.y = 0;
         this.titleAnimCurTime = 0;
+
+        this.lineGizmo?.init(new THREE.Color('black'));
+        this.lineGizmo?.setVisible(true);
     }
     start() {
         super.start();
@@ -50,6 +57,8 @@ export default class LocalPlayer extends Player {
         this.moveDirection.y = this.position.z;
         this.moveDirection.multiplyScalar(-1).normalize();
         VirtualJoystickManager.getInstance().offset.copy(this.moveDirection);
+        // console.log(`moveDirection:${this.moveDirection.x}/${this.moveDirection.y}`);
+        // console.log(`VirtualJoystickManager.getInstance().offset:${VirtualJoystickManager.getInstance().offset.x}/${VirtualJoystickManager.getInstance().offset.y}`);
         this.arrow.visible = true;
     }
     kill(player: Player) {
@@ -108,9 +117,23 @@ export default class LocalPlayer extends Player {
         if (joystickOffset.length() == 0)
             return;
         const inputDirection = new THREE.Vector2().copy(joystickOffset.normalize());
-        inputDirection.y *= -1;
+        // inputDirection.y *= -1;
         this.moveDirection.lerp(inputDirection, deltaTime * 10).normalize();
         // console.log(this.moveDirection);
+
+        // console.log(`moveDirection:${this.moveDirection.x}/${this.moveDirection.y}`);
+        // console.log(`inputDirection:${inputDirection.x}/${inputDirection.y}`);
+
+        if (this.lineGizmo !== undefined) {
+            const startPos = this.getWorldPosition(new THREE.Vector3());
+            startPos.y = 0.2;
+            this.lineGizmo?.setStartPoint(startPos);
+
+            const endPos = startPos.clone();
+            endPos.x += this.moveDirection.x * 10;
+            endPos.z += this.moveDirection.y * 10;
+            this.lineGizmo?.setEndPoint(endPos);
+        }
     }
 
     fromDirectionInFinish = new THREE.Vector2(0, 0);

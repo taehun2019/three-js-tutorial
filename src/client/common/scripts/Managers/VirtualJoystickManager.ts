@@ -91,7 +91,8 @@ export default class VirtualJoystickManager {
         const pos = this.getCanvasRelativePositionFunction(event);
         return {
             x: (pos.x / this.canvas.width) * 2 - 1,
-            y: (pos.y / this.canvas.height) * -2 + 1, // Y를 뒤집습니다.
+            // y: (pos.y / this.canvas.height) * -2 + 1, // Y를 뒤집습니다.
+            y: (pos.y / this.canvas.height) * 2 + 1,
         }
     }
     private getCanvasRelativePosition(event: any) { //PointerEvent) {

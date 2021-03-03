@@ -3,13 +3,15 @@ import DeviceManager from "./DeviceManager";
 const appleStoreUrl = 'https://apps.apple.com/us/app/snow-roll-io/id1545852074';
 const googleStoreUrl = 'https://play.google.com/store/apps/details?id=com.foursgames.snowroll';
 
-let mraidService: any;
+let loadedMraid: any;
+let loadedDapi: any;
 
 export enum AdNetwork {
     None,
     Mintegral,
-    AppLovin,
     IronSource,
+    AppLovin,
+    UnityAds,
 }
 
 export default class PublishManager {
@@ -27,6 +29,7 @@ export default class PublishManager {
         PublishManager.loadGameAction = loadGameAction;
         switch (this.adNetwork) {
             case AdNetwork.AppLovin:
+            case AdNetwork.UnityAds:
                 PublishManager.loadWithMraid(loadGameAction);
                 break
             case AdNetwork.IronSource:
@@ -42,9 +45,9 @@ export default class PublishManager {
     static loadWithMraid(loadGameAction: Function) {
         try {
             //@ts-ignore
-            mraidService = mraid;
-            if (mraidService.getState() === 'loading')
-                mraidService.addEventListener('ready', () => loadGameAction());
+            loadedMraid = mraid;
+            if (loadedMraid.getState() === 'loading')
+                loadedMraid.addEventListener('ready', PublishManager.onMraidReadyCallback());
             else {
                 loadGameAction();
             }
@@ -60,20 +63,53 @@ export default class PublishManager {
             loadGameAction();
         }
     }
+    static onMraidReadyCallback() {
+        loadedMraid.removeEventListener("ready", PublishManager.onMraidReadyCallback);
+        PublishManager.loadGameAction();
+    }
 
     static loadWithDapi(loadGameAction: Function) {
         //@ts-ignore
-        console.log(dapi);
+        loadedDapi = dapi;
+        console.log(loadedDapi);
         //@ts-ignore
         console.log(window.dapi);
-        //@ts-ignore
-        (dapi.isReady()) ? loadGameAction() : dapi.addEventListener("ready", PublishManager.onDapiReadyCallback());
+        (loadedDapi.isReady()) ? PublishManager.onDapiReadyCallback() : loadedDapi.addEventListener("ready", PublishManager.onDapiReadyCallback());
     }
     static onDapiReadyCallback() {
-        //@ts-ignore
-        dapi.removeEventListener("ready", PublishManager.onDapiReadyCallback);
+        console.log('onDapiReadyCallback');
+        loadedDapi.removeEventListener("ready", PublishManager.onDapiReadyCallback);
+
+        loadedDapi.getScreenSize();
+        loadedDapi.getAudioVolume();
+        loadedDapi.addEventListener("audioVolumeChange", () => { });
+
+        if(loadedDapi.isViewable()){
+            PublishManager.adVisibleCallback({isViewable: true});
+        }
+    
+        loadedDapi.addEventListener("viewableChange", PublishManager.adVisibleCallback);
+        loadedDapi.addEventListener("adResized", PublishManager.adResizeCallback);
+
         PublishManager.loadGameAction();
     }
+    static adVisibleCallback(event: any) {
+        console.log("isViewable " + event.isViewable);
+        if (event.isViewable){
+            const screenSize = loadedDapi.getScreenSize();
+            //START or RESUME the ad
+        } else {
+            //PAUSE the ad and MUTE sounds
+        }
+    }
+    static adResizeCallback(event: any){
+        const screenSize = event;
+        console.log("ad was resized width " + event.width + " height " + event.height);
+    }
+    static userClickedDownloadButton(event: any){
+        loadedDapi.openStoreUrl();
+    }
+    
 
     static onClickDownloadButton() {
         switch (this.adNetwork) {
@@ -82,7 +118,11 @@ export default class PublishManager {
                 window.install && window.install();
                 break;
             case AdNetwork.AppLovin:
+            case AdNetwork.UnityAds:
                 PublishManager.OpenStoreWithMraid();
+                break;
+            case AdNetwork.IronSource:
+                loadedDapi.openStoreUrl();
                 break;
             default:
                 PublishManager.OpenStore();
@@ -112,10 +152,10 @@ export default class PublishManager {
         const osName = DeviceManager.osName;
         switch (osName) {
             case 'iOS':
-                mraidService.open(appleStoreUrl);
+                loadedMraid.open(appleStoreUrl);
                 break;
             default:
-                mraidService.open(googleStoreUrl);
+                loadedMraid.open(googleStoreUrl);
                 break;
         }
     }

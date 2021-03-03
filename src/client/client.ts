@@ -12,21 +12,15 @@ import GizmosManager from 'common/scripts/Managers/GizmosManager';
 import DeviceManager from 'common/scripts/Managers/DeviceManager';
 import PublishManager, { AdNetwork } from 'common/scripts/Managers/PublishManager';
 
-PublishManager.adNetwork = AdNetwork.Mintegral;
-PublishManager.load(loadThree);
+// mintegral: https://www.mindworks-creative.com/review/doc/
+// ironsource:
+// https://docs.google.com/document/d/1OjEPQE-Uw12ioQWl_3FyPpHN5wXJo9srE6Xz95iuniU/edit
+// https://demos.ironsrc.com/test-tool/?adUnitLoader=dapi&mode=testing
 
-////@ts-ignore
-// window.gameStart && window.gameStart();
-// function gameStart() {
-//     console.log('gamestart!!');
-// }
-// gameStart();
-////@ts-ignore
-// window.gameClose && window.gameClose();
-// function gameClose() {
-// }
-(window as any).gameStart = function() {
-    console.log('gamestart!!');
+PublishManager.adNetwork = AdNetwork.UnityAds;
+
+window.onload = () => {
+    PublishManager.load(loadThree);
 }
 
 function loadThree() {

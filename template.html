@@ -18,58 +18,17 @@
             height: 100%;
             display: block;
             touch-action: none;
-        }
-        .end {
-            /* background-color: red; */
-            background-color: rgba(0,0,0,0.5); /* Black background with opacity */
-            width: 60%;
-            height: 40%;
-            /* padding: 50px; */
-            /* border: 20px solid maroon; */
-            border-radius: 5%;
-            /* margin: 50px; */
-            z-index: 12345;
-            position: absolute;
-            top:30%;
-            /* margin-top: -20%; */
-            left:20%;
-            /* margin-left: -30%; */
-        }
-        #bottomBtn {
-            z-index: 12345;
-            position: absolute;
-            width: 50%;
-            height: 10%;
-            left: 25%;
-            bottom: 0%;
-            /* margin-left: 50%; */
-        }
-        #info {
-            position: absolute;
-            top: 20%;
-            width: 100%;
-            text-align: center;
-            z-index: 100;
-            display:block;
-            font-size: 50px;
-            color: aquamarine;
-            text-shadow: #000 0px 0px 5px;
-        }
-        #title {
-            position: absolute;
-            width: 70%;
-            left: 15%;
-            /* height: 10%; */
-            top:10%;
+            /* https://stackoverflow.com/questions/25704650/disable-blue-highlight-when-touch-press-object-with-cursorpointer */
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0); 
         }
     </style>
-    <script src="mraid.js"></script>
+    <!-- <script src="mraid.js"></script> -->
     <script>
         //Mintegral
         function gameStart() { console.log('gameStart!!') }
         function gameClose() { console.log('gameClose!!') }
-        //IronSource
-        function getScript(e,i){var n=document.createElement("script");n.type="text/javascript",n.async=!0,i&&(n.onload=i),n.src=e,document.head.appendChild(n)}function parseMessage(e){var i=e.data,n=i.indexOf(DOLLAR_PREFIX+RECEIVE_MSG_PREFIX);if(-1!==n){var t=i.slice(n+2);return getMessageParams(t)}return{}}function getMessageParams(e){var i,n=[],t=e.split("/"),a=t.length;if(-1===e.indexOf(RECEIVE_MSG_PREFIX)){if(a>=2&&a%2===0)for(i=0;a>i;i+=2)n[t[i]]=t.length<i+1?null:decodeURIComponent(t[i+1])}else{var o=e.split(RECEIVE_MSG_PREFIX);void 0!==o[1]&&(n=JSON&&JSON.parse(o[1]))}return n}function getDapi(e){var i=parseMessage(e);if(!i||i.name===GET_DAPI_URL_MSG_NAME){var n=i.data;getScript(n,onDapiReceived)}}function invokeDapiListeners(){for(var e in dapiEventsPool)dapiEventsPool.hasOwnProperty(e)&&dapi.addEventListener(e,dapiEventsPool[e])}function onDapiReceived(){dapi=window.dapi,window.removeEventListener("message",getDapi),invokeDapiListeners()}function init(){window.dapi.isDemoDapi&&(window.parent.postMessage(DOLLAR_PREFIX+SEND_MSG_PREFIX+JSON.stringify({state:"getDapiUrl"}),"*"),window.addEventListener("message",getDapi,!1))}var DOLLAR_PREFIX="$$",RECEIVE_MSG_PREFIX="DAPI_SERVICE:",SEND_MSG_PREFIX="DAPI_AD:",GET_DAPI_URL_MSG_NAME="connection.getDapiUrl",dapiEventsPool={},dapi=window.dapi||{isReady:function(){return!1},addEventListener:function(e,i){dapiEventsPool[e]=i},removeEventListener:function(e){delete dapiEventsPool[e]},isDemoDapi:!0};init();
+        // //IronSource
+        // function getScript(e,i){var n=document.createElement("script");n.type="text/javascript",n.async=!0,i&&(n.onload=i),n.src=e,document.head.appendChild(n)}function parseMessage(e){var i=e.data,n=i.indexOf(DOLLAR_PREFIX+RECEIVE_MSG_PREFIX);if(-1!==n){var t=i.slice(n+2);return getMessageParams(t)}return{}}function getMessageParams(e){var i,n=[],t=e.split("/"),a=t.length;if(-1===e.indexOf(RECEIVE_MSG_PREFIX)){if(a>=2&&a%2===0)for(i=0;a>i;i+=2)n[t[i]]=t.length<i+1?null:decodeURIComponent(t[i+1])}else{var o=e.split(RECEIVE_MSG_PREFIX);void 0!==o[1]&&(n=JSON&&JSON.parse(o[1]))}return n}function getDapi(e){var i=parseMessage(e);if(!i||i.name===GET_DAPI_URL_MSG_NAME){var n=i.data;getScript(n,onDapiReceived)}}function invokeDapiListeners(){for(var e in dapiEventsPool)dapiEventsPool.hasOwnProperty(e)&&dapi.addEventListener(e,dapiEventsPool[e])}function onDapiReceived(){dapi=window.dapi,window.removeEventListener("message",getDapi),invokeDapiListeners()}function init(){window.dapi.isDemoDapi&&(window.parent.postMessage(DOLLAR_PREFIX+SEND_MSG_PREFIX+JSON.stringify({state:"getDapiUrl"}),"*"),window.addEventListener("message",getDapi,!1))}var DOLLAR_PREFIX="$$",RECEIVE_MSG_PREFIX="DAPI_SERVICE:",SEND_MSG_PREFIX="DAPI_AD:",GET_DAPI_URL_MSG_NAME="connection.getDapiUrl",dapiEventsPool={},dapi=window.dapi||{isReady:function(){return!1},addEventListener:function(e,i){dapiEventsPool[e]=i},removeEventListener:function(e){delete dapiEventsPool[e]},isDemoDapi:!0};init();
     </script>
 </head>
 
@@ -87,7 +46,7 @@
         <div id="titleTextAlign"> <text id="titleTextShadow" fill="red">Snow Roll.io</text> </div>
         <div id="titleTextAlign"> <text id="titleText" fill="red">Snow Roll.io</text> </div>
     </div> -->
-    <img id="title">
+    <!-- <img id="title"> -->
     <canvas id="c"></canvas>
     <!-- <button type="button" id="bottomBtn">DOWNLOAD NOW</button> -->
 </body>

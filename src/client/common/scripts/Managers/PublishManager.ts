@@ -12,6 +12,7 @@ export enum AdNetwork {
     IronSource,
     AppLovin,
     UnityAds,
+    Facebook,
 }
 
 export default class PublishManager {
@@ -36,6 +37,7 @@ export default class PublishManager {
                 PublishManager.loadWithDapi(loadGameAction);
                 break;
             case AdNetwork.Mintegral:
+            case AdNetwork.Facebook:
             default:
                 loadGameAction();
                 break;
@@ -124,6 +126,10 @@ export default class PublishManager {
             case AdNetwork.IronSource:
                 loadedDapi.openStoreUrl();
                 break;
+            case AdNetwork.Facebook:
+                //@ts-ignore
+                FbPlayableAd.onCTAClick()
+                break;
             default:
                 PublishManager.OpenStore();
                 break;
@@ -131,18 +137,18 @@ export default class PublishManager {
     }
 
     static OpenStore() {
-        const osName = DeviceManager.osName;
-        switch (osName) {
-            case 'iOS':
-                window.location.href = appleStoreUrl;
-                break;
-            case 'Mac OS':
-                window.open(appleStoreUrl);
-                break;
-            default:
-                window.open(googleStoreUrl);
-                break;
-        }
+        // const osName = DeviceManager.osName;
+        // switch (osName) {
+        //     case 'iOS':
+        //         window.location.href = appleStoreUrl;
+        //         break;
+        //     case 'Mac OS':
+        //         window.open(appleStoreUrl);
+        //         break;
+        //     default:
+        //         window.open(googleStoreUrl);
+        //         break;
+        // }
     }
     static OpenStoreWithMraid() {
         // if (mraidService === undefined) {

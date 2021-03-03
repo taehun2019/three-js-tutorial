@@ -7,9 +7,10 @@ import SwipeTutorial from '../common/scripts/UI/SwipeTutorial';
 import FinishScreen from 'common/scripts/UI/FinishScreen';
 import PlayNowButton from 'common/scripts/UI/PlayNowButton';
 import PlayScreen from './UI/PlayScreen';
+import PublishManager, { AdNetwork } from 'common/scripts/Managers/PublishManager';
 // import font from './../assets/fonts/FredokaOne-Regular.ttf'
 
-require('./../assets/fonts/fonts.css');
+// require('./../assets/fonts/fonts.css');
 
 export default class MainUI {
 

@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 // import { PhysicsLoader } from '@enable3d/ammo-physics'
 // import { THREE } from 'enable3d';
-import AmmoModule from "ammojs-typed";
+// import AmmoModule from "ammojs-typed";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Stats from 'three/examples/jsm/libs/stats.module'
 import { GUI } from 'three/examples/jsm/libs/dat.gui.module'
@@ -17,7 +17,7 @@ import PublishManager, { AdNetwork } from 'common/scripts/Managers/PublishManage
 // https://docs.google.com/document/d/1OjEPQE-Uw12ioQWl_3FyPpHN5wXJo9srE6Xz95iuniU/edit
 // https://demos.ironsrc.com/test-tool/?adUnitLoader=dapi&mode=testing
 
-PublishManager.adNetwork = AdNetwork.UnityAds;
+PublishManager.adNetwork = AdNetwork.Facebook;
 
 window.onload = () => {
     PublishManager.load(loadThree);

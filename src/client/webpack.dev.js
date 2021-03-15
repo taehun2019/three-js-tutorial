@@ -30,7 +30,7 @@ module.exports = {
 				use: 'base64-inline-loader'
 			},
             {
-                test: /\.(png|glb)/,
+                test: /\.(png|glb|mp3)/,
                 type: 'asset/inline'
             },
         ],

@@ -12,21 +12,24 @@ export default class AssetManager {
 
     textures: Map<string, THREE.Texture>;
     gltfs: Map<string, GLTF>;
+    audios: Map<string, AudioBuffer>;
     //https://basarat.gitbook.io/typescript/main-1/typed-event
     // finishLoadAction: EventEmitter;
 
     textureLoader: THREE.TextureLoader;
     gltfLoader: GLTFLoader;
+    audioLoader: THREE.AudioLoader;
 
     constructor() {
         this.textures = new Map<string, THREE.Texture>();
         this.gltfs = new Map<string, GLTF>();
+        this.audios = new Map<string, AudioBuffer>();
         // this.finishLoadAction = ()=>{};
         // this.finishLoadAction = new EventEmitter();
 
         this.textureLoader = new THREE.TextureLoader();
         this.gltfLoader = new GLTFLoader();
-
+        this.audioLoader = new THREE.AudioLoader();
     }
 
     loadTexture(url: string, finishAction: Function) {
@@ -58,6 +61,16 @@ export default class AssetManager {
         else
             this.gltfLoader.loadAsync(url, this.onProgress).then((value) => {
                 this.gltfs.set(url, value);
+                finishAction(value);
+            });
+    }
+
+    loadAudio(url: string, finishAction: Function) {
+        if (this.audios.has(url) === true)
+            finishAction(this.audios.get(url));
+        else
+            this.audioLoader.loadAsync(url, this.onProgress).then((value) => {
+                this.audios.set(url, value);
                 finishAction(value);
             });
     }

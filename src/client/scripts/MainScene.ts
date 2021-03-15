@@ -7,6 +7,7 @@ import * as EventEmitter from 'events';
 import MainUI from './MainUI';
 import { CameraState } from 'common/scripts/World/MainCamera';
 import { TrailRenderer } from 'common/downloads/TrailRenderer/TrailRenderer'
+import SoundManager from 'common/scripts/Managers/SoundManager';
 
 export default class MainScene extends THREE.Scene {
     world: World;
@@ -93,6 +94,7 @@ export default class MainScene extends THREE.Scene {
                 this.touch = true;
             }
         }, 3000)
+        SoundManager.play('bgm');
     }
 
     getCamera() {

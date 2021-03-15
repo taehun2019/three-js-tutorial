@@ -10,7 +10,7 @@ import PlayScreen from './UI/PlayScreen';
 import PublishManager, { AdNetwork } from 'common/scripts/Managers/PublishManager';
 // import font from './../assets/fonts/FredokaOne-Regular.ttf'
 
-// require('./../assets/fonts/fonts.css');
+require('./../assets/fonts/fonts.css');
 
 export default class MainUI {
 

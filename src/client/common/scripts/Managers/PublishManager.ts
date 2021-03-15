@@ -76,6 +76,7 @@ export default class PublishManager {
         console.log(loadedDapi);
         //@ts-ignore
         console.log(window.dapi);
+        loadedDapi.isReady();
         (loadedDapi.isReady()) ? PublishManager.onDapiReadyCallback() : loadedDapi.addEventListener("ready", PublishManager.onDapiReadyCallback());
     }
     static onDapiReadyCallback() {
@@ -108,10 +109,6 @@ export default class PublishManager {
         const screenSize = event;
         console.log("ad was resized width " + event.width + " height " + event.height);
     }
-    static userClickedDownloadButton(event: any){
-        loadedDapi.openStoreUrl();
-    }
-    
 
     static onClickDownloadButton() {
         switch (this.adNetwork) {
@@ -158,10 +155,12 @@ export default class PublishManager {
         const osName = DeviceManager.osName;
         switch (osName) {
             case 'iOS':
-                loadedMraid.open(appleStoreUrl);
+                //@ts-ignore
+                mraid.open(appleStoreUrl);
                 break;
             default:
-                loadedMraid.open(googleStoreUrl);
+                //@ts-ignore
+                mraid.open(googleStoreUrl);
                 break;
         }
     }

@@ -4,6 +4,7 @@ import failed from '../../images/FAILED.png';
 import tryAgain from '../../images/TryAgain.png';
 import { ScaleAnimation } from "./ScaleAnimation";
 import DeviceManager from "../Managers/DeviceManager";
+import SoundManager from "../Managers/SoundManager";
 
 export default class FinishScreen {
     onClickTryAgainAction: Function = () => { };
@@ -100,6 +101,7 @@ export default class FinishScreen {
             this.tryAgainAnim.animate(deltaTime);
     }
     onClickTryAgain() {
+        SoundManager.play('buttonClick');
         // console.log('onClickTryAgain. tryCount:' + this.tryCount);
         this.onClickTryAgainAction(this.tryCount);
         if (this.tryCount === 0) {

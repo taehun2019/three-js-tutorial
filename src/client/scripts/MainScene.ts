@@ -9,6 +9,14 @@ import { CameraState } from 'common/scripts/World/MainCamera';
 import { TrailRenderer } from 'common/downloads/TrailRenderer/TrailRenderer'
 import SoundManager from 'common/scripts/Managers/SoundManager';
 
+import bgm from './../assets/sounds/Background_loop.mp3';
+import winSound from './../assets/sounds/Victory.mp3';
+import loseSound from './../assets/sounds/Failed.mp3';
+import snowFallSound from './../assets/sounds/SnowFall.mp3';
+import snowRollSound from './../assets/sounds/SnowRoll.mp3';
+import snowBrokenSound from './../assets/sounds/SnowBroken.mp3';
+import buttonClickSound from './../assets/sounds/Button.mp3';
+
 export default class MainScene extends THREE.Scene {
     world: World;
     ui: MainUI;
@@ -70,6 +78,14 @@ export default class MainScene extends THREE.Scene {
 
         const trailRenderer = new TrailRenderer(this, false);
         const trailMaterial = TrailRenderer.createBaseMaterial();
+
+        SoundManager.register('bgm', bgm);
+        SoundManager.register('win', winSound);
+        SoundManager.register('lose', loseSound);
+        SoundManager.register('snowBroken', snowBrokenSound);
+        SoundManager.register('snowFall', snowFallSound);
+        SoundManager.register('snowRoll', snowRollSound);
+        SoundManager.register('buttonClick', buttonClickSound);
     }
     onWindowResize() {
         for (let index = 0; index < this.world.totalPlayers.length; index++) {
@@ -87,14 +103,17 @@ export default class MainScene extends THREE.Scene {
 
         this.updateAction = this.updateInTitle;
 
-        this.touch = false;
-        setTimeout(() => {
-            if (this.touch === false) {
-                this.readyToStart();
-                this.touch = true;
-            }
-        }, 3000)
-        SoundManager.play('bgm');
+        // this.touch = false;
+        // setTimeout(() => {
+        //     if (this.touch === false) {
+        //         this.readyToStart();
+        //         this.touch = true;
+        //     }
+        // }, 3000)
+
+        // SoundManager.resume();
+        // SoundManager.stop();
+        // SoundManager.play('bgm', true);
     }
 
     getCamera() {
@@ -119,6 +138,7 @@ export default class MainScene extends THREE.Scene {
         this.ui.start();
         this.callbacks.emit('start');
         this.updateAction = this.updateInPlay;
+        SoundManager.play('bgm', true);
     }
 
     update(deltaTime: number) {
@@ -152,6 +172,8 @@ export default class MainScene extends THREE.Scene {
     }
 
     win() {
+        // SoundManager.stop();
+        SoundManager.play('win');
         //@ts-ignore
         window.gameEnd && window.gameEnd();
 
@@ -170,6 +192,8 @@ export default class MainScene extends THREE.Scene {
     }
 
     lose() {
+        // SoundManager.stop();
+        SoundManager.play('lose');
         //@ts-ignore
         window.gameEnd && window.gameEnd();
 

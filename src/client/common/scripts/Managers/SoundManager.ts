@@ -11,27 +11,118 @@ export default class SoundManager {
     }
 
     static audioListener = new THREE.AudioListener();
-    static audio = new THREE.Audio(SoundManager.audioListener);
+    // static loopAudio = new THREE.Audio(SoundManager.audioListener);
+    static loopAudios: THREE.Audio[] = [];
+    // static oneShotAudio = new THREE.Audio(SoundManager.audioListener);
+    static oneShotAudios: THREE.Audio[] = [];
 
     static sounds = new Map<string, AudioBuffer>();
-
-    constructor() {
-        // this.audio = 
-    }
-
+    
     static register(name: string, url: string, finishAction: Function | undefined = undefined) {
+        if (SoundManager.sounds.has(name) === true) {
+            finishAction && finishAction();
+            return;
+        }
         AssetManager.getInstance().loadAudio(url, (value: AudioBuffer) => {
             this.sounds.set(name, value);
-            if (finishAction !== undefined) 
-                finishAction();
+            finishAction && finishAction();
         });
     }
 
-    static play(name: string) {
-        if (SoundManager.sounds.has(name) === false)
+    // static resume() {
+    //     console.log('resume A');
+    //     SoundManager.loopAudio.context.resume();
+    //     console.log('resume B');
+    // }
+
+    static pause() {
+        SoundManager.loopAudios.forEach(loopAudio => {
+            loopAudio.pause();
+        });
+    }
+    static resume() {
+        SoundManager.loopAudios.forEach(loopAudio => {
+            loopAudio.play();
+        });
+    }
+
+    static stop(name: string) {
+        console.log(`try to stop sound ${name}`);
+        const soundBuffer = SoundManager.sounds.get(name) as AudioBuffer;
+        SoundManager.loopAudios.forEach(loopAudio => {
+            if (loopAudio.buffer === soundBuffer) {
+                loopAudio.stop();
+                loopAudio.buffer = null;
+                console.log(`stop sound ${name}`);
+                return;
+            }
+        });
+    }
+
+    static checkPlaying(name: string) {
+        let result = false;
+        const soundBuffer = SoundManager.sounds.get(name) as AudioBuffer;
+        // console.log(soundBuffer);
+        SoundManager.loopAudios.forEach(loopAudio => {
+            // console.log(loopAudio);
+            // console.log(loopAudio.source);
+            // console.log(loopAudio.context.state);
+            // console.log(loopAudio.buffer);
+            if (loopAudio.buffer === soundBuffer && loopAudio.context.state === 'running') {
+                console.log(`${name} is being played`);
+                result = true;
+            }
+        });
+        return result;
+    }
+
+    static play(name: string, loop = false, volume = 1) {
+        console.log(`SoundManager.play ${name}`);
+        if (SoundManager.sounds.has(name) === false) {
+            console.log(`no sound named ${name}`);
             return;
-        SoundManager.audio.setBuffer(SoundManager.sounds.get(name) as AudioBuffer);
-        SoundManager.audio.play();
+        }
+        const soundBuffer = SoundManager.sounds.get(name) as AudioBuffer;
+        let selectedAudio: THREE.Audio | undefined = undefined;
+        if (loop === true) {
+            if (SoundManager.checkPlaying(name) === true)
+                return;
+
+            SoundManager.loopAudios.some((loopAudio) => {
+                if (loopAudio.context.state !== 'running') {
+                    selectedAudio = loopAudio;
+                    return true;
+                }
+                return false;
+            });
+            if (selectedAudio === undefined) {
+                selectedAudio = new THREE.Audio(SoundManager.audioListener);
+                SoundManager.loopAudios.push(selectedAudio);
+            }
+            // if (restart === true)
+            //     SoundManager.loopAudio.stop();
+            
+            selectedAudio.setBuffer(soundBuffer);
+            selectedAudio.play();
+            // console.log(selectedAudio.getVolume());
+            selectedAudio.setVolume(volume);
+            selectedAudio.setLoop(true);
+        }
+        else {
+            SoundManager.oneShotAudios.some((oneShotAudio) => {
+                if (oneShotAudio.context.state !== 'running') {
+                    selectedAudio = oneShotAudio;
+                    return true;
+                }
+                return false;
+            });
+            if (selectedAudio === undefined) {
+                selectedAudio = new THREE.Audio(SoundManager.audioListener);
+                SoundManager.oneShotAudios.push(selectedAudio);
+            }
+            selectedAudio.setBuffer(SoundManager.sounds.get(name) as AudioBuffer);
+            selectedAudio.play();
+        }
 
         // AssetManager.getInstance().loadAudio(this.sounds.get(name) as string, (value: AudioBuffer) => {
         //     this.audio.setBuffer(value);

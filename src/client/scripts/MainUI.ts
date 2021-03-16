@@ -45,13 +45,13 @@ export default class MainUI {
         this.startCountdownText.style.color = '#242246';
         this.startCountdownText.style.fontFamily = 'Fredoka';
 
-        this.titleImage = UIManager.createImg(title, '80%', '20%');
-        this.titleImage.style.left = '10%';
-        this.titleImage.style.top = '10%';
-
         this.playScreen = new PlayScreen();
         this.finishScreen = new FinishScreen();
         this.playNowButton = new PlayNowButton();
+
+        this.titleImage = UIManager.createImg(title, '80%', '20%');
+        this.titleImage.style.left = '10%';
+        this.titleImage.style.top = '10%';
 
         window.addEventListener('resize', () => this.onWindowResize(), false);
         this.onWindowResize();

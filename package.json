@@ -4,10 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node ./dist/server/server.js",
+    "dev": "webpack serve --config ./src/client/webpack.dev.js",
+    "dev_applovin": "webpack serve --config ./src/client/webpack.dev.js --env AD_NETWORK=AppLovin",
     "build": "webpack --config ./src/client/webpack.prod.js",
-    "dev": "webpack serve --config ./src/client/webpack.dev.js"
+    "build_applovin": "webpack --config ./src/client/webpack.prod.js --env AD_NETWORK=AppLovin",
+    "build_facebook": "webpack --config ./src/client/webpack.prod.js --env AD_NETWORK=Facebook",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

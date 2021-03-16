@@ -13,20 +13,37 @@ import DeviceManager from 'common/scripts/Managers/DeviceManager';
 import PublishManager, { AdNetwork } from 'common/scripts/Managers/PublishManager';
 import SoundManager from 'common/scripts/Managers/SoundManager';
 
-// import bgm from './../assets/sounds/BackgroundMisic.mp3';
-import bgm from './assets/sounds/BackgroundMisic.mp3';
-
 // mintegral: https://www.mindworks-creative.com/review/doc/
 // ironsource:
 // https://docs.google.com/document/d/1OjEPQE-Uw12ioQWl_3FyPpHN5wXJo9srE6Xz95iuniU/edit
 // https://demos.ironsrc.com/test-tool/?adUnitLoader=dapi&mode=testing
 
-PublishManager.adNetwork = AdNetwork.AppLovin;
+console.log(process.env.AD_NETWORK);
+PublishManager.adNetwork = AdNetwork.None;
+switch (process.env.AD_NETWORK) {
+    case 'AppLovin':
+        PublishManager.adNetwork = AdNetwork.AppLovin;
+        break;
+    case 'Facebook':
+        PublishManager.adNetwork = AdNetwork.Facebook;
+    default:
+        break;
+}
 
 window.onload = () => {
-    SoundManager.register('bgm', bgm, () => {
-        PublishManager.load(loadThree);
-    });
+    PublishManager.load(loadThree);
+}
+// window.onpagehide = () => {
+//     SoundManager.pause();
+// }
+// window.onpageshow = () => {
+//     SoundManager.resume();
+// }
+window.onblur = () => {
+    SoundManager.pause();
+}
+window.onfocus = () => {
+    SoundManager.resume();
 }
 
 function loadThree() {

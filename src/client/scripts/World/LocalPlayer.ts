@@ -5,6 +5,7 @@ import Arrow from "./Arrow";
 import SnowKillEffect from './SnowKillEffect';
 import Snow from './Snow';
 import { LineGizmo } from 'common/scripts/Managers/GizmosManager';
+import SoundManager from 'common/scripts/Managers/SoundManager';
 
 export default class LocalPlayer extends Player {
     elapsedTime: number = 0;
@@ -60,6 +61,8 @@ export default class LocalPlayer extends Player {
         // console.log(`moveDirection:${this.moveDirection.x}/${this.moveDirection.y}`);
         // console.log(`VirtualJoystickManager.getInstance().offset:${VirtualJoystickManager.getInstance().offset.x}/${VirtualJoystickManager.getInstance().offset.y}`);
         this.arrow.visible = true;
+
+        SoundManager.play('snowRoll', true, 2);
     }
     kill(player: Player) {
         super.kill(player);
@@ -74,6 +77,9 @@ export default class LocalPlayer extends Player {
         super.update(deltaTime);
         if (this.killEffect.visible === true)
             this.killEffect.update(deltaTime);
+        if (this.onGround === false && SoundManager.checkPlaying('snowRoll')) {
+            SoundManager.stop('snowRoll');
+        }
     }
     toLeftTime = (1/3) * this.titleAnimMaxTime;
     toRightTime = (2/3) * this.titleAnimMaxTime;

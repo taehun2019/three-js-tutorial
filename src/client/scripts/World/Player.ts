@@ -11,6 +11,7 @@ import SnowDieEffect from './SnowDieEffect';
 import Shadow from './Shadow';
 import SnowHitEffect from './SnowHitEffect';
 import World from './../World';
+import SoundManager from 'common/scripts/Managers/SoundManager';
 
 const Vector2 = THREE.Vector2;
 const Vector3 = THREE.Vector3;
@@ -56,6 +57,8 @@ export default class Player extends THREE.Object3D {
     killCount = 0;
 
     updateAction: Function = () => { };
+
+    playFallSound = false;
 
     constructor(world: THREE.Object3D) {
         super();
@@ -164,6 +167,8 @@ export default class Player extends THREE.Object3D {
 
         this.killCount = 0;
         this.updateAction = ()=>{};
+
+        this.playFallSound = false;
     }
     start() {
         this.updateAction = this.updateInPlay;
@@ -206,8 +211,11 @@ export default class Player extends THREE.Object3D {
         this.position.z += +this.moveDirection.y * this.curMoveSpeed * deltaTime;
         this.snow.update(deltaTime);
 
-        if (this.onGround == false)
-        {
+        if (this.onGround == false) {
+            if (this.playFallSound === false) {
+                this.playFallSound = true;
+                SoundManager.play('snowFall');
+            }
             // this.velocityY -= 50 * deltaTime;
             this.velocityY = -40;
             // this.velocityY -= 0 * deltaTime;
@@ -269,6 +277,7 @@ export default class Player extends THREE.Object3D {
                 this.dieEffect.visible = false;
             }, 3000);
         }
+        SoundManager.play('snowBroken');
     }
     updateSpeed() {
         this.curMoveSpeed = THREE.MathUtils.lerp(Player.initMoveSpeed, Player.initMoveSpeed * 2.5, THREE.MathUtils.clamp((this.scale.x - 1) / (5 - 1), 0, 1));

@@ -3,6 +3,7 @@ import UIManager from "../Managers/UIManager";
 import playNow from '../../images/play_now.png';
 import DeviceManager from "../Managers/DeviceManager";
 import { ScaleAnimation, ScaleAnimLoopMode } from "./ScaleAnimation";
+import SoundManager from "../Managers/SoundManager";
 
 // const baseWidth = 60;
 // const baseHeght = 15;
@@ -20,7 +21,10 @@ export default class PlayNowButton {
         // this.setSize(baseWidth, baseHeght);
         this.image.addEventListener(
             DeviceManager.getInstance().clickEventName, 
-            ()=>this.onClickAction()
+            ()=> {
+                SoundManager.play('buttonClick');
+                this.onClickAction();
+            }
         );
 
         this.scaleAnim = new ScaleAnimation({

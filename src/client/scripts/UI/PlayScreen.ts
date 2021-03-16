@@ -16,6 +16,12 @@ export default class PlayScreen {
     playerProfiles: PlayerProfile[];
 
     constructor() {
+
+        this.playerProfiles = [];
+        for (let index = 0; index < 7; index++) {
+            this.playerProfiles[index] = new PlayerProfile(index);
+        }
+        
         this.killCountDiv = UIManager.createDiv('180px', '180px');
         this.killCountDiv.style.top = '0%';
         
@@ -46,11 +52,6 @@ export default class PlayScreen {
             topPercent: 45, leftPercent: 50,
             fromScale: 3, toScale: 1,
         });
-
-        this.playerProfiles = [];
-        for (let index = 0; index < 7; index++) {
-            this.playerProfiles[index] = new PlayerProfile(index);
-        }
     }
     updateAspect() {
         let length = (window.innerWidth < window.innerHeight) ? window.innerWidth : window.innerHeight;
